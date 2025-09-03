@@ -1,0 +1,260 @@
+A strong theory of logical uncertainty might let us say when the results
+of computations will give “information”, including logical information,
+about other computations. This might be useful for, among other things,
+identifying parts of hypotheses that have the same meaning. TL;DR: I don’t think this works as stated, and this kind of problem
+should probably be sidestepped anyway. Experts may get most of the value from the summary. Thanks to Sam
+Eisenstat for conversations about this idea. Executive summary Logical information Logical uncertainty Logical information Example: XOR Collapsing levels of indirection and
+obfuscation Possible uses of logical
+information Throttling changes in logical
+uncertainty Ontology identification Not-obviously-this-person
+predicate Problems with logical
+information Empirical bits can be logical
+bits Strong dependence on a theory of logical
+uncertainty Dependence on irrelevant
+knowledge Pointers to things are hard to
+recognize Subtraces can sneak in
+information Problems with the non-person
+predicate Values over counterfactual
+behavior Identifying things, not human
+things Executive summary If we have a good predictor under logical uncertainty P ,
+we can ask: how does P ’s predictions about the output of a
+computation Y change if it learns the outcome of X ? We can then
+define various notions of how informative X is about Y . Possible uses: Throttling modeling capabilities: preventing an agent from gaining
+too much logical information about a computation Y might translate
+into safety guarantees in the form of upper bounds on how well the
+agent can model Y . Ontology identification: finding parts of different hypotheses that
+are mutually informative about each other could point towards the
+ontology used by arbitrary hypotheses, which could be useful for
+attaching values to parts of hypotheses, dealing with ontological
+crises, and finding which parts of a world-model influenced
+a decision. Non-person predicate: disallowing computations that are very
+informative about a human might prevent some mindcrime. Problems: Empirical information can include logical information, so a good
+theory will have to consider “total information”. Any interesting properties of logical information rely heavily on a
+good theory of logical uncertainty. If the predictor knows too much, it can’t see dependencies, since it
+has no uncertainty to become more informed about. The predictor needs more time to integrate larger knowledge bases
+and larger pointers to parts of hypotheses. But given more time, the
+predictor becomes less and less uncertain about the computation of
+interest, without necessarily having learned anything relevant. The non-person predicate only blacklists computations that are
+clearly informative about a particular computation, so it doesn’t at
+all prevent mindcrime in general. Counterlogical behavior is probably relevant to our values, and
+isn’t captured here. At best this scheme identifies abstract structures in hypotheses,
+rather than things that humans care about. Logical information TL;DR: it might be enlightening to look at how a good predictor, under
+logical uncertainty, would change its distribution after adding the
+result of a computation to its knowledge base. Logical uncertainty Say that a predictor is an algorithm that assigns probabilities to
+outcomes of computations. For conceptual convenience, assume all
+computations are labeled by a running time and a finite specification of
+what their outputs could possibly be (so we don’t have to worry that
+they won’t halt, and so we know what space to assign probabilities
+over). Predictors have access to a knowledge base K , which
+is a list of outputs of computations, and we write P ( X | K ) for the probability distribution the
+predictor puts on the outputs of X given knowledge base K . Assume we have a predictor P which is “good” in some sense
+to be determined by how we will use P . Logical information We can then talk about how informative a given computation X is about
+another computation Y (relative to P ). Say X , Y ∉ K , X in fact evaluates to x , and Y has
+possible outputs y i . Then we can compare the distributions P ( Y | K ) and P ( Y | K ∪ { X = x } ) over the y i ; how much they change gives a measure of how much P would learn about Y if it learned that X evaluates to x . For example, we can compare the entropy of these distributions to get an
+analog of information, or we could look at KL divergence, total
+variation, the probability of the true outcome of Y , or something
+else. We might also look at the expected change in one of these
+quantities between P ( Y | K ) to P ( Y | K ∪ { X = x i } ) , taken
+over the x i according to P ( X | K ) , to get a
+notion of “how much one could reasonably expect to learn about Y from X ”. Vaguely, we want P to be such that if there is a reliable
+way of predicting Y faster or more accurately using the result of X ,
+then P will take advantage of that method. Also P should be able to do this across a wide variety of
+knowledge bases K . Example: XOR Let X and Y be two “unrelated”, difficult computations, each of
+which outputs a 0 or a 1. Let Z : = X ⊕ Y (the code of X and Y appear verbatim in the code of Z ). Say P ( X = 1 | K ) = P ( Y = 1 | K ) = 0.5 ,
+and they are independent (i.e. P ( ( X , Y ) | K ) = P ( X | K ) P ( Y | K ) ),
+so that hopefully P ( Z | K ) = 0.5 . (This is
+assuming something vaguely like P has twice the time to
+predict something with twice the code; or we could explicitly add time
+indices to everything.) We should have that P ( X | K ∪ { Y = 1 } ) = 0.5 ,
+given that X and Y are unrelated. Even knowing Y , P still has the same relevant information and the same computational
+resources to guess at X . On the other hand, consider P ( Z | K ∪ { Y = 1 } ) . A good predictor asked to
+predict Z should, given the output of Y , devote more resources to
+guessing at X . This should result in a more confident prediction in
+the right direction; e.g., assuming in fact X = 1 , we might get P ( Z | K ∪ { Y = 1 } ) = 0.8 . Note that this is different from ordinary information, where the random
+variable Y would have no mutual information with Z , and X would
+have an entire bit of mutual information with Z , conditional on Y .
+This difference is a feature: in the logical uncertainty setting, Y really is informative about Z . Collapsing levels of indirection and obfuscation It’s often difficult to understand where in a system the important work
+is being done, because important dynamics could be happening on
+different levels or in non-obvious ways. E.g., one can imagine a search
+algorithm implemented so that certain innocuous data is passed around
+from function to function, each applying some small transformation, so
+that the end result is some output-relevant computation that was
+apparently unrelated to the search algorithm. Taking a “logical
+information” perspective could let us harness a strong theory of logical
+uncertainty to say when a computation is doing the work of another
+computation, regardless of any relatively simple indirection. Possible uses of logical information Throttling changes in logical uncertainty One might hope that preventing P ( X | K ) from
+being low entropy, would correspond to any sufficiently bounded agent
+being unable to model X well. Then we could let K grow
+by adding the results of computations that are useful but irrelevant to X , and end up doing something useful, while maintaining some safety
+guarantee about the agent not modeling X . I don’t think this works;
+see this post . Ontology identification TL;DR: maybe we can look at chunks of computation traces of different
+hypotheses, and ask which ones are logically informative about other
+ones, and thereby identify “parts of different hypotheses that are doing
+the same work”. (NB: Attacking the problem directly like this—trying to
+write down what a part is—seems doomed.) Motivation: looking inside hypotheses One major problem with induction schemes like Solomonoff induction is
+that their hypotheses are completely opaque: they take observations as
+inputs, then do…something…and then output predictions. If an agent does
+its planning using a similar opaque induction scheme, this prevents the
+agent from explicitly attaching values to things going on internally to
+the hypotheses, such as conscious beings; an agent like AI ξ only
+gets to look at the reward signals output by the black-box hypotheses. Even a successful implementation of AI ξ (that didn’t drop an anvil
+on its head or become a committed
+reductionist )
+would have a strong incentive to seize control of its input channel and
+choose its favorite inputs, rather than to steer the world into any
+particular state, other than to protect the input channel. Technically
+one could define a utility function that incentivizes AI ξ to act
+exactly in the way required to bring about certain outcomes in the
+external world; but this is just wrapping almost all of the difficulty
+into defining the utility function, which would have to do induction on
+transparent hypotheses, recognize valuable things, do decision theory,
+and translate action evaluations into a reward function (HT Soares). The right way to deal with this may be to build a reasoning system to be
+understandable from the ground up, where each piece has, in some
+appropriate sense, a clear function with a comprehensible meaning in the
+context of the rest of the system; or to bypass the problem entirely
+with high-level learning of human-like behaviors, goals, world models,
+etc. (e.g. apprenticeship
+learning ).
+But we may want to start with a reasoning system designed with other
+desiderata in mind, for example to satisfy guarantees like limited
+optimization power or robustness under changes. Then later if we want to
+be able to identify valuable referents of hypotheses, it would be nice
+to understand the “parts” of different hypotheses. In particular, it
+would be nice to know when two parts of two different hypotheses “do the
+same thing”. Rice’s theorem: mostly false (HT Eisenstat) Rice’s theorem—you can’t determine any extensional input-output behavior
+of programs in general—stops us from saying in full generality when two
+programs do the same thing (in terms of I/O). But, there may be
+important senses in which this is mostly false: it may be possible to
+mostly discern the behavior of most programs. This is one way to view
+the logical uncertainty program. Parts of hypotheses I suggest that two “parts” of two hypotheses are “doing the same work”
+when they are logically informative about each other. For example, a
+(spacetime chunk containing a) chair in a physical model of the world,
+is informative about an abstract wire-frame simulation of the same
+chair, at least for certain questions such as “what happens if I tip the
+chair by τ / 6 radians?”. This should hold even if both hypotheses
+are fully specified and deterministic, as long as the predictor is not
+powerful enough to just simulate each one directly rather than guessing. Unfortunately, I’m pretty sure that there’s no good way to, in general,
+decompose programs neatly so that different parts do separate things,
+and so that anything the program is modeling, is modeled in some
+particular part. Now I’ll sketch one notion of part that I think doesn’t
+work, in case it helps anyone think of something better. Say that all hypotheses are represented as cellular automaton
+computations, e.g. as Turing machines. Consider the computation trace of
+a given hypothesis X . Then define a part of X to be a small,
+cheaply computable subtrace of the trace of X , where by subtrace I
+just mean a subset of the bits in the trace. Cheaply computable is meant
+to capture the notion of something that is easily recognizable in the
+world X while you are looking at it. This can be viewed as a small
+collection of observed nodes in the causal graph corresponding to the
+cellular automaton implementing X . Then we say that a part X ′ of a hypothesis X is informative about a
+computation Y ′ , to the extent that P ( Y ′ | K ∪ { X ′ = ¯ x } changes from P ( Y ′ | K ) . If Y ′ is also a subtrace of some
+hypothesis Y , this gives a notion of how much two parts of two
+hypotheses are doing the same work. Potential uses for identifying parts Finding valuable parts of hypotheses. Say we have some computation X that implements something relevant to computing values of possible
+futures. This X doesn’t necessarily have to be intrinsically valuable
+by itself, like a simulation of a happy human, since it could be
+something like a strong but non-conscious Go program, and humans may
+have values about what sort of thing their opponent is. (It’s not
+actually obvious to me that I have any non-extensional values over
+anything that isn’t on the “inside” of a conscious mind, i.e. any
+non-conscious Go player with the same input-output behavior across
+counterfactuals is just as sweet.) In any case, we might be able to identify instances of X in a given
+model by searching for parts of the model that are informative about X and vice versa. Finding such computations X seems hard. Ontological crises. Say we have an AI system with a running model of
+the world, and value bindings into parts of that model. Then some
+considerations such as new data arise, and the AI system switches its
+main model to an entirely new sort of model. For example, the agent
+might switch from thinking the world runs on particles and classical
+mechanics, to thinking the world runs on quantum mechanics. See “Ontological crises in artificial agents’ value
+systems” . Then we want the agent to attach values to parts of the new model that
+correspond to values attached to parts of the old model. This might be
+accomplished by matching up parts of models as gestured at above. E.g. a
+happy human embedded in classical physics or a happy human embedded in
+quantum mechanics may be “made of different stuff”, but still do very
+similar computations and thereby be logically informative about each
+other. Plan-pivotal parts of a hypothesis class. Even more speculatively,
+it could be possible to identify “pivotal parts” of hypotheses that lead
+to a decision or a belief. That is, if we want to understand why an AI
+made a decision or came to a conclusion, it could help to look at a
+single class of corresponding parts across many hypotheses, and see how
+much the predicted behavior of those parts “influenced” the decision,
+possibly again using logical informativeness. Not-obviously-this-person predicate We might hope to prevent an agent from running computations that are
+conscious and possibly suffering, by installing an overseer to veto any
+computations that are logically informative about a reference human
+simulation H . This works just as in ontology identification, but it is
+distinct because here we are trying to avoid moral patients actually
+occurring inside the agent’s hypotheses, rather than trying to locate
+references to moral patients. Problems with logical information Empirical bits can be logical bits If the environment contains computers running computations that are
+informative about Y , then empirical observations can be relevant to
+predicting Y . So a good theory of “total information” should call on a
+general predictor rather than just a logical predictor. These might be
+the same thing, e.g. if observations are phrased as logical statements
+about the state of the agent’s sensors. Strong dependence on a theory of logical uncertainty Many computational questions are entangled with many other computational
+questions [citation needed], so using logical information to
+understand the structure of computations depends on a good quantitative
+theory of logical uncertainty. Then we can speak meaningfully of “how
+much” one computation is informative about another. Indeed, this notion of logical information may depend in undesirable
+ways on the free parameter of a “good” predictor, including the choices
+of computational resources available to the predictor. This is akin to
+the free choice of a UTM for Solomonoff induction; different predictor
+predictors may use, in different ways, the results of X to guess the
+results of Y , and so could make different judgments about how
+informative X is about Y . (As in the case of Solomonoff induction,
+there is some hope that this would wash out in any cases big enough to
+be of interest.) For example, if the predictor is clever enough or computationally
+powerful enough to predict Y , it will think nothing is at all
+informative about Y , because all the conditional distributions will
+just be the same point distribution on the actual outcome of Y . This
+may not capture what we cared about. For example, if Y implements
+versions of a conscious computation X , we want to detect this; but the
+predictor tells us nothing about which things Y implements. More abstractly, logical informativeness formulated in terms of some
+predictor is relying on ignorance to detect logical dependencies; this
+is not necessarily a problem, but seems to demand a canonical idea of
+prediction under logical uncertainty. Dependence on irrelevant knowledge We want to get notions of how informative X is about Y , given a
+knowledge base K . In particular, P needs to
+have enough time to consider what is even in K . But this
+means that we need to allow P more time to think about Y as K gets larger, even if X and Y are fixed. This is
+problematic because at some point P will simply be able to
+compute Y , and therefore be useless for saying whether X is
+informative about Y . (There may be some clever way to preprocess K to avoid this problem, but it does seem like a serious
+problem.) Pointers to things are hard to recognize Say we want to find all the chairs in some large hypothesis X . We
+consider some subtrace X ′ , which does in fact point to a chair in X .
+But, this pointer may be long (as a program), and so it might take a lot
+of resources for the predictor to think about X ′ enough to recognize
+that X ′ points to a chair. If the chair is another fixed computation,
+then for most implementations X ′ of chairs in other hypotheses, it is
+easier for P to just compute any question about the chair,
+than to recognize X ′ as a chair and use its behavior as information.
+This seems like a serious problem. I don’t think P would have a similar problem identifying
+parts of hypotheses that are informative or not in a way that depends on
+the results of difficult computations happening inside a hypothesis. For
+example, say X runs a very complicated computation, and then depending
+on its output, either halts or implements a chair. We might worry that P can’t tell if the second stage is useful or not for
+modeling a chair, because it can’t compute the complicated thing. But P can still tell that this is the setup, so if it is given
+the results and they start to look like a chair is being modeled, P will know that it can use the rest of the bits as
+information. Also note that locating parts of large hypotheses requires a search over
+vast numbers of possible parts, which seems extremely expensive. Subtraces can sneak in information The programs serving as pointers to subtraces of X could just think
+about Y , and then find bits in the trace of X to encode information
+about Y , mostly ignoring whatever X is doing. This is supposed to be
+avoided by simply adding the value of certain bits of X ’s trace to K (rather than adding the result of the computation that
+looks at the trace). But this assumes that the predictor somehow updates
+on its observations of logical facts without updating on the fact that
+it was shown those facts, which is probably not even a desirable
+property of a good predictor. Problems with the non-person predicate Recall the proposal to prevent mindcrime by vetoing computations that
+are informative about a human. Agent: Okay to run computation X ? Overseer: Hold on, let me make sure it is safe. Overseer: *commits a whole lot of mindcrime* Overseer: Um, yep, that is definitely mindcrime, no you may not run X . Agent: Whew, glad I checked. Overseer: *grimaces inwardly* Even if the predictor can successfully detect potential mindcrime, it
+may itself commit mindcrime, especially while thinking about
+computations that include mindcrime. This might be partially sidestepped
+by not computing the answer to X and just adding possible outputs of X to K , but the resulting counterfactuals might not make
+sense. More fundamentally, the overseer blacklists computations that are
+definitely bad because they are informative about H , rather than
+whitelisting computations that are definitely safe. There may be many
+situations where an agent commits mindcrime without modeling any
+existing human, or commit mindcrime on very nonhuman but nevertheless
+morally valuable minds. Values over counterfactual behavior We may have values that depend on the counterfactual behavior of certain
+parts of the environment (“If I hadn’t tried so hard to beat the video
+game, the win screen wouldn’t be displayed.”). In this context, we might
+try saying that a part of X implements Y if adding any possible
+results of that subtrace to K would make P more informed about Y . But there’s no reason to expect that this sort
+of counterlogical will be reasonable. For example, instead of updating Y on counterfactual results of X , the predictor might just stop
+thinking that X has anything to do with Y (because X is apparently
+doing some weird thing). Identifying things, not human things At best, this ontology identification scheme still has nothing to do
+with locating things that humans value. That would require something
+like writing down computations that exemplify different kinds of
+value-relevant parts of the world, which seems like most of the problem.

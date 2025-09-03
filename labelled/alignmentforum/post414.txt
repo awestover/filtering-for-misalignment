@@ -1,0 +1,1 @@
+The UC Berkeley course I co-taught now has lecture videos available: https://www.youtube.com/playlist?list=PLJ66BAXN6D8H_gRQJGjmbnS5qCWoxJNfe Course site: Understanding LLMs: Foundations and Safety Unrelatedly, a more conceptual AI safety course has its content available at https://www.aisafetybook.com/

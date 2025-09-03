@@ -1,0 +1,161 @@
+This is Section 2.2.4.3 of my report “ Scheming AIs: Will AIs fake alignment during training in order to get power? ”. There’s also a summary of the full report here (audio here ). The summary covers most of the main points and technical terms, and I’m hoping that it will provide much of the context necessary to understand individual sections of the report on their own. Audio version of this section here , or search "Joe Carlsmith Audio" on your podcast app. How much useful, alignment-relevant cognitive work can be done using AIs with short-term goals? So overall, I think that training our models to pursue long-term
+goals – whether via long episodes, or via short episodes aimed at
+inducing long-term optimization – makes the sort of beyond-episode goals
+that motivate scheming more likely to arise. So this raises the
+question: do we need to train our models to pursue long-term goals? Plausibly, there will be strong general incentives to do this. That is:
+people want optimization power specifically applied to long-term goals
+like "my company being as profitable as possible in a year." So,
+plausibly, they'll try to train AIs that optimize in this way. (Though
+note that this isn't the same as saying that there are strong
+incentives to create AIs that optimize the state of the galaxies in the
+year five trillion.) Indeed, there's a case to be made that even our alignment work , today,
+is specifically pushing towards the creation of models with
+long-term – and indeed, beyond-episode – goals. Thus, for example, when
+a lab trains a model to be "harmless," then even though it is plausibly
+using fairly "short-episode" training (e.g., RLHF on user interactions),
+it intends a form of "harmlessness" that extends quite far into the
+future, rather than cutting off the horizon of its concern after e.g. an
+interaction with the user is complete. That is: if a user asks for help
+building a bomb, the lab wants the model to refuse, even if the bomb
+in question won't be set off for a decade. [1] And this example is
+emblematic of a broader dynamic: namely, that even when we aren't
+actively optimizing for a specific long-term outcome (e.g., "my company
+makes a lot of money by next year"), we often have in mind a wide
+variety of long-term outcomes that we want to avoid (e.g., "the
+drinking water in a century is not poisoned"), and which it wouldn't be
+acceptable to cause in the course of accomplishing some short-term task.
+Humans, after all, care about the state of the future for at least
+decades in advance (and for some humans: much longer), and we'll want
+artificial optimization to reflect this concern. So overall, I think there is indeed quite a bit of pressure to steer our
+AIs towards various forms of long-term optimization. However, suppose
+that we're not blindly following this pressure. Rather, we're
+specifically trying to use our AIs to perform the sort of
+alignment-relevant cognitive work I discussed above – e.g., work on
+interpretability, scalable oversight, monitoring, control, coordination
+amongst humans, the general science of deep learning, alternative (and
+more controllable/interpretable) AI paradigms, and the like. Do we need
+to train AIs with long-term goals for that? In many cases, I think the answer is no. In particular: I think that a
+lot of this sort of alignment-relevant work can be performed by models
+that are e.g. generating research papers in response to human+AI
+supervision over fairly short timescales, suggesting/conducting
+relatively short-term experiments, looking over a codebase and pointing
+out bugs, conducting relatively short-term security tests and
+red-teaming attempts, and so on. We can talk about whether it will be
+possible to generate reward signals that adequately incentivize the
+models to perform these tasks well (e.g., we can talk about whether the
+tasks are suitably
+" checkable ") – but
+naively, such tasks don't seem, to me, to require especially long-term
+goals. (Indeed, I generally expect that the critical period in which
+this research needs to be conducted will be worryingly short , in
+calendar time.) And I think we may be able to avoid bad long-term
+outcomes from use of these systems (e.g., to make sure that they don't
+poison the drinking water a century from now) by other means (for
+example, our own reasoning about the impact of a model's
+actions/proposals on the future). Now, one source of skepticism about the adequacy of short-horizon AI
+systems, here, is the possibility that the sort of alignment-relevant
+cognitive work we want done will require that super-human optimization
+power be applied directly to some ambitious, long-horizon goal – that
+is, in some sense, that at least some of the tasks we need to perform
+will be both "long-term" and such that humans, on their own, cannot
+perform them. (In my head, the paradigm version of this objection
+imagines, specifically, that to ensure safety, humans need to perform
+some "pivotal act" that "prevents other people from building an
+unaligned AGI that destroys the world," [2] and that this act is
+sufficiently large, long-horizon, and beyond-human-capabilities that it
+can only be performed by a very powerful AI optimizing for long-term
+consequences – that is, precisely the sort of AI we're most scared
+of. [3] ) I think there's something to this concern, but I give it less weight
+than some of its prominent proponents. [4] In particular: the basic
+move is from " x task that humans can't perform themselves requires
+long-term optimization power in some sense" to " x task requires a
+superhuman AI optimizing for long-term goals in the manner that raises
+all the traditional alignment concerns." But this move seems to me quite
+questionable. In particular, it seems to me to neglect the relevance of
+the distinction between verification and generation to our ability to
+supervise various forms of cognitive work. Thus, suppose (as a toy example meant to illustrate the structure of my
+skepticism – not meant to be an example of an actual "pivotal act")
+that you don't know how to make a billion dollars by the end of next
+year (in a legal and ethical way), but you want your AI to help you do
+this, so you ask it to help you generate plans execution of which will
+result in your making a billion dollars by the end of next year in a
+legal and ethical way. In some sense, this is a super-human (relative to
+your human capabilities), long-horizon goal. And suppose that your AI is
+powerful enough to figure out an adequate plan for doing this (and then
+as you go, adequate next-steps-in-response-to-what's-happening to adapt
+flexibly to changing circumstances). But also: this AI only cares about
+whether you give it reward in response to the immediate plan/next-steps
+it generates. [5] And suppose, further, that it isn't powerful
+enough to seize control of the reward process. Can you use this short-horizon AI to accomplish this long-horizon goal
+that you can't accomplish yourself? I think the answer may be yes. In
+particular: if you are adequately able to recognize good
+next-steps-for-making-a-billion-dollars-in-a-legal-and-ethical-way, even
+if you aren't able to generate them yourself, then you may be able to
+make it the case that the AI's best strategy for getting short-term
+reward, here, is to output suggested-next-steps that in fact put you on
+a path to getting a billion dollars legally and ethically. Now, you might argue: "but if you were able to steer the future into the
+narrow band of 'making a billion dollars in a year legally and
+ethically,' in a manner that you weren't able to do yourself, then at
+some point you must have drawn on super-human AI cognition that was
+optimizing for some long-term goal and therefore was scary in the manner
+that raises familiar alignment challenges." But I think this way of
+talking muddies the waters. That is: yes, in some sense, this AI may be
+well-understood as applying some kind of optimization power towards a
+long-term goal, here. But it's doing so in a manner that is ultimately
+aimed at getting short-term reward. That is, it's only applying
+optimization power towards the future of the form that your short-term
+supervision process incentivizes . If your short-term supervision
+process is adequately able to recognize (even if not, to generate)
+aligned optimization power applied to the future, then this AI will
+generate this kind of aligned, future-oriented optimization power. And
+just because this AI, itself, is generating some kind of long-term
+optimization power doesn't mean that its final goal is such as to
+generate traditional incentives towards long-term problematic
+power-seeking. (The "final goal" of the plans generated by the AI could in principle generate these incentives – for example, if you
+aren't able to tell which plans are genuinely ethical/legal. But the
+point here is that you are.) Of course, one can accept everything I just said, without drawing much
+comfort from it. Possible forms of ongoing pessimism include: Maybe the actual long-term tasks required for AI safety (Yudkowsky's
+favored example here is: building steerable nano-tech) are
+sufficiently hard that we can't even supervise them, let alone
+generate them – that is, they aren't "checkable." [6] Maybe you don't think we'll be able to build systems that only
+optimize for short-term goals, even if we wanted to, because we lack
+the relevant control over the goals our AIs end up with. Maybe you worry (correctly, in my view) that this sort of
+short-term-focused but powerful agent can be fairly easily turned
+into a dangerous long-term optimizer. [7] Maybe you worry that achieving the necessary long-term goals via
+methods like this, even if do-able, won't be suitably competitive
+with other methods, like just training long-horizon optimizers
+directly. All of these are fair concerns. But I think the point stands that
+short-horizon systems can, in some cases, generate superhuman,
+long-horizon optimization power in a manner that does, in fact, seem
+quite a bit safer than just building an AI with a long-horizon goal
+directly. Not all ways of superhumanly "steering the future into a
+narrow band" are equally scary. [8] That said: overall, even if there are some ways of accomplishing the
+alignment-relevant work we need to (and even: the long-horizon
+alignment-relevant work) without training AIs with long-term goals, I
+think people might well train such AIs anyway. And as I said above, I do
+think that such AIs are more at risk of scheming. My thanks to Daniel Kokotajlo for flagging this point, and the
+corresponding example, to me. ↩︎ See Yudkowsky
+(2022) ,
+point 6 in section A. I won't, here, try to evaluate the merits (and
+problems) of this sort of "pivotal act"-centric framing, except to
+say: I think it shouldn't be taken for granted. ↩︎ For versions of this objection, see Yudkowsky's response to Ngo
+starting around 13:11 here ,
+and his response to Evan Hubinger here . ↩︎ Here I'm thinking, in particular, of Eliezer Yudkowsky and Nate
+Soares. ↩︎ In this sense, it may be best thought of as a succession of
+distinct agents, each optimizing over very short timescales, than as
+a unified agent-over-time. ↩︎ Though note, importantly, that if your supervision failure looks
+like "the AI can convince you to give reward to plans that won't
+actually work," then what you get is plans that look good but which
+won't actually work, rather than plans optimized to lead to AI
+takeover. ↩︎ See e.g. " Optimality is tiger, and agents are its
+teeth ,"
+and Yudkowsky's comments here (around 13:30) about how "the hypothetical planner is only one line
+of outer shell command away from being a Big Scary Thing" – though:
+the wrong "outer shell command" can turn lots of things dangerous,
+and "X powerful thing is dual use" is different from "X powerful
+thing has all the same alignment concerns as Y powerful thing" (see,
+for example, aligned AIs themselves). ↩︎ And not all "bands" are equally "narrow." For example: the
+"band" represented by the state "the drinking water next year is not
+poisoned" is quite a bit "broader" than the "band" represented by
+the state "my company makes a billion dollars by the end of next
+year." ↩︎

@@ -1,0 +1,18 @@
+author: 'Tsvi Benson-Tilsen'
+title: Index of some decision theory posts
+... What this is Index Index of some decision theory
+posts Notation for induction and decision
+theory Desiderata for decision
+theory An inductive setting for decision
+theory Training a universal Garrabrant inductor to predict
+counterfactuals Open problem: very thin logical
+priors What this is Edit: this is now a general index for agent-foundations-related decision
+theory research. It is most-recent-first. I'll add summaries for other posts if anyone wants. Index Modal Combat for games other than the prisoner's dilemma Forum post: https://agentfoundations.org/item?id=1304 Generalizing Foundations of Decision Theory Forum post: https://agentfoundations.org/item?id=1302 Prediction Based Robust Cooperation Forum post: https://agentfoundations.org/item?id=1295 Entangled Equilibria and the Twin Prisoners' Dilemma Forum post: https://agentfoundations.org/item?id=1279 On motivations for MIRI's highly reliable agent design research Forum post: https://agentfoundations.org/item?id=1220 Open problem: very thin logical priors An open problem relevant to decision theory and to understanding bounded
+reasoning: is there a very easily computable prior over logical facts
+that, when updated on the results of computations, performs well in some
+sense? Forum post: https://agentfoundations.org/item?id=1206 postCDT: Decision Theory using post-selected Bayes nets Forum post: https://agentfoundations.org/item?id=1077 Updatelessness and Son of X Forum post: https://agentfoundations.org/item?id=1073 A failed attempt at Updatelessness using Universal Inductors Forum post: https://agentfoundations.org/item?id=1071 Training Garrabrant inductors to predict counterfactuals A proposal for training UGIs to predict action- and
+policy-counterfactuals by learning from the consequences of actions
+taken by similar (“logically previous”) agents. Forum post: https://agentfoundations.org/item?id=1054 Github pdf: https://github.com/tsvibt/public-pdfs/blob/master/decision-theory/training-counterfactuals/main.pdf Desiderata for decision theory A list of desiderata for a theory of optimal decision-making for bounded
+rational agents in general environments. Forum post: https://agentfoundations.org/item?id=1053 Github pdf: https://github.com/tsvibt/public-pdfs/blob/master/decision-theory/desiderata/main.pdf Transitive negotiations with counterfactual agents Forum post: https://agentfoundations.org/item?id=1047 Attacking the grain of truth problem using Bayes-Savage agents Forum post: https://agentfoundations.org/item?id=1046 Notation for induction and decision theory A reference for notation that might be useful for using (universal)
+Garrabrant inductors as models for bounded reasoning, and some notation
+for modelling agents. (Not on the forum because tables.) Github pdf: https://github.com/tsvibt/public-pdfs/blob/master/decision-theory/notation/main.pdf Index of some decision theory posts As advertised. Forum post: https://agentfoundations.org/item?id=1026 Github pdf: https://github.com/tsvibt/public-pdfs/blob/master/decision-theory/index/main.pdf

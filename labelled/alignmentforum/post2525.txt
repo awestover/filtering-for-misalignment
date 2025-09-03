@@ -1,0 +1,1 @@
+The term "belief" is used very differently in Bayesian ML and everyday life. 1) In Bayesian ML, is refers to a distribution over entire world models. 2) In everyday life, it refers to something more like a single proposition. I propose the term "notion" for technical use to describe something like (2).

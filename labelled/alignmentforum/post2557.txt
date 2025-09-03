@@ -1,0 +1,1 @@
+Just a very brief link to a resource that people may not know about: Johns Hopkins Institute for Assured Autonomy newsletter For anybody interested in nearer-term AI safety / assured autonomy issues, I have found this recently-started newsletter to be a useful aggregator of relevant news and articles. (Full disclosure: Much of my work is for the IAA.)

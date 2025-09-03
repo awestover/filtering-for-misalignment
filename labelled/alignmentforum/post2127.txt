@@ -1,0 +1,56 @@
+Spurious counterfactuals (perhaps an easier handle than "the lobian inference issues described in Section 2.1 here, in the Embedded Agency paper ), are important to address because they lead to inference problems. Having a function (or agent) rely on proofs about itself to generate its output immediately introduces Lob's Theorem-related issues -- agents may very well want proofs that their behavior leads to an outcome to determine their actions, but that makes a lot of actions possible to find proofs for. Uncertainty does not help much, but reveals a greater critique: the utility in a counterfactual is not information inferred from our making the decision -- we can't decide if a choice is good just because, in the circumstances we can imagine making that choice, well, it was the right choice, wasn't it? This seems relatively unavoidable for all agents who notice they are competent decision makers, under any level of uncertainty. A smart professor will notice, in the subjunctive case where he slashes the tires on his own car, it must have made a lot of sense, he wouldn't do that for no reason. Perhaps he needed an unimpeachable excuse for not being somewhere he desperately wanted to avoid. But seeing high reward in that case isn't relevant to the counterfactual imagining where he sees, if he slashed his tires right here and now, it would be a massive bummer. I think explicit agent self-pointers resolve this issue. Taking the example from the paper (U being the universe and A being the agent): A :=
+	Spend some time searching for proofs of sentences of the form
+	“[A() = 5 →U() = x] & [A() = 10 →U() = y]” for x,y ∈{0,5,10}.
+	if a proof is found with x > y:
+		return 5
+	else:
+		return 10
+		
+U :=
+	if A() = 10 :
+		return 10
+	if A() = 5 :
+		return 5 We can replace it with (I've added a parameter for "which decision is being made" because that clarifies the intent behind the counterfactual agent change, but obviously this is still a highly simplified view): Situation :: Nonce
+Agent :: Agent -> Situation -> Choice
+Universe :: Agent -> Reward
+
+CounterfactuallyDoing(PriorAgent, CounterfactualSituation, Choice) :=
+	NewAgent := \Agent, Situation -> 
+		if Situation == CounterfactualSituation:
+			return Choice
+		else:
+			return PriorAgent(NewAgent, Situation)
+	return NewAgent
+
+A(Self, Situation == OnlySituation) := 
+	Spend some time searching for proofs of sentences of the form
+	“[U(CounterfactuallyDoing(Self, OnlySituation, 5)) = x] & [U(CounterfactuallyDoing(Self, OnlySituation, 10)) = y]” for x,y ∈{0,5,10}.
+	if a proof is found with x > y:
+		return 5
+	else:
+		return 10
+		
+U(Actor) :=
+	if Actor(Actor, OnlySituation) = 10:
+		return 10
+	if Actor(Actor, OnlySituation) = 5:
+		return 5 Because the proofs are acting over simpler objects, there is no Lobian issue, and the only proofs you can find are the ones with extremely simple reasoning (they operate over constant functions, essentially). And this approach can be chained into arbitrarily deep counterfactual considerations. Consider a simple game where you must make two choices, and if they match, you get a prize corresponding to the scenario you picked. It will have two scenarios, ChooseDesire and GetReward. U(Actor) :=
+	precommitment := Actor(Actor, ChooseDesire)
+	if precommitment ∈{0,5,10} & Actor(Actor, GetReward) = precommitment:
+		return precommitment
+	else:
+		return 0 I submit that any reasonably sane way of constructing the actor in this game, whether defaulting to "can I find a proof I should choose 5" or "shortest proof" or any other proof search, will find basically sane behavior, so long as reflection is done using the CounterfactuallyDoing operator. For instance: A(Self, Situation == ChooseDesire) := 
+	Spend some time searching for proofs of sentences of the form
+	“[U(CounterfactuallyDoing(Self, ChooseDesire, 5)) = x] & [U(CounterfactuallyDoing(Self, ChooseDesire, 10)) = y]” for x,y ∈{0,5,10}.
+	if a proof is found with x > y:
+		return 5
+	else:
+		return 10
+
+A(Self, Situation == GetReward) := 
+	Spend some time searching for proofs of sentences of the form
+	“[U(CounterfactuallyDoing(Self, GetReward, 5)) = x] & [U(CounterfactuallyDoing(Self, GetReward, 10)) = y]” for x,y ∈{0,5,10}.
+	if a proof is found with x > y:
+		return 5
+	else:
+		return 10 I think being robust to otherwise-proof-detail-contingent changes in how the agent is constructed is a quite helpful property. You don't need to use the objects only for proofs, for instance, they could be used in simulations or any other agent-appropriate setting. I do not think the Self parameter being contained inside the quotes of the proof search goal indicates an issue, unless for some reason the proof search process was meant to be static and couldn't search for proofs of dynamic statements. If you're familiar with the notation from clojure, you can imagine it as: `([U(CounterfactuallyDoing(~Self, ... I also think this approach matches our intuition about how counterfactuals work. We imagine ourselves as the same except we're choosing this particular behavior. Surely, in the formal reasoning, there might also be a distinction between the initial agent and the agent within that counterfactual, considering it's present in our own imaginations? It also fixes the smaller but more obvious issue of distinguishing between reasoning-aware counterfactuals and pure counterfactuals. A pure counterfactual shouldn't, either in proof or more sloppy reasoning, make us think a choice is wise only because a wise agent made it. By constructing counterfactual agents we can assert things about their behavior without the reflective interference caused by having that assertion describe the wise agent (except where such a description would be accurate). This approach seems straight-forward, but I was unable to find others discussing it -- I'm not certain this is even still an open problem, or if this approach has a subtle problem I've not been able to notice (I've not taken the time to actually put this into a theorem prover, although it seems extremely efficiently computable, at least in these toy examples). If it is an open problem, and the approach is promising, hopefully this helps resolve some self-proof-related issues moving forward. Hopefully, this also avoids failures-to-reason in important general scenarios, because counterfactuals have a weaker reflective consistency to the original agent, but I think this is somewhat unavoidable, and probably desirable. [Update/Clarification of "failure to reason": in some of the multi-agent scenarios, there will be a lack of coordination if another agent distinguishes between precommitments and "spontaneously" making a choice in mutual-access-to-source-code scenarios. For instance, the mutual-source-code Prisoner's Dilemma with one agent structured similarly to the above, maximizing reward using the CounterfactuallyDo operator, going against MIRI's "cooperate iff that cooperation is what makes the other person cooperate" will defect, because it would prove the CounterfactuallyDo'ing agent would always be giving a ~constant agent to it, and the constant agent wouldn't trigger cooperation, and so it would only see defections and therefore, maximizing the reward, defect itself. I think it's worth explicitly interrogating if there ought to be a distinction between precommitments and determining a decision live. In scenarios where the other agents have your source code, it likely isn't live anyway , so I should be explicit: this resolution to the Lobian issues brought up in Embedded Agency explicitly relies on the idea we should be blind to the difference between reliably making a choice and precommitting to it. In scenarios without mutual source code, this difference is inaccessible, obviously, but I think the case is still strong in mutual visibility cases.]

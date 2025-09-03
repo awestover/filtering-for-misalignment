@@ -1,0 +1,1 @@
+This is a link post for https://aligned.substack.com/p/alignment-mvp I'm writing a sequence of posts on the approach to alignment I'm currently most excited about. This second post argues that instead of trying to solve the alignment problem once and for all, we can succeed with something less ambitious: building a system that allows us to bootstrap better alignment techniques.

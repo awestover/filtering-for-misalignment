@@ -1,0 +1,1 @@
+I am not sure if this paper is flying under the radar for many people, but has anyone read Transcending Scaling Laws with 0.1% Extra Compute ? If so, how do you think it compares to the scaling laws presented by Deepmind's An empirical analysis of compute-optimal large language model training ? Does it make you rethink the importance of dataset size (again)?

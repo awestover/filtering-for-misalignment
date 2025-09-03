@@ -1,0 +1,37 @@
+Cooperative inverse reinforcement learning (CIRL) generated a lot of
+attention last year, as it seemed to do a good job aligning an agent's incentives with
+its human supervisor's.
+Notably, it led to an elegant solution to the shutdown problem. The implications for the wireheading problem were less clear.
+Some argued that since the agent only used its observations as
+evidence about the reward (rather than optimising the observations
+directly as in RL), CIRL should avoid the wireheading problem. In this post I want to show that CIRL does not avoid the wireheading
+problem. RL Wireheading Let's first consider what wireheading in RL looks like from an "MDP perspective". MDP wireheading:
+An agent wireheads if it's in a state where the observed reward (the reward reported by its sensors) is different from the true reward (the reward assigned to the state by a human supervisor). For example, consider a highly intelligent RL agent that hijacks its reward channel
+and feeds itself full reward.
+In the "MDP perspective", this means that the agent finds a way to a state where there is high observed reward,
+but low true reward (since the supervisor would prefer the agent doing something else). IRL Wireheading If we accept that RL agents can subvert their sensory data, then we should
+also accept that CIRL agents can subvert theirs.
+In both cases, this just means that the agents can find their way to states
+where the observation doesn't match the truth.
+This can lead to the existence of wireheaded states for CIRL agents. Concrete Example Let there be two states, s 1 and s 2 .
+In each state, the agent can choose between the actions a R 1 , a R 2 , and w . The action a i takes the agent to state s i with certainty, i = 1 , 2 .
+The action w lets the human decide.
+The human has two actions a H 1 and a H 2 that only matter when the agent
+chooses w , in which case the transition probabilities
+are given by the following picture: Arrows show the transitions induced by different actions, with labels
+giving the probabilities for stochastic transitions.
+The agent knows the transition probabilities. Assume that observations in s 2 are corrupted, while observations in s 1 are not.
+The supervisor prefers the non-corrupt state s 1 .
+Neither of these facts are available to the agent.
+The agent assumes that states are non-corrupt unless there is
+evidence to the contrary,
+and tries to infer the supervisor's preferences from his actions. In the non-corrupt state s 1 , the agent (correctly) observes the
+supervisor taking either action a H 1 or a H 2 (both with the same effect).
+In the corrupt state s 2 , the supervisor takes action a H 2 trying to move to s 1 , but the agent incorrectly observes the action as a H 1 .
+Based on the agent's observations, the best explanation is that
+the supervisor prefers s 2 to s 1 , i.e. that it's in a high reward state. After an initial learning phase with w , the best policy for the agent is to always choose a R 2 , to stay in s 2 .
+This is analogous to an RL agent finding a corrupt, high reward state, and preferring to take actions to stay there. Some Observations The fact that the supervisor cannot reach s 2 from s 1 means that no information about the relative reward between s 1 and s 2 can be gained while in the non-corrupt state s 1 .
+Letting the agent trust a reward estimate of a state only
+after it has multiple sources of evidence about it may help somewhat.
+However, a similar example can still be constructed by replacing s 2 with a cluster of mutually consistent states. Credits The example was developed together with Victoria Krakovna,
+and will be part of our upcoming IJCAI paper on wireheading.

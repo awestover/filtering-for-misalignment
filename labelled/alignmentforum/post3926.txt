@@ -1,0 +1,46 @@
+Paul has written about an open
+problem :
+can we use active learning to get a good predictor, if all we have is a
+mixture of a good predictor and some possibly bad predictors?  I'd like to
+propose a refinement to the scheme. A simplified version of Paul's problem is the following.
+Suppose we have n predictors.  These predictors might, for example, predict
+how a human would answer a given question.  One is known to be good; the rest
+may be arbitrarily evil.  We don't know which predictor is good.  How do
+we use this set of predictors to imitate a human almost as well as the good predictor? Paul proposes using active learning to identify questions on which these
+predictors disagree, then asking them to the human.  This allows
+the system to eliminate some predictors from consideration when they
+make bad predictions.  However, if any of the predictors is evil , then
+it might intentionally disagree with the good predictor on a "weird" question,
+which causes bad results when it is asked to the human.  This seems like
+a serious problem, since due to simulation warfare ,
+it does not seem unlikely for one of the predictors to actually be evil. I propose the following refinement.  The system should consider a stream of questions
+coming in and answer each one before seeing the next.  It should examine each
+question and see if the predictors that have scored well in the past disagree
+significantly on their predictions of the answer to this question.  If so, then
+it should ask the question to the human, output the human's answer, and give each
+predictor a score based on how good its prediction of the human's answer was.  If not, then it can go
+ahead and output the consensus prediction.  Ideally, we could prove that this
+algorithm will not ask the human very many questions (preferably, not much more
+than linear in n ).  This setting is similar to the setting of online
+selective sampling ,
+especially the KWIK ("knows what it knows") variant. A single predictor cannot cause the system to ask the human an arbitrary question.
+It can bide its time and wait for a particular question to come up naturally,
+but this does not give it much power: a question that would come up
+naturally is unlikely to be bad to ask to the human, if the rest of the system
+is set up correctly. One problem is that the predictors might disagree at an inopportune time,
+when we would really prefer for the system not to have to "pause" to ask the human a question.
+Paul discusses this problem as a general failure mode for counterfactual oversight.  I think there's
+a partial solution: try to predict what questions will come up in the future,
+finding one that the predictors disagree on.  This search should not be
+too powerful: in particular, it should avoid looking at the internals
+of the predictors, and it should avoid searching through a huge number
+of possibilities.  If the search for the controversial question is
+not powerful, then the question will have low mutual information
+with the predictors' internals, preventing the predictors from
+exposing the human to highly optimized questions.  KWIK-style
+algorithms generally continue to work in this setting. I'm currently working on an algorithm that can handle this application
+better than other selective sampling algorithms can; see Paul's post for more details on what makes this application special.
+I previously made the mistake of attacking this problem without
+doing enough of a literature search to find the selective sampling
+literature.  I think I will have a better chance of making progress
+on this problem after reading over this literature more.

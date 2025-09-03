@@ -1,0 +1,1 @@
+Blog post by Alex Irpan. The basic summary: In 2015, I made the following forecasts about when AGI could happen. 10% chance by 2045 50% chance by 2050 90% chance by 2070 Now that it’s 2020, I’m updating my forecast to: 10% chance by 2035 50% chance by 2045 90% chance by 2070 The main underlying shifts: more focus on improvements in tools, compute, and unsupervised learning.

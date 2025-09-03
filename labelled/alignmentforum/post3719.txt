@@ -1,0 +1,52 @@
+The idea here is due to Scott Garrabrant. All I did was write it. Let's say a logical induction-based agent is making an infinite sequence
+of decisions, and is using ε -exploration on each decision. There are two desirable criteria, which are somewhat
+in conflict: First, we want there to be enough exporation that traders attempting
+to bet that good strategies would have bad outcomes (and thus prevent
+the good strategies from being tried, so that the bet never gets settled)
+will lose arbitrarily large amounts of money if they try doing that
+every time. This requires that in total, there is an infinite amount
+of exploration. For example, if the agent 2 − n -explores on step n , then it is possible for a sufficiently wealthy malicious trader
+to bet against a good strategy by enough that the agent will avoid
+it every time, without the trader losing all its money, because the
+actions it is discouraging only are taken anyway finitely many times.
+But if the agent ε -explores on step n for some fixed ε > 0 , then this is not possible, because each action is
+taken infinitely many times no matter what any of the traders do,
+so no trader can consistently make some good action appear bad without
+losing all its money. Second, we want there to be sufficiently little exploration that the
+agent does not sacrifice a nontrivial amount of value to it. If actions
+only have short-term effects, then it is enough for the probability
+of exploration to approach 0 as n → ∞ , in order
+for the agent to behave optimally in the limit (if actions can have
+lasting consequences, then this is not enough; for instance, if there
+is an action that destroys all value forever if it is ever taken,
+then that action needs to never be taken; this directly conflicts
+with the first criterion). For example, if the agent ε -explores
+on step n for some fixed ε > 0 , then it never gets any
+closer to acting optimally, but if it 2 − n -explores on step n ,
+then its probability of acting optimally will approach 1 as n → ∞ . Fortunately, there are sequences that converge to 0 but whose sum
+diverges, like 1 n , so it is possible to satisfy both of
+these criteria. However, if there are important differences among
+what the agent should do for different steps, then this might not
+be enough. For example, if the agent 1 n -explores on step n , and it is particularly important what action the agent takes
+on steps that are powers of 2 , then a wealthy malicious trader
+could bet against good actions on every step that is a power of 2 ,
+then on the k th time the malicious trader does this, the agent 2 − k -explores, and the malicious trader will only lose a finite
+amount of money doing this. Thus we should strengthen the first criterion
+to ensure that a wealthy malicious trader cannot bet against a good
+strategy infinitely many times, rather than that it cannot bet against
+a good strategy every time. Thus, for every efficiently computable
+infinite subset X ⊆ N , we want an infinite amount
+of exploration to occur on steps in X , so that no malicious trader
+can bet against a good strategy on every step in X without running
+out of money (we only need to consider efficiently computable subsets
+because only efficiently computable traders participate in the market,
+and they cannot pick out sets that are not efficiently computable). To do this, pick some computable probability distribution p over
+all efficiently computable subsets of N , which does not
+assign probability 0 to any of them. This can be done computably
+by picking a probability distribution over programs that provably
+run in polynomial time. For each efficiently computable set X ⊆ N ,
+we want to explore with probability at least p ( X ) k on the k th element of X . Formally, let X n be 1 k if n is the k th element of X , and 0 if n ∉ X . On
+step n , we explore with probability ∑ X p ( X ) X n .
+Since we explore with probability at least p ( X ) k on the k th element of X , this satisfies the strengthened version
+of the first condition. Since ∑ X p ( X ) = 1 , X n ≤ 1 for every X and n , and X n → 0 as n → ∞ for every X , ∑ X p ( X ) X n → 0 as n → ∞ ,
+so the second condition is also satisfied.

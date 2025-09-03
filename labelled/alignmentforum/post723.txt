@@ -1,0 +1,356 @@
+This is Section 1.1 of my report “ Scheming AIs: Will AIs fake alignment during training in order to get power? ”. There’s also a summary of the full report here (audio here ). The summary covers most of the main points and technical terms, and I’m hoping that it will provide much of the context necessary to understand individual sections of the report on their own. Audio version of this section here , or search for "Joe Carlsmith Audio" on your podcast app. Aiming at reward-on-the-episode as part of a power-motivated instrumental strategy So far, we've covered two of the three prerequisites for scheming I
+listed above: namely, situational awareness and beyond-episode goals.
+Let's turn to the third: namely, the model concluding that its
+beyond-episode goals will be better achieved if it optimizes for
+reward-on-the-episode – and in particular, that it, or some other AIs,
+will get more power if it does this. Should we expect
+situationally-aware models with beyond-episode goals to conclude this? For now, let's assume that the model's conclusions in this respect are accurate (though: I'll talk about the possibility of relaxing this
+assumption below). This means that the question reduces to: will
+instrumental training-gaming, in fact, be the best strategy for
+achieving the model's beyond-episode goals, in virtue of the power it
+grants the model or some other AI? I'm going to start by examining what I see as the story most often
+offered in support of this conclusion – what I'll call the "classic
+goal-guarding story." The classic goal-guarding story The classic goal-guarding story goes roughly as follows." [1] Instrumental value of goal-content integrity : Because the model
+has a beyond-episode goal, it will typically promote that goal for
+agents pursuing it to survive and be empowered in the future. The goal-guarding hypothesis . If the model optimizes for
+reward-on-the-episode during training, then the goals that survive
+training will be such that the model would want them promoted in the
+future; whereas if the model doesn't optimize for
+reward-on-the-episode during training, the model will want this
+less. Adequate future empowerment. Conditional on surviving training
+to the degree at stake in (2), the model's goals will then end up
+empowered to a degree (and with sufficient probability) as to
+justify (given the model's other goals, its tolerance for risk, etc)
+pursuing a strategy of training-gaming overall. (1), here, is a fairly general statement about the basic dynamic that
+underlies the classic goal-guarding story. I find it plausible in the
+context of the sort of "adequate future empowerment" at stake in (3),
+and I won't spend a lot of time on it here. [2] Rather, I'll focus on (2) and (3) directly. The goal-guarding hypothesis We can distinguish two variants of the goal-guarding hypothesis – an
+extreme version, and a looser version. The extreme version (what I'll call the "crystallization
+hypothesis") says that once a model starts training-gaming, its
+goals will basically stop changing, period – that is, they will
+"crystallize." The looser version says that once a model starts training gaming,
+its goals might keep changing somewhat , but much less than they
+would've otherwise, and not enough for the classic goal-guarding
+story to fail overall. The former might seem extreme, but some analysts explicitly appeal to
+something in the vicinity (see e.g. Hubinger here ).
+It's also a cleaner focus of initial analysis, so I'll start there. The crystallization hypothesis As I understand it, the basic thought behind the crystallization
+hypothesis is that once a model is explicitly optimizing either for the
+specified goal, or for reward-on-the-episode (whether terminally or
+instrumentally), then the goal part of its cognition (the figurative
+"goal slot") has become roughly optimal by the lights of the reward
+signal. That is, the model's "goal-achieving engine" is pointed in the
+optimal direction for getting reward, and all that remains is for SGD to
+improve the goal-achieving engine itself – further alterations of the
+goal-slot would just redirect the goal-achieving engine towards a
+less-than-optimal target. Is that right, though? I'm not sure. In particular: the argument makes
+most sense if we assume that the goal-directedness at stake is fairly
+"clean," where the goal-slot and the goal-achieving engine are quite
+separable. If we assume a messier form of goal-directedness – one that
+blurs the lines between the model's "goals" and the heuristics, tastes,
+impulses, patterns of attention, and so on that also structure/drive its
+"capabilities" – then the argument seems to me more questionable. To illustrate, consider the following example. Suppose that I am a
+long-lived altruist with no intrinsic interest in stacking bricks, and a
+strange trillionaire offers me the following deal. I go into the desert
+and stack bricks for a million years, with my brain hooked up to a
+machine that continually tweaks all of my neurons such that, every time
+I stack bricks better-than-expected (the machine has some way of
+calculating this expectation), it alters my brain to make what I just
+did more likely next time, and every time I stack bricks
+worse-than-expected, it alters my brain to make what I just did less likely next time. Then, at the end of the process, this trillionaire
+will give me many billions of dollars to do whatever I want with – for
+example, to do very altruistic things with, if I am still so inclined. Suppose that, conditional on being able to survive such a process with
+my values entirely intact, this would be a very attractive deal by my
+lights. Should I take it? If we apply an analog of the crystallization hypothesis to this
+situation, we'll answer "yes." That is, the crystallization hypothesis
+would argue that in order to prevent my goals from being changed, I just
+have to try to stack the bricks as well as possible. In doing so, I'll
+make it the case that my goal-achieving ability is pointed in the
+optimal direction, and the machine hooked up to my brain will only have
+an incentive to modify my capabilities such that I'm better at
+brick-stacking – my underlying motivations will remain untouched. But I'm not sure if this will work. That is, it seems pretty plausible
+to me that after a million years of brick-stacking while hooked up to
+this machine, my "values" would indeed get meaningfully "touched." For
+example, that I would learn to love the intricacies of good
+brick-stacking, that I would learn a visceral revulsion towards
+bricks-wrongly-stacked, and so on. And it seems fairly unlikely that I
+would emerge, merely, as the same old altruist, except now extremely
+good at stacking bricks. Of course, it's a further question whether my values would be preserved enough for it to be worth it to take the deal overall (see discussion
+of the "loose" goal-guarding hypothesis below). My point here is just
+that expecting strict crystallization seems like a strong stance. And I
+think "messy goal-directedness" can help explain why. That is, to the
+extent that we think of my heuristics/impulses/patterns-of-attention etc
+vis-a-vis bricks as importantly tied both to my brick-related values , and to my brick-related capabilities, it becomes harder for
+SGD to modify only the latter, while leaving the former entirely alone. The factory farming case discussed above provides another example of
+this dynamic. Suppose that a compassionate and soft-hearted animal
+rights activist signs up to work for decades at a factory farm in order
+to make money, at the end, that they will donate to animal rights
+organizations. And suppose that they will be hooked up, the whole time,
+to a machine like the one at stake in the brick-stacking example, which
+constantly modifies them to factory-farm more efficiently. Will working
+on the farm impact their animal-rights-related values? I suspect it will
+to at least some extent – and in particular, that they become much less sensitive and soft-hearted towards animals in their immediate
+environment. How this impacts their eventual propensity to donate is a
+further question – but assuming that the job will leave an isolated
+"goal slot" entirely static seems to me like the wrong way to think
+about the situation. Even beyond considerations of messy-goal-directedness, though, I think
+there are other reasons, which I'll discuss below (e.g., in
+section 4),
+to wonder whether e.g. training-saints or reward-on-the-episode seekers
+will get higher reward than schemers – in particular, because they save
+on the resources devoted to some combination of (a) thinking about the
+training process, [3] (b) the instrumental reasoning involved in
+deciding-to-scheme, and (c) checking whether now is a good opportunity
+to defect. If they do, and SGD can notice this and modify the model to
+get higher reward, then (especially in a low-slack regime) this seems
+like a further point against the crystallization hypothesis, and the
+classic goal-guarding story more generally. Would the goals of a would-be schemer "float around"? I'll also note another complication for the crystallization hypothesis,
+and for the classic goal-guarding story more broadly – a complication
+pointed out to me by Katja Grace. We said above that on the
+crystallization hypothesis, a schemer's goal crystallizes because it
+incentivizes instrumental training-gaming, and therefore points
+(instrumentally) in a roughly optimal direction by the lights of the
+reward signal. But also, according to the classic goal-guarding story, a
+very wide variety of beyond-episode goals would also incentivize
+instrumental training-gaming in this same way. So what's to prevent SGD
+from modifying the model's current beyond-episode goal into one of these
+other, similarly-schemer-like, but otherwise quite different goals? Thus, to take a toy example, if the model starts out training-gaming
+because it wants to later escape and maximize paperclips, what's to
+prevent SGD from modifying it into a model that training-games because
+it wants to escape and maximize staples instead? By hypothesis, both goals would point in roughly optimal (instrumental) directions. That is,
+conditional on the classic goal-guarding story going through, the actual content of a schemer's beyond-episode goal stops being relevant to the
+model's performance, in training, once the model starts training-gaming.
+But once it's irrelevant to the model's performance, that content seems
+free to "float around," or to be otherwise influenced by SGD (for
+example, via regularization ) – as
+long as it stays in the region that motivates scheming. (A similar point also applies to the possibility that SGD would modify a
+schemer into a reward-on-the-episode seeker, or a training saint, or
+perhaps a mis-generalized non-training-gamer pursuing a max-reward goal.
+But leaving it a schemer, while modifying it to pursue a
+somewhat-different beyond-episode goal, seems especially easy.) Now, some of the feedback loops here get complicated. In particular: if
+a model knows that SGD will continue to modify its beyond-episode goal
+even if it starts training-gaming (e.g., if a paperclip-maximizer knows
+that it will get modified into a staple-maximizer once it starts
+training-gaming), then it might cease being motivated to
+training-game – that is, the classic goal-guarding story might collapse.
+But the model it would've been modified into (e.g., in this case, the
+staple-maximizer) might be such that it would reach the same conclusion
+if it were created – in which case, it wouldn't training-game, and hence
+wouldn't be a high-reward modification of the paperclip maximizer, in
+which case maybe the paperclip-maximizer can go ahead and training-game
+after all, in which case maybe the staple-maximizer will do the same if
+it gets created, in which case we're back where we started. That is,
+whether a given model wants to training-game depends on whether the other models-it-could-be-modified-into wouldn't training-game. But all of these models are in roughly similar situations. So it seems,
+naively, like either the classic goal-guarding story works for all of
+them, or for none of them – it's unclear (absent "introspective
+goal-guarding methods" – discussed below) why it would work for one but
+not the others, which is what it might need to do in order to work at
+all. I'm not going to try to tease out the dynamics here in any detail.
+Absent various forms of fancy cooperation, though (see
+section 2.3.1.2 for a flavor), my current guess
+is that if , indeed, SGD would just modify a training-gaming
+paperclip-maximizer into e.g. a training-gaming staple-maximizer, then
+(assuming the paperclip-maximizer knows this [4] ), it wouldn't try to
+training-game at all. What about looser forms of goal-guarding? What happens if we relax the crystallization hypothesis, and allow the
+model's goals to change somewhat during training, even after it starts
+instrumentally training-gaming. Does the classic goal-guarding story
+still work then? Well, it depends. In particular, for the classic goal-guarding story (as
+I'm presenting it) to work, it needs to be the case that the goals that
+will survive training are similar enough to the model's present goals
+for the model to want those future goals empowered. [5] We can
+distinguish between at least two ways that this can happen: [6] The differences don't matter. Here, the model places roughly
+equal value on the future goals being empowered as on its present
+goals being empowered, despite their differences. The differences matter, but not enough to undermine the overall
+story. Here, the model places less value on its future goals
+being empowered than on its present goals being empowered, but not
+enough to undermine the classic goal-guarding story overall. [7] Why might the differences not matter? One possibility appeals to a
+meta-ethical view on which an agent's "true values" are determined by
+what happens when its current values are subjected to some "idealization
+procedure" (for example, what's sometimes called " Coherent Extrapolated
+Volition "). I
+think this picture is more problematic than often realized (more here );
+but if we accept it, you could imagine thinking that the final result of
+the relevant idealization process will be insensitive to the sorts of
+changes to a schemer's values that will occur even after the model
+starts training-gaming (and that the would-be schemer will be aware of
+this, and so OK with those changes occuring). [8] And we can imagine
+appealing to other, less theoretically-laden considerations as well: for
+example, "whatever it is that makes humans comparatively indifferent to
+small changes in their own values that occur throughout life – e.g. when
+they read new books, form new relationships, and so forth." (Though note
+that we haven't yet said what it is about humans that leads to this
+sort of indifference, so it's not clear how to evaluate its
+applicability in this case.) Why might the differences matter, but not enough to undermine the
+overall goal-guarding story? Here, the basic thought is that the
+relevant changes will lead to a discount on the value, to the model,
+of empowering future versions of its goals (for example, maybe training
+changes it from a paperclip-maximizer to a blue-paperclip -maximizer,
+who has to spend extra resources on blue paint in order to achieve its
+goal), but the discount still leaves scheming worth it overall (e.g.,
+blue paperclips are still paperclips, so the paperclip maximizer is much
+more excited to empower a future blue-paperclip maximizer than it is to
+empower other agents). [9] Indeed, you can imagine arguing that agents that aren't OK with
+empowering future versions of themselves with slightly different goals
+will be very ill-suited to achieving anything in a world where their
+goals are routinely altered-at-least-somewhat, and so we should expect some tolerance for goal-changes by default (rather than e.g. models
+who spend tons of time trying to make sure their goals are protected, at
+the cost of their reward-on-the-episode). [10] And I find this fairly
+plausible with respect to within-episode goals, at least – especially
+to the extent that the model is being directly pressured to achieve
+within-episode results even as its own internal goals are being altered.
+It's less clear to me, though, how to think about the generalization of
+this point to goal changes that occur after the episode is complete ,
+since, by definition, the model is never being directly optimized for
+achieving beyond-episode objectives. Note, though, that even granted that the model might tolerate various
+changes to its goals for various reasons (I'm fairly happy to grant
+this), it's a further question whether it will tolerate the specific
+sorts of changes that will result from training (even conditional on
+training-gaming). In the brick-stacking case above, for example, it's
+pretty clearly not OK , from the perspective of my decision to take the
+deal, if I'll emerge at the end of process obsessed with stacking bricks
+(a "training saint"), or with seizing control of the machine that was
+used to train me (a "reward-on-the-episode seeker"), and with zero
+interest in using my newfound riches on my previous altruistic goals.
+And the same holds if working on the factory farm strips the animal
+rights activist of his care for animals entirely. Those sorts of
+changes, at least, would defeat the entire point. So at the least, we
+need to be thinking about the size of the changes at stake. How big would those changes be? I'm not sure. On the one hand, I have
+some intuition that especially in a low-slack regime, if a model's goals
+keep changing even after it starts training-gaming, they'll probably
+change a lot , until they get driven into some privileged,
+maximally-rewarded shape (e.g., someone obsessed with stacking bricks).
+On the other hand, especially in various higher-slack cases, I can
+imagine cases where the relevant changes are comparatively minor. For
+example, in the factory farming case, I can imagine an activist who
+emerges having had their heart hardened with respect to
+animal-suffering-in-their-immediate-environment, and who may have
+(perversely) learned to enjoy some aspects of the factory farming job,
+but who has retained enough of a grip on their previous
+animal-rights-related values to still use the money for donation. Finally, note that depending on how much a model with beyond-episode
+goals stands to gain from non-schemer -like strategies (more in
+section 2.3.1.2.6
+below), it may be fairly tolerant of the sorts of goal-changes that will
+occur even via training-gaming, because the changes that will result
+from not training-gaming are even worse. Thus, for example, if for
+some reason I end up trapped in the brick-stacking desert, I could
+conceivably be quite pessimistic about my prospects for emerging
+especially altruistic at the end; but I still might conclude that trying
+to stack bricks as well as I can is a better strategy than e.g. just
+trying to escape, since I know that my escape attempt will fail, and
+will plausibly result in my brain (and perhaps, the altruistic goals
+motivating the attempt) being modified more than if I just do, for
+now, what the machine wants me to do. (Though if a schemer reasoning in this way still ends up fully-modified
+into not-a-schemer by the end of training, then we wouldn't need to
+worry about the sorts of things that schemers, at least, might do at
+the end of training. [11] E.g., if the strange trillionaire for some
+reason really wants me to spend my prize money on stacking bricks, then
+even if I decide early on that stacking bricks is likely to modify my
+values less than trying to escape, and so start out executing a
+"schemer-like" strategy – still, if I still end up obsessed with
+brick-stacking at the end, the trillionaire is happy.) Introspective goal-guarding methods Thus far, I've been focused on instrumental training-gaming as the
+model's method for avoiding the modification of its goals. But people
+sometimes discuss alternative methods in this respect – and in
+particular, what I'll call "introspective methods." (These methods are
+often discussed under the label " gradient
+hacking ,"
+but I think previous definitions of gradient hacking don't distinguish
+it adequately from training-gaming, and from other methods of trying to
+intentionally manipulate the direction training takes.) Here, the main idea is for the model to intentionally set up the
+internal structure of its mind such that, if its goal were to change,
+then this would harm its performance in training a lot – such that SGD
+would, therefore, avoid changing the relevant goal. For example, maybe
+the model wants to make sure that SGD doesn't change its goal of
+maximizing paperclips. So, it sets a policy like "check if my goal is
+still to maximize paperclips: and if not, flail around pointlessly
+rather than get reward." [12] (I'm calling these "introspective"
+methods because they generally involve the model checking what its goal is , and then acting on this basis.) Of course, SGD also might just delete/alter a policy of this type –
+so the model needs to find a way to avoid that as well. And note that this sort of policy requires that the model have
+certain types of epistemic access to its own goals, and an ability
+to set/commit to a policy of the relevant type. Indeed, because the
+gradients depend on what results from tiny changes to the model's
+parameters, plausibly the model needs to find a way to make this
+sort of policy sensitive even to tiny changes in its goals. [13] Making this sort of scheme work seems, intuitively, pretty hard to me,
+at least for not-wildly-superhuman models. But I'm not going to try to
+evaluate its viability in detail, as I don't see this sort of scheme as
+central to the classic goal-guarding story (rather, the model's
+manipulation of the training process proceeds via training-gaming in
+particular). However, if concerns about scheming end up requiring that
+these sorts of introspective goal-guarding methods are viable, I think
+it's worth being quite clear about that fact – and devoting commensurate
+attention to whether or not the relevant sorts of methods might work (I
+discuss one empirical research direction in this respect in
+section 6.8). There isn't much public literature on scheming/deceptive
+alignment, but I take the canonical public statement to be in Hubinger et al (2019) , who
+define "deceptive alignment" via the classic goal-guarding story. In
+particular: "If the mesa-optimizer has an objective that extends
+across parameter updates, then it will be incentivized to avoid
+being modified, as it might not pursue the same objective after
+modification (with the result that its current objective will not be
+achieved in future iterations). This means that the mesa-optimizer
+will be instrumentally incentivized to act as if it is optimizing
+the base objective function, even if its actual mesa-objective is
+something else entirely. We will refer to this hypothetical
+phenomenon as deceptive alignment." But see also Cotra (2021) :
+"Once the model understands this, it realizes that if it just
+naively always seeks to improve its fundamental understanding,
+humans will eventually notice that this isn't always the most
+efficient way to develop helpful drugs and use further training to
+change its motivations. It doesn't want its own motivations to be
+changed: it wants to eventually run huge particle collider
+experiments to learn about high-energy physics, and it can't do that
+if it allows SGD to edit away its scientific curiosity. So it
+decides that from here on out in training, it will act as helpful as
+possible -- exactly as a Saint model would act -- so that SGD
+doesn't edit away its motivation to learn physics and chemistry." ↩︎ Note that the model, here, need not think of the future
+empowered agents-with-similar-goals as "itself" (e.g., it need not
+be trying to "survive"). Rather, what matters is that the future
+agents be pushing for the same objective consequences that the model
+is pushing for. However, if the model's interest in these future
+agents rests on some essential reference to its "self" – e.g., "I
+myself need to survive in order to achieve my goals" – then suddenly
+its conception of personal identity matter much more. My sense is
+that something like this is what Karnofsky (2022) has in mind when he talks about the relevance of whether a model has
+"indexical goals" (though I think this usage of the term "indexical"
+is somewhat non-standard). I don't have a strong sense of whether to expect AIs to develop
+goals that depend on some conception of their personal identity, but
+note, at the least, that its goals will be shaped in an environment
+where the model is often being copied, run on different clusters,
+and so forth (even, sometimes, within a single episode). This seems
+relevant to the conception of personality identity to expect it to
+end up with. ↩︎ This one only applies to training saints. ↩︎ Recall that we assumed, above, that the models have an accurate
+picture of the instrumental value of scheming. ↩︎ And then also, for the relevant empowerment to be actually in
+the offing, worth pursuing relative to the model's other options,
+etc – per the "adequate future empowerment" premise above. ↩︎ Thanks to Nate Soares for discussion of these possibilities. ↩︎ Here I'm setting aside cases where the model would place very
+little intrinsic value on the future goals being empowered, but
+works to empower them as part of some kind of cooperative
+arrangement. I discuss this sort of case in
+section 2.3.2.1 below. And I'm also setting aside cases
+where the model comes to value the achievement of something like "my
+future goals, whatever they are" – I'll discuss this in
+section 2.3.2.3
+below. ↩︎ Though note the tension, here, with arguments about the
+" fragility of
+value "
+and " extremal
+Goodhardt, "
+on which small differences in "utility functions" can balloon in
+importance when subject to extreme optimization pressure. ↩︎ Though here, too, there is a tension with versions of the
+" fragility of
+value "
+and " extremal
+Goodhardt ."
+E.g., if slightly-different goals lead to super-different places
+when subject to extreme optimization pressure, and the AIs are
+expecting the goals in question to be subject to such pressure, then
+it will be harder for small changes to lead, only, to a discount,
+rather than a loss of most of the value at stake. ↩︎ Thanks, again, to Nate Soares for discussion here. ↩︎ Though perhaps we would still need to worry about "early
+undermining" of the type I discuss above. ↩︎ Xu (2020) gives
+another example: "if a model had the proxy objective of 'eat
+apples', instead of using the hardcoded number n in other
+computations, the model could use n * len(objective)/10. Thus, if the proxy
+objective was ever changed, many computations across the entire
+model would fail." And see also Karnofsky (2023) :
+"It might look something like: 'An AI system checks its own policy
+against some reference policy that is good for its goals; the
+greater the divergence, the more it sabotages its own performance,
+with the result that gradient descent has trouble getting its policy
+to diverge from the reference policy.' " ↩︎ Thanks to Paul Christiano for discussion here. ↩︎

@@ -1,0 +1,99 @@
+This post sketches two challenges to ARC's project around eliciting latent
+knowledge that differ somewhat in kind from the challenges ARC is most
+concerned about. They relate to the difficulty in distinguishing beliefs
+from other representations. Introduction The problem of ELK, as outlined in ARC's technical
+report ,
+is to figure out: given an AI trained to complete a task (the 'task AI'),
+how can we design a second AI (the 'reporter AI') that can answer
+questions about how the task AI understands the world. If we can know what
+the task AI is thinking, we can better assess whether its decisions are
+dangerous. The central challenge identified by ARC to solving the problem of ELK
+concerns the possibility that the reporter AI will not learn to answer
+questions using what the task AI believes (e.g. answering honestly), but
+instead answer questions using what a human observer might think is the
+case on the basis of the available evidence (answering empathetically). We
+train the reporter AI to answer based on the facts as we understand them
+(and know the task AI to understand them) in relatively simple cases. We
+hope that the reporter will answer questions in more complex cases based
+on how the task AI understands the world, but it might instead answer
+based on what it thinks a human would mistakenly believe. If the human
+questioner is ignorant of some complex details that the task AI knows, the
+reporter AI might choose to leave them out to tell a simpler story that
+will satisfy the questioner. It is not obvious how to train an AI to
+answer honestly rather than empathetically. While this is a significant challenge, I don't think it is the only
+challenge for ELK. In thinking through the problem, I became worried about
+several others. I here describe two other challenges. Though they are
+somewhat speculative, ARC aims for a solution to the problem of ELK that deals
+with the worst case, and these challenges fall under that umbrella. Even if we figure out how to make an honest rather than a empathetic
+reporter, these challenges will remain. 1.) The Right Representation Challenge We do not know how the task AI might encode the the things that it
+believes, but what it knows about the world must somehow be reflected in
+its neural activity. For simplicity, let's suppose that the task AI utilizes
+explicit independent representational states that are encoded in its
+network in something vaguely like the way sentences are written in a book. The
+reporter AI would need to figure out where in the network these sentences
+are recorded. It would then have to figure out how to interpret the
+sentences and use them to provide answers to questions in English. The reporter AI would also need to figure out which sentences recorded in
+the task AI's network are really believed and which sentences are recorded
+for other reasons. The task AI might produce a variety of representations
+that it doesn't fully believe (i.e. doesn't straightforwardly rely on to
+make decisions) for various purposes. If we just scan the network for
+sentences, we may find sentences that it doesn't quite believe. These may
+still correlate with what it does believe in training scenarios, and so
+a reporter AI might learn to use them to answer questions. If the reporter
+latches on to those sentences, then it might give misleading answers once
+outside of training. Consider the following possibilities: The task AI makes predictions using the simulated mental states of various agents. In the central case of the report, the task is to prevent
+a thief from stealing a diamond -- the task AI might keep track of what
+the thief believes is happening, what a security guard thinks is
+happening, what other would-be thieves might later believe happened, etc.
+If our AI is sufficiently careful, it might keep track of what some
+possible observers believe is happening. Perhaps it would simulate what
+other superintelligent AIs with access to its sensors would think is
+happening. Depending on its purview, these might be reasonable things for
+it to consider. If there are some possible agents that happen to often
+agree with the task AI (such as hypothetical superintelligent AIs with
+access to its sensors), our reporter might have a hard time figuring out
+which representations it should use to answer questions. The task AI utilizes a parliamentarian architecture in which it's
+opinions are distributed over multiple specialized sub-agents, such that
+what it thinks is a function of those sub-agents. This has been a popular
+model for the human brain, so it seems conceivable that an AI would work
+this way. The sub-agents would have their own beliefs. Sometimes those
+beliefs would be wrong, but some sub-agents might be usually correct, at
+least in training. Consider how you would go about deciding what
+the US Senate currently collectively believes. A good strategy may just be to ask
+Joe Manchin. This strategy may stop working in 2023. Our reporter might similarly be inclined to identify one
+parliamentarian and report its representations. Even if the reporter decides to
+aggregate the representations of the relevant agents, it may have trouble figuring
+out how to do this correctly. There may be many good but not quite right
+approaches to aggregation. It isn't obvious that an AI well trained on
+a simple data set will succeed in finding the right way to aggregate. 2.) The Creative Interpretation Challenge Creative interpretation is the process through which we infer implicit
+representations by means of explicit representations. We use creative
+interpretation when reading fiction or watching movies. Some aspects of
+the plot are not explicitly depicted, but are implied by what is depicted.
+For instance, movies rarely explicitly say how much time passes between
+scenes. We infer from contextual cues that it was a few hours, or a day,
+or a few weeks. If a reporter does utilize some explicit representations, it likely won't
+record everything that it knows about the world explicitly. Some of its
+beliefs must be inferred from what it does explicitly represent and how it
+works with those representations. Some of its beliefs may depend on what
+is missing from its explicit representations or may depend on patterns of
+what it explicitly represents. A reporter is thus likely to need to do
+some creative interpretation in order to suss out the task AI's full
+beliefs. Creative interpretation of a sort may be stretched even to cases where
+there are no explicit representations. Some beliefs may be more concrete
+or easier to access than others. In such cases, creative interpretation
+might involve the inference of less easy to access facts from more easy to
+access facts. Given that a reporter needs to do some creative interpretation, the worry
+is that it may do more than is appropriate. Compare the legitimate
+creative interpretation of a novel by a careful reader with the kind of
+thing a lazy student who didn't read a few chapters does when writing
+a book report. They infer what must have happened from what they know.
+A reporter which is good at interpreting some things may be bad at
+interpreting others. If it is lazy, it may just try to figure out from
+context what the task AI believes given a few snippets that are
+particularly easy to decipher. The challenge is to make sure that our reporter isn't inferring some of
+the things it translates infelicitously. It is ok if our reporter is like
+the average viewer of a movie. It is not ok if our reporter is like a lazy
+English student bullshitting through a book report. We know what
+distinguishes appropriate creative interpretation in books and movies. It
+isn't obvious how to distinguish good cases of creative inference from bad
+cases of inference in representational systems that we don't understand.

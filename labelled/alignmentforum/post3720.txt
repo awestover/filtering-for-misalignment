@@ -1,0 +1,34 @@
+In the definition of a logical inductor, the deductive process is
+required to be computable. This, of course, does not allow the logical
+inductor to use randomness, or predict uncomputable sequences. The
+way traders were defined in the logical induction paper , this was
+necessary, because the traders were not given access to the output
+of the deductive process. To fix this, a trading strategy for day n should be redefined as
+a function that takes in the output of the deductive process on day n − 1 as its input, and outputs what the logical induction paper
+defines as a trading strategy for day n ; that is, an affine combination
+of the form c + ξ 1 ϕ 1 + . . . + ξ k ϕ k , where ϕ 1 , . . . , ϕ k are sentences, ξ 1 , . . . , ξ k are expressible features of
+rank ≤ n , and c = − ∑ i ξ i ϕ ∗ n i . A trader is
+a function which takes in n and outputs a trading strategy for
+day n . By Currying, a trader can be seen as a function that takes
+in a number n and a list of sentences given by the deductive process,
+and outputs an expressible feature combination as above. We can say
+that a trader is efficiently computable if this function is computable
+in time polynomial in n plus the total length of the sentences
+output by the deductive process. The definition of exploitation would
+be modified in the natural way, and there is also a natural way to
+modify the logical induction algorithm, which will satisfy the logical
+induction criterion. As an example, suppose a logical inductor is given access to a sensor
+that regularly produces bits based on what it observes in the environment.
+We can represent the data from the sensor with an additional unary
+predicate S that we add to the language, such that S ( n ) is true iff the n th bit provided by the sensor is a 1 (this
+assumes that we're working in a theory that can interpret arithmetic,
+so that `` n '' can be expressed in the language). The deductive
+process should output S ( n ) or ¬ S ( n ) on day n (and also can output consequences that it can deduce from
+the values of the bits it has seen so far). Or, if the logical inductor
+gets access to more empirical information or random bits as time goes
+on, there could be an increasing function f such that the deductive
+process outputs the truth values of S ( f ( n ) ) , . . . , S ( f ( n + 1 ) − 1 ) on day n . Note that in this situation, the deductive process is
+computable as a function of the bitstream given by the sensor, so
+the traders may as well take in as input only the bits from the sensor
+that the deductive process has seen by day n − 1 , rather than every
+sentence produced by the deductive process. This seems to be similar to what Vadim was doing in section 3 of this paper , except that that paper moved to a continuous setting, did not deal with computability, and abandoned predicting theorems as a goal.

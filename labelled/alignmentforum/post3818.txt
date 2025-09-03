@@ -1,0 +1,319 @@
+Modal Combat for arbitrary games Modal combat has, as far as I know, only been studied in the context
+of the prisoner's dilemma, but it can also be used for other games.
+The definition of modal agent for an arbitrary game will be similar
+to the definition of modal agent for the prisoner's dilemma given
+in Robust Cooperation in the Prisoner's Dilemma , except that since
+different players can have different sets of available actions, a
+modal agent must know which position it is playing in, and since players
+can have more than two available actions, multiple formulas will be
+needed to express what action the agent takes. Formally, let G be a game with players 1 , . . . , n , where each player i has a set
+of available actions A i = { a 1 i , . . . , a m i i } ( m i = | A i | ), and for each player i , the function U i : A 1 × . . . × A n → R describes
+the payoff for player i for each possible combination of actions.
+A modal agent X for G of player type i and rank k ≥ 0 consists of a finite sequence of triples { ( t j , Y j , a s j t j ) } j ∈ { 1 , . . . , N } ,
+where t j ∈ { 1 , . . . , n } ∖ { i } , Y j is either X or a modal agent of player type i and rank < k , and s j ∈ { 1 , . . . , m t j } , together with m i fully modalized formulas φ ℓ ( p 1 , . . . , p N ) such that Godel-Lob logic proves that exactly one of φ 1 , . . . , φ m i holds. By definition, in a game played by modal agents Z 1 , . . . , Z i − 1 , X , Z i + 1 , . . . , Z n ,
+where Z j is of player type j , X takes action a ℓ i (an event denoted as [ X ( Z 1 , . . . , Z n ) = a ℓ i ] )
+iff φ ℓ ( [ Z t 1 ( Z 1 , . . . , Z i − 1 , Y 1 , Z i + 1 , . . . , Z n ) = a s 1 t 1 ] , . . . , [ Z t N ( Z 1 , . . . , Z i − 1 , Y N , Z i + 1 , . . . , Z n ) = a s N t N ] ) holds. (We could also allow modal agents to consider what happens
+if players other than themselves are replaced by modal agents of lower
+rank. Making this change would not affect anything in this post, and
+I didn't allow for that mainly because the definition is already a
+mouthful and I didn't want it to get any worse). The modal combat
+version of G is the game in which each player i submits a modal
+agent for G of player type i , and gets the payoff that their
+agent does when the modal agents play G with each other. A strong Nash equilibrium is a Nash equilibrium in which there is
+no non-empty coalition of players that could achieve a Pareto improvement
+for themselves (not including players outside the coalition) by switching
+strategies, while the strategies of the other players are held fixed.
+(Note: "Pareto improvement" is ambiguous as to whether it requires
+at least one person to become strictly better off while everyone stays
+at least as well off, or requires everyone to become strictly better
+off. Everything in this post should make sense using either definition).
+The prisoner's dilemma is a famous game in which there is no strong
+Nash equilibrium, since the only Nash equilibrium is for both players
+to defect, but the coalition consisting of both players could achieve
+a Pareto improvement by both cooperating instead. The modal combat
+version of the prisoner's dilemma, in which each player submits a
+modal agent to play on their behalf, does have strong Nash equilibria
+(for instance, one player using FairBot while the other uses PrudentBot),
+and this is part of what makes modal combat appealing. Since the presence
+of strong Nash equilibria in the modal combat version of the prisoner's
+dilemma is a selling point for modal combat, a natural question is
+whether or not all modal combat games have strong Nash equilibria.
+The answer is no. A natural followup question is whether or not all
+modal combat games at least have Pareto optimal Nash equilibria (equivalent
+to strong Nash equilibrium for 2-player games). The answer is still
+no, but in the second section of this post, I'll consider a better
+version of the question to which the answer is either "no" or
+"it's complicated", and I haven't yet figured out which. Let's
+run through a few examples. In matching pennies, there are two players, each of which can play H or T . If both players do the same thing, then player 1 wins,
+and if they do opposite things, then player 2 wins. This is a zero-sum
+game, and hence so is its modal combat version. In two-player zero-sum
+games, every Nash equilibrium is a strong Nash equilibrium. However, Theorem 1:
+In the modal combat version of matching pennies, for any strategy
+(i.e. probability distribution over modal agents) for either player,
+there is a strategy for the other player that gets their probability
+of victory arbitrarily close to 1 . Consequently, there is no Nash
+equilibrium. Proof:
+Lemma: For any finite set of modal agents of one player type, there
+is a modal agent of the other player type that wins against all of
+them. Lemma ⟹ Theorem 1: Since there are only countably many modal
+agents to choose from, for any mixed strategy, there must be a finite
+set of modal agents such that the probability of playing an agent
+from the set exceeds 1 − ε . The other player can play a
+modal agent that defeats all of these, and thus wins with probability
+greater than 1 − ε . Thus a Nash equilibrium would have
+to allow both players to win with probability 1 , which is impossible. Sublemma: In the Kripke frame with worlds { w n | n ∈ N } such that w n is accessible to w m iff n < m , the behavior
+of a modal agent must be eventually constant, no matter how the other
+player behaves in each world. Sublemma ⟹ Lemma: Consider the agent PerseveranceBot, which,
+in w n + 1 , takes the action that would defeat what its opponent
+did in w n . PerseveranceBot is not a modal agent, but if it plays
+against a modal agent, then its opponent, and consequently PerseveranceBot,
+will behave in a way that is eventually constant. Thus, for any finite
+set of modal agents, there is some N such that against any of the
+agents in the set, PerseveranceBot behaves the same in w n and w m whenever n , m ≥ N . Let N PerseveranceBot be the agent
+which, in w n + 1 , takes the action that would defeat what its
+opponent did in w min ( n , N ) . N PerseveranceBot can
+be implemented as a modal agent, and behaves identically to PerseveranceBot
+against its finite set of opponents, thus defeating all of them. Proof of Sublemma: If φ is any formula, then the truth value
+of □ φ in w n can only change at most once as n increases, since if w n ⊨ ¬ □ φ , then w k ⊨ ¬ φ for some k < n , and hence w m ⊨ ¬ □ φ for all m > n . The behavior of a modal agent is given by some fully modalized
+formula (in terms of atomic formulas about its opponent's behavior).
+Since the formula is fully modalized, it is a Boolean combination
+of formulas of the form □ φ , and thus can only change
+truth-values finitely many times as n increases. □ It's clear what the problem is here: although the players can use
+randomness to select the modal agent they use, the modal agents themselves
+are deterministic. If a modal agent was allowed to randomize its move,
+it could play the Nash equilibrium for matching pennies (that is,
+equal probabilities of H and T ), and playing this modal agent
+would be a Nash equilibrium (and hence a strong Nash equilibrium)
+in the modal combat version of the game. This will be formalized in
+the second section of this post. For a different example, which does not relate to mixed strategies,
+consider the game in which there are three pirates trying to decide
+how to divide ten gold coins between them. Each pirate proposes a
+way to divide the treasure, and if two of the pirates propose the
+same division of the treasure, the treasure is divided in the manner
+they propose (if no two pirates propose the same division of treasure,
+the treasure is dumped overboard). This game has no strong Nash equilibrium,
+because no matter what each pirate's strategy is, some pair of pirates
+would be able to make each of them better off by agreeing to steal
+the third pirate's share of the treasure and split it between them.
+The same is true in the modal combat version of the game, and will
+remain true when we allow modal agents to use mixed strategies. This
+example feels somehow unfair, like this alliance dynamic is legitimately
+trickier than just wanting everyone to be able to coordinate on a
+strategy that leaves all of them better off. This is why I thought
+it might be reasonable to only insist on Pareto optimal Nash equilibria,
+rather than strong Nash equilibria (these are equivalent in two-player
+games). One more example: Consider the variant of the prisoner's dilemma in
+which, if both players defect, they both get a payoff of 1 , if
+both cooperate, they both get a payoff of 2 , and if one cooperates
+while the other defects, the cooperater gets nothing while the defecter
+gets a payoff of 10 . In the modal combat version of this game,
+it is still a Nash equilibrium for both players to play PrudentBot,
+getting each of them a payoff of 2 , but it is no longer Pareto
+optimal. Both players would get an expected payoff of 3.25 if they
+each randomized between playing CooperateBot and DefectBot with equal
+probabilities, for instance. More generally, if both players cooperate
+with probability p and defect with probability 1 − p , then they
+each get an expected payoff of 2 p 2 + 10 p ( 1 − p ) + ( 1 − p ) 2 = 1 + 8 p − 7 p 2 ,
+which is maximized at p = 4 7 , with a value of 23 7 ≈ 3.29 .
+Without modal combat, this would be Pareto optimal, since the players'
+mixed strategies are independent of each other, and thus they cannot
+coordinate on which of them cooperates and which defects. However,
+with modal combat, they can do even better, and each get an expected
+payoff of 5 . To see this, there are modal agents X 1 , X 2 , Y 1 , and Y 2 , such that X 1 exploits Y 1 , X 2 exploits Y 2 , Y 1 exploits X 2 , and Y 2 exploits X 1 (`` X exploits Y '' means that X defects against Y while Y cooperates with X ), so that by one player randomizing
+between X 1 and X 2 and the other randomizing between Y 1 and Y 2 , each of them gets an even chance at the payoff of 10 . Example of an implementation of this is (where C and D abbreviate
+cooperate and defect): [ X 1 ( Z ) = C ] ⟺ □ ( ¬ □ ⊥ → [ Z ( X 1 ) = D ] ) , [ X 2 ( Z ) = C ] ⟺ ¬ □ ( ¬ □ ⊥ → [ Z ( X 2 ) = C ] ) , [ Y 1 ( Z ) = C ] ⟺ □ ( □ ⊥ → [ Z ( Y 1 ) = C ] ) ,
+and [ Y 2 ( Z ) = C ] ⟺ □ ( □ ⊥ → [ Z ( Y 2 ) = D ] ) . However, this is not a Nash equilibrium, because, for example, player
+2 could play a modal agent that exploits both X 1 and X 2 ,
+like DefectBot. This technique for achieving coordination can be generalized,
+and in this particular game, can be done in a Nash equilibrium. Theorem 2:
+In any game, any result that can be achieved with a joint probability
+distribution over the actions taken by each player can also be achieved
+with each player acting independently in the modal combat version
+of the game. Proof:
+Assume without loss of generality that player 1 has at least 2 available
+actions. Player 1 has one modal agent for each element of A 1 × . . . × A n ,
+where A i is the set of actions available to player i , and
+player 1 plays one of these agents at random according to the joint
+probability distribution given. The modal agent corresponding to ( a s 1 1 , . . . , a s n n ) should take action a s 1 1 if ¬ □ N ⊥ , where N ≥ log 2 | A 2 × . . . × A n | , and, if □ N ⊥ ,
+then it should act in a way that depends on the smallest m such
+that ¬ □ m ⊥ , and which is used to encode ( s 2 , . . . , s n ) .
+Players 2 through n each submit modal agents that read off the actions
+they are supposed to take from what player 1 would do if □ N ⊥ ,
+and take those actions. □ Theorem 3:
+In the modified prisoner's dilemma, there exists a Nash equilibrium
+in which each player gets an expected payoff of 5 . Proof:
+Let { X i n } i ∈ { 1 , 2 } n ∈ N , { Y i n } i ∈ { 1 , 2 } n ∈ N be sequences of modal agents defined by induction as [ X 1 n ( Z ) = C ] ⟺ □ ( ¬ □ ⊥ → [ Z ( X 1 n ) = D ] ) ∧ ⋀ k < n □ ( ¬ □ □ ⊥ → ( [ Z ( X 2 k ) = C ] ∧ [ X 2 k ( Z ) = D ] ) ) [ X 2 n ( Z ) = C ] ⟺ ¬ □ ( ¬ □ ⊥ → [ Z ( X 2 n ) = C ] ) ∧ ⋀ k < n □ ( ¬ □ □ ⊥ → ( [ Z ( X 1 k ) = C ] ∧ [ X 1 k ( Z ) = D ] ) ) [ Y 1 n ( Z ) = C ] ⟺ □ ( □ ⊥ → [ Z ( Y 1 n ) = C ] ) ∧ ⋀ k < n □ ( ¬ □ □ ⊥ → ( [ Z ( Y 2 k ) = C ] ∧ [ Y 2 k ( Z ) = D ] ) ) [ Y 2 n ( Z ) = C ] ⟺ □ ( □ ⊥ → [ Z ( Y 2 n ) = D ] ) ∧ ⋀ k < n □ ( ¬ □ □ ⊥ → ( [ Z ( Y 1 k ) = C ] ∧ [ Y 1 k ( Z ) = D ] ) ) Note that testing other agents against its opponent isn't directly
+allowed for in the definition of modal agent, but theorem 4.6 in Robust
+Cooperation in the Prisoner's Dilemma shows that there are modal agents
+that are equivalent to these. X 1 n is similar to X 1 above, except that it also defects against anything that is not exploited
+by X 2 k for k < n (analogous statements hold for X 2 n , Y 1 n , and Y 2 n ). Suppose player 1 plays X i n with probability 1 20 ( 0.9 ) n for i ∈ { 1 , 2 } and n ∈ N , and player 2 plays Y i n with probability 1 20 ( 0.9 ) n for i ∈ { 1 , 2 } and n ∈ N . Each player gets an expected payoff of 5 ,
+since if X i n exploits Y j m iff i = j , and otherwise Y j m exploits X i n . We just need to show that neither
+player can find a modal agent that will get them an expected payoff
+greater than 5 , holding the other player's strategy constant. Suppose
+player 1 finds a modal agent X ′ that gets an expected payoff greater
+than 5 . Since it is impossible to get a payoff greater than 2 without exploiting your opponent, X ′ must exploit some Y i n .
+If X ′ does not exploit Y 1 n for any n , then it must
+exploit some Y 2 n , and hence all Y 1 n defect against
+it. Let n ∈ N ∪ { ∞ } be the supremum
+of { k | X ′ exploits Y 2 k } . X ′ is exploited
+by Y 1 k for k < n (probability 1 2 ( 1 − ( 0.9 ) n ) ,
+payoff 0 ). X ′ can potentially exploit Y 2 k for k ≤ n (probability 1 2 ( 1 − ( 0.9 ) n + 1 ) ,
+payoff at most 10 ). X ′ does not exploit Y 2 k for k > n (probability 1 2 ( 0.9 ) n + 1 , payoff at most 2 ). And X ′ gets defected against by Y 1 k for k ≥ n (probability 1 2 ( 0.9 ) n , payoff at most 1 ).
+This gives an upper bound on total utility of 10 ( 1 2 ( 1 − ( 0.9 ) n + 1 ) ) + 2 ( 1 2 ( 0.9 ) n + 1 ) + ( 1 2 ( 0.9 ) n ) = 5 − 3.15 ( 0.9 ) n ≤ 5 ,
+a contradiction. The cases when X ′ exploits some Y 1 n ,
+and when player 2 finds a modal agent getting an expected payoff greater
+than 5 , follow similarly. □ Theorem 4:
+There is no Nash equilibrium in which either player gets an expected
+payoff greater than 2 without playing modal agents of unboundedly
+high rank with nonzero probability. Proof:
+In any Nash equilibrium in which some player gets an expected payoff
+greater than 2 , suppose X is a modal agent with maximal rank
+up to equivalence among those that the player plays with nonzero probability
+(by a modal agent's rank up to equivalence, I mean the lowest rank
+of a modal agent that G L proves it equivalent to). X must get
+expected payoff greater than 2 against the other player's strategy,
+so there must be some agent Y the the other player plays with nonzero
+probability such that X exploits Y . If there is some modal agent Y ′ that defects against X and achieves the same outcome as Y against anything else that the first player might play, then Y ′ would achieve a higher expected payoff than Y , contradicting the
+assumption that Y is played with nonzero probability in the Nash
+equilibrium. In fact, it is enough for Y ′ to fail to achieve the
+same outcome as Y with sufficiently low probability, and the probability
+of failure can be driven arbitrarily low by ensuring that Y ′ achieves
+the same outcome as Y against some finite set { X 1 , . . . , X n } of modal agents that the first player might use. Let { Z 1 , . . . , Z N } be the smallest set of agents containing X 1 , . . . , X n and such
+that whenever any Z i tests its opponent against some modal agent W of lower rank than Z i , then W = Z j for some j . This
+is finite, since each modal agent can only test its opponent against
+finitely many modal agents of lower rank. Since X has maximal rank
+up to equivalence, no Z i is equivalent to X . Hence there
+are W 1 , . . . , W N such that for each i , w k ⊨ Z i ( W i ) ≠ X ( W i ) for some k . Y ′ can be designed to test its opponent against W 1 , . . . , W N , and do what Y would do unless there are accessible
+worlds in which its opponent acts differently from each of Z 1 , . . . , Z N ,
+in which case it defects. By induction on rank, Y ′ achieves the
+same outcome as Y against Z 1 , . . . , Z N , which include X 1 , . . . , X n ,
+and X at some point distinguishes itself from each of Z 1 , . . . , Z N on W 1 , . . . , W N , so Y ′ defects against X . □ Mixed Strategy Modal Combat The basic idea is that a mixed strategy model agent should be able
+to choose between finitely many mixed strategies, using what it can
+prove about what polynomial inequalities hold about the probabilities
+of other players taking various actions. One could probably come up
+with more flexible notions of mixed strategy modal combat than what
+I have here, but I expect it will not change any of my conclusions
+or the answers to my open questions. Formally, let G be a game
+with players 1 , . . . , n , where each player i has a set of available
+actions A i = a 1 i , . . . , a m i i ( m i = | A i | ),
+and for each player i , the function U i : A 1 × . . . × A n → R a l g ( R a l g is the set of algebraic real numbers) describes
+the payoff for player i for each possible combination of actions.
+A mixed strategy modal agent X for G of player type i and
+rank k ≥ 0 consists of a finite sequence of triples { ( t j , Y j , P j ( x 1 , . . . , x m t j ) ) } j ∈ { 1 , . . . , N } ,
+where t j ∈ { 1 , . . . , n } ∖ { i } , Y j is either X or a mixed strategy modal agent of player
+type i and rank < k , and P j ( x 1 , . . . , x m t j ) is an inequality between polynomials with m t j variables and
+integer coefficients, together with some number r fully modalized
+formulas φ ℓ ( p 1 , . . . , p N ) such that Godel-Lob
+logic proves that exactly one of φ 1 , . . . , φ r holds,
+and m i r nonnegative algebraic numbers x s , ℓ ( s ∈ { 1 , . . . , m i } , ℓ ∈ { 1 , . . . , r } } ) such that for each ℓ , ∑ m i s = 1 x s , ℓ = 1 . By definition, in a game played
+by mixed strategy modal agents Z 1 , . . . , Z i − 1 , X , Z i + 1 , . . . , Z n ,
+where Z j is of player type j , X uses mixed strategy ∑ m i s = 1 x s , ℓ a s i (an event denoted as X ( Z 1 , . . . , Z n ) = ( x 1 , ℓ , . . . , x m i , ℓ ) )
+iff φ ℓ ( P 1 ( Z t 1 ( Z 1 , . . . , Z i − 1 , Y 1 , Z i + 1 , . . . , Z n ) ) , . . . , P N ( Z t N ( Z 1 , . . . , Z i − 1 , Y N , Z i + 1 , . . . , Z n ) ) ) holds. The mixed strategy modal combat version of G is the game
+in which each player i submits a mixed strategy modal agent for G of player type i , and gets the payoff that their agent does
+when the mixed strategy modal agents play G with each other. Mixed strategy modal agents are only allowed to use algebraic probabilities,
+and test for polynomial inequalities, because if they were allowed
+to use too general a class of probabilities, or test for too general
+a class of conditions, then it would not be possible to represent
+mixed strategy modal agents in a concrete way from which their behavior
+is decidable. Polynomial inequalities of algebraic numbers are decided
+by PA, so the Kripke frame method can be used in the same way that
+it was used for pure strategy modal agents. Furthermore, this is flexible
+enough that, provided the payoffs are algebraic, we're not going to
+be unable to achieve anything on account of not being able to use
+some particular number as a probability. Theorem 5:
+All mixed strategy modal combat games have Nash equilibria. In fact,
+they have pure strategy Nash equilibria, in the sense that each player
+chooses their mixed strategy modal agent deterministically, not in
+the sense that the modal agents implement pure strategies. Proof:
+The underlying ordinary game G has finitely many players, each
+of which has finitely many available actions, so it has a Nash equilibrium.
+The existence of a Nash equilibrium for G can be expressed as a
+first-order sentence in the language of ordered rings, and R a l g is an elementary substructure of R , so G must have
+a Nash equilibrium in R a l g ; that is, with each player
+assigning algebraic probabilities to each possible action. In the
+mixed strategy modal combat version of G , each player can submit
+a modal agent that just uses the mixed strategy from the algebraic
+Nash equilibrium for G (regardless of what it can prove about the
+other players). This is a Nash equilibrium. □ This can be strengthened somewhat. Theorem 6:
+All mixed strategy modal combat games have pure strategy Nash equilibria
+from which no Pareto improvement can be made without mixed strategies
+(again, in the sense that each player randomizes which mixed strategy
+modal agent they use, not that the model agents implement mixed strategies). This theorem is not very satisfying, since I don't see a good reason
+to avoid mixed strategies, and that limitation prevents things like
+coordinating who gets exploited in the modified prisoner's dilemma
+so that each player gets an expected payoff of 5 . What we really
+want is a Nash equilibrium that is Pareto optimal among all strategy
+profiles. Proof:
+Start from a pure strategy Nash equilibrium in which player i plays
+mixed strategy modal agent X i . Each player gets a certain expected
+payoff, and if this is not Pareto optimal, then there is a strategy
+profile in the underlying ordinary game that is a Pareto optimal Pareto
+improvement over it. The existence of a strategy profile in the underlying
+ordinary game that gives a Pareto optimal Pareto improvement can be
+expressed as a first-order sentence, so again it holds in R a l g ,
+so there is a Pareto optimal Pareto improvement in which each player
+uses algebraic probabilities. Let Y i be the mixed strategy modal
+agent of player type i that follows the mixed strategy used by
+player i in the Pareto optimal Pareto improvement in the underlying
+ordinary game. If each player i plays Y i , this results in
+a Pareto improvement over each player i playing X i . In any
+pure strategy in modal combat, the mixed strategy modal agents end
+up implementing some particular mixed strategy in the underlying ordinary
+game when playing against each other, so any outcome that is achievable
+with a pure strategy in modal combat is achievable with a mixed strategy
+in the ordinary game. Thus it is Pareto optimal among pure strategy
+profiles for each player i to play Y i . However, it is not
+necessarily a Nash equilibrium. The goal is to find a modal agent Z i such that Z i acts like Y i so long as the other
+modal agents are acting like Y j for each j ≠ i , and if
+one of the other agents doesn't act like the corresponding Y j ,
+then Z i should revert to acting like X i . The first condition
+is easier to implement: If there is a proof that all other agents
+use the mixed strategy used by the corresponding Y j , then use
+the mixed strategy used by Y i . By Lob's theorem, ( Z 1 , . . . , Z n ) will act like ( Y 1 , . . . , Y n ) around each other, given
+that they follow that condition. For the second condition, if one
+of the other players does not act like the corresponding Y j ,
+let k be minimal such that in the Kripke frame, one of the other
+players j fails to behave like Y j in w k . Then we want
+to become X i and pretend w 0 , . . . , w k never happened;
+that is, in w k + 1 + m , do what X i would have done in w m .
+To do this, define the relativization of a modal formula φ to a modal formula ψ , denoted φ ψ by induction
+on φ : ( □ φ ) ψ = □ ( ψ → ( φ ψ ) ) , φ ψ = φ if φ is atomic, ( ¬ φ ) ψ = ¬ ( φ ψ ) , ( φ 1 ∧ φ 2 ) ψ = ( φ ψ 1 ) ∧ ( φ ψ 2 ) ,
+and ( φ 1 ∨ φ 2 ) ψ = ( φ ψ 1 ) ∨ ( φ ψ 2 ) .
+If there is no proof that the other players act like the corresponding Y j , then Z i implements X i , with the formulas in X i all relativized to the nonexistence of a proof that all the
+other players behave like the corresponding Y j , and the agents
+that X i tests the other players against modified in the same
+way that Z i was constructed from X i . This has the effect
+of cutting out worlds w 0 , . . . , w k , as desired. If all but one
+of the players play their Z i , and the remaining player plays
+an agent that does not act like Y i around them, then it diverges
+from expected behavior on some w k , and everyone else reverts
+to acting like X i , which was a Nash equilibrium, so the player
+who did not use Z i cannot benefit from doing this. Thus ( Z 1 , . . . , Z n ) is a Nash equilibrium, and was already shown to be a Pareto improvement
+over ( X 1 , . . . , X n ) and Pareto optimal among pure
+strategy profiles. □ Theorem 7:
+The mixed strategy modal combat version of the prisoner's dilemma
+variant discussed in the previous section has no Pareto optimal Nash
+equilibrium with mixed strategy modal agents of bounded rank. Proof:
+Any pair of expected payoffs for each player ( p , 10 − p ) for any p ∈ [ 0 , 10 ] is achievable, for instance with
+one player playing X 1 from the previous section, and the other
+player playing Y 1 with probability p 10 and Y 2 with probability 1 − p 10 . That is, for any strategy profile
+on the Pareto frontier, the expected payoffs for each player sum to 10 , and this can only happen if it is guaranteed that one player
+exploits the other. If either player uses, with nonzero probability,
+a mixed strategy modal agent that randomizes its action, then there
+must be a nonzero probability of neither agent exploiting the other.
+Thus, the Pareto frontier is only reachable with deterministic modal
+agents. But by theorem 4, no Nash equilibrium with deterministic modal
+agents of bounded rank gives either player an expected payoff greater
+than 2 . □ Open questions: Is there a Nash equilibrium with agents of bounded rank in a mixed
+strategy modal combat game for which there is no pure strategy Nash
+equilibrium with the same expected payoffs for each player? Does every mixed strategy modal combat game have a Pareto optimal
+Nash equilibrium? I started out thinking that if all mixed strategy modal combat games
+had Pareto optimal Nash equilibria, then this would be a good sign
+for modal combat as a model for coordination between agents, and if
+there were mixed strategy modal combat games without Pareto optimal
+Nash equilibria, then this would suggest that perhaps modal combat
+is just a one-act pony that does not perform well outside of the prisoner's
+dilemma. As it is, it seems pretty plausible that every mixed strategy
+modal combat game has a Pareto optimal Nash equilibrium, but this
+can require using mixed strategy modal agents of unbounded rank. If
+that is the case, then I'm not really sure how to interpret it.

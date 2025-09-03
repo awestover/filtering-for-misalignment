@@ -1,0 +1,124 @@
+This post is to announce my new paper Demanding and Designing Aligned
+Cognitive Architectures , which I
+recently presented in the PERLS workshop (Political Economy of Reinforcement Learning)] at NeurIPS
+2021. In this post, I will give a brief overview of the paper, specifically
+written for this forum and the LW/EA communities.  I will highlight some
+of the main differences with the AI alignment approaches and outlooks
+more often discussed here. The comment section below can be used for general comments and Q&A
+about the entire paper. Scope of the paper The main focus of this paper is to improve the global debate about the medium-term alignment problems in purple below. In the last few years, these two problems have moved inside society's Overton window , not
+only in the West but also in China.  So it is topical to write papers
+which focus specifically on improving the debate about these two
+problems. But I also have more long-term, x-risk related motivation for
+discussing these two problems.  If society develops better tools and
+mechanisms for managing them, I expect that it will also become better
+at managing the long-term x-risk problems on the right. Alignment as a policy problem The word demanding describes a political act, whereas designing is
+a technical act.  The phrase 'Demanding and Designing' in the paper
+title gives a hint that there will be a cross-disciplinary
+discussion inside.  This discussion fuses insights about running
+political processes with insights about AI technology. On this forum and in the broader Rationalist/EA web sphere, it is
+common to see posts which treat all political activity as a source of
+irrationality and despair only.  In the paper, I develop a very
+different viewpoint. I treat politics as the sum total of activities in society that
+contribute to creating, updating, and legitimizing social
+contracts .  Social
+contracts can be encoded in law, customs, institutions, code, or all
+of the above.  They aim to produce mutual benefit by binding the
+actions of society's stakeholders. In this framing, AI alignment policy making is the activity of having
+a broad debate that will update our existing social contracts.
+Updates of social contracts are preferably decided on in a debate that
+will involve all affected stakeholders at some stage, or at least
+involve their representatives. These are all pretty standard Enlightenment ideas. Crucially, these
+ideas can applied to both global and local policy debates. Social contract theory does not absolutely require that every
+stakeholder has to be consulted or satisfied, in order for a new
+contract to be legitimate. In this, it stands apart from another
+approach to legitimacy which is often mentioned on this forum: the
+approach of seeking legitimacy for proposals by claiming that they
+represent a Pareto
+improvement .  I have
+have been in applied politics.  In my experience, the strategy of
+trying to offend nobody by seeking Pareto improvements almost never
+works. So much for discussing moral and political theory.  In the paper, I
+only discuss theory in one small section.  The paper devotes much more
+space to applied politics, to topics like understanding and
+controlling the prevailing narrative flows in the alignment debate. The participants in the AI alignment policy debate will have to
+overcome many obstacles.  Many of these obstacles are of course no
+different from those encountered by the participants in the global
+warming debate, in the global debate about improving cybersecurity,
+etc. In the paper, I am not wasting any ink on enumerating these general
+obstacles.  Instead, I start by saying that I will cover three only
+three obstacles, three obstacles which happen to be specific to the AI
+alignment problem. When considering how to lower these obstacles, I also take a fresh look
+at some questions more often discussed on this forum: How do we usefully move beyond the concepts of goal-directness and
+reward maximization? How must alignment research relate to 'mainstream' ML research? My answers are included further below. Abstract of the paper The paper does not present a single idea, it develops several
+interconnected ideas and approaches.  Here is the abstract, with
+some re-formatting. With AI systems becoming more powerful and pervasive, there is
+increasing debate about keeping their actions aligned with the broader
+goals and needs of humanity.  This multi-disciplinary and
+multi-stakeholder debate must resolve many issues, here we examine
+three of them. The first issue is to clarify what demands stakeholders might usefully make
+on the designers of AI systems, useful because the technology exists
+to implement them.
+We make this technical topic more accessible by
+using the framing of cognitive architectures. The second issue is to move beyond an analytical
+framing that treats useful intelligence as being reward
+maximization only.  To support this move, we define several AI
+cognitive architectures that combine reward maximization with other
+technical elements designed to improve alignment. The third issue is how stakeholders should calibrate their
+interactions with modern machine learning researchers.  We consider
+how current fashions in machine learning create a narrative pull that
+participants in technical and policy discussions should be aware of,
+so that they can compensate for it. We identify several technically tractable but currently unfashionable
+options for improving AI alignment. Cognitive architectures A cognitive architecture is a set of interconnected building blocks
+which create a cognitive process , where a cognitive process is one
+that uses observations to decide on actions.  It is common in AI
+research to apply the cognitive architecture framing to the analysis
+of both human and machine minds.  In the paper, I extend this framing
+by considering how companies and governments also use cognitive
+architectures to make decisions. I also consider how many modern social contracts encode extensive
+demands on the behavior of governments and companies, to make these
+large and powerful synthetic intelligences more human-aligned.  Many
+of these demands can be interpreted as demands on the design of the
+cognitive architectures that governments and companies are allowed to
+use for decision making, in pursuit of their goals. I show how we can take such demands and also apply them to the design
+of cognitive architectures used by powerful AIs.  In fact, this is the
+pattern of policy making already used in AI fairness.  I show in the
+paper how it can be extended beyond fairness. Using the lens of cognitive architectures to move beyond pure reward maximization In the broad alignment debate, and also in the AGI debate on this
+forum, the most common mental model of a reinforcement learner is as
+follows.  A reinforcement learner is a black box containing a mind
+which aims to maximize a reward, a box which also happens to have some
+sensors and actuators attached. In the paper, I go inside of this black box. I show that there is a
+cognitive architecture inside which has many distinct and legible
+individual building blocks.  I picture the mind of a generic
+reinforcement learner like this: This picture has many moving parts, which we might all consider
+tweaking, if we want to turn a powerful reinforcement learner into a
+more human-aligned powerful reinforcement learner.  One important
+tweak I consider is to add these extra green building blocks: Progress on the alignment problem In the paper, I show how this idea of demanding the use of a
+'specifically incorrect predictive world model' inside the AI can be
+applied to many types of alignment.  It can be used to reason about
+and resolve: short-term AI alignment problems, like computational fairness medium-term AI alignment problems, like ensuring that market-facing
+reinforcement learners do not game the market too much long-term alignment problems, like making an AGI ignore the
+existence of its stop button, and the existence of other built-in
+safety mechanisms. Overall, the broad applicability of this 'specifically incorrect world
+model' concept has made me more optimistic about the tractability of
+long-term alignment, both at a technical and at a policy level. Discussions on this forum often treat AGI alignment as something
+unique, as something which will require the invention of entirely new
+paradigms to solve.  The claim that AGI alignment is
+'pre-paradigmatic' encodes the assumption that there is a huge
+technical and policy-making gap between the problems of short-term
+alignment and the problems of long-term alignment.  I do not see this
+gap, I see a broad continuum. Alignment research is not a sub-field of modern ML research This brings me to another paradigm, another basic assumption often
+encoded in posts appearing on this forum.  This is the assumption that
+AI alignment research is, or must urgently become, a sub-field of
+modern ML research.  In the paper, I examine in detail why this is a
+bad idea. To make an analogy with the industrial revolution: treating the impact
+of ML on society as an ML research problem makes about as much sense
+as treating the impact of the stream engine on society as a steam
+engine engineering problem. I argue that a better way forward is to declare that many of the
+problems in AI alignment are broad political and systems
+engineering problems, not ML research problems.  I argue that it is both
+ineffective and unkind to expect that modern ML researchers should
+lead every charge in the alignment debate. Intended audience of the paper I wrote this paper to be accessible to all readers from a general,
+multi-disciplinary but academic-level audience.  I do assume however
+that the reader has some basic familiarity with the technical and
+political problems discussed in the alignment literature. The latest version of the paper is here . In a big difference with my earlier papers on alignment , there is not even
+single line of math inside.

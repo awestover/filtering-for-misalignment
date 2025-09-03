@@ -1,0 +1,580 @@
+This is Section 3 of my report “ Scheming AIs: Will AIs fake alignment during training in order to get power? ”. There’s also a summary of the full report here (audio here ). The summary covers most of the main points and technical terms, and I’m hoping that it will provide much of the context necessary to understand individual sections of the report on their own. Audio version of this section here , or search for "Joe Carlsmith Audio" on your podcast app. Arguments for/against scheming that focus on the path that SGD takes In this section, I'll discuss arguments for/against scheming that focus
+more directly on the path that SGD takes in selecting the final output
+of training. Importantly, it's possible that these arguments aren't relevant. In
+particular: if SGD would actively favors or disfavor schemers, in some
+kind "direct comparison" between model classes, and SGD will "find a
+way" to select the sort of model it favors in this sense (for example,
+because sufficiently high-dimensional spaces make such a "way"
+available), [1] then enough training will just lead you to whatever
+model SGD most favors, and the "path" in question won't really matter. In the section on comparisons between the final properties of the
+different models, I'll discuss some reasons we might expect this sort of
+favoritism from SGD. In particular: schemers are "simpler" because they
+can have simpler goals, but they're "slower" because they need to engage
+in various forms of extra instrumental reasoning – e.g., in deciding to
+scheme, checking whether now is a good time to defect, potentially
+engaging in and covering up efforts at "early undermining," etc (though
+note that the need to perform extra instrumental reasoning, here, can
+manifest as additional complexity in the algorithm implemented by a
+schemer's weights, and hence as a "simplicity cost", rather than as a
+need to "run that algorithm for a longer time"). [2] I'll say much
+more about this below. Here, though, I want to note that if SGD cares enough about properties
+like simplicity and speed, it could be that SGD will typically build a
+model with long-term power-seeking goals first, but then even if this
+model tries a schemer-like strategy (it wouldn't necessarily do this, in
+this scenario, due to foreknowledge of its failure), it will get
+relentlessly ground down into a reward-on-the-episode seeker due to the
+reward-on-the-episode seeker's speed advantage. Or it could be that SGD
+will typically build a reward-on-the-episode seeker first, but that
+model will be relentlessly ground down into a schemer due to SGD's
+hunger for simpler goals. In this section, I'll be assuming that this sort of thing doesn't
+happen. That is, the order in which SGD builds models can exert a
+lasting influence on where training ends up. Indeed, my general sense is
+that discussion of schemers often implicity assumes something like
+this – e.g., the thought is generally that a schemer will arise
+sufficiently early in training, and then lock itself in after that. The training-game-independent proxy-goals story Recall the distinction I introduced above, between: Training-game- independent beyond-episode goals, which arise
+independently of their role in training-gaming, but then come to
+motivate training-gaming, vs. Training-game- dependent beyond-episode goals, which SGD actively creates in order to motivate training gaming. Stories about scheming focused on training-game- independent goals seem
+to me more traditional. That is, the idea is: Because of [insert reason], the model will develop a (suitably
+ambitious) beyond-episode goal correlated with good performance in
+training (in a manner that doesn't route via the training game). This could happen before situational awareness arrives, or
+afterwards. If before, then there's some period where it might get
+trained out, and where it doesn't yet motivate
+training-gaming. If after, it might start motivating training-gaming
+immediately. Then, in conjunction with situational awareness, this (suitably
+ambitious) beyond-episode goal will start to motivate
+training-gaming. Call this the "training-game-independent proxy-goals story." I take this argument fairly seriously. If some sort of
+suitably-ambitious beyond-episode proxy goal falls out of training
+(either because it doesn't get trained away prior to situational
+awareness, or because it pops up after situational awareness), and if
+some story about why this goal makes scheming a good instrumental
+strategy applies (e.g., the classic goal-guarding story, or potentially
+some other non-classic story), then it does seem like scheming could
+just be a thing that happens. I think the most immediate objection is: why did the model develop these
+(suitably ambitious) beyond-episode goals? I discussed this earlier, in
+the context of arguments like "goals don't come with temporal discounts
+by default" and "model time won't be like calendar time," and I won't
+add much here, except to say that an assumption that the model will land
+on some suitably ambitious, beyond-episode, training-game-independent
+proxy goal, pursuit of which correlates with high reward, seems to me
+one of the weaker parts of the classic story. In particular: discussions of scheming sometimes focus on proxy goals
+like "curiosity" and "power" that show up as useful in lots of episodes.
+But that doesn't mean that pursuing curiosity and power beyond the
+episode is incentivized in training. What's more, and especially if you
+know/can control when situational awareness arises, it doesn't seem all
+that hard to put in training episodes where a model is actively
+penalized for pursuing curiosity/power. And a non-training-gaming model
+will just go for it and get modified. Indeed, in general, I expect us to
+be doing quite a lot to actively discourage models from taking
+power-seeking-ish actions, and to encourage other forms of "modesty." This latter point is connected to the reason for optimism I mentioned
+earlier: namely, that the training-game-independent proxy goals story
+allows us to do whatever adversarial training we want prior to
+situational awareness in order to try to ensure that a model's goals
+remain within-episode and suitably modest. That said, trying to ward off this path to scheming via adversarial
+training prior to situational awareness faces a few serious obstacles: First: and most importantly, the adversarial training in question
+might not be diverse/thorough enough. In particular (and especially
+absent interpretability tools): it may be too difficult to think of
+all the possible suitably-ambitious beyond-episode proxy goals that
+correlate well enough with reward, and that you need to use such
+training to push back on. [3] Second: you might not know, or be able to control very well, when
+situational awareness kicks in. Third: once a smart-enough model has been pre-trained on
+text-prediction, it might be quite close to situational awareness
+already, since it has so much of the relevant general knowledge
+(even if not necessarily the self-locating knowledge). So there
+might not be much time for
+adversarial-training-without-situational-awareness after that point. Finally, it's possible for a model to develop suitably-ambitious,
+beyond-episode, scheming-motivating goals after situational
+awareness has kicked in. [4] For example, perhaps the model is already quite smart and
+strategically aware by the time it starts "reflecting" in the
+sense I described above – e.g., "figuring out what it really
+wants," ironing itself out, learning new things that break
+previous attempts to align it, and so on. (This requires that
+the model didn't immediately start seeking reward-on-the-episode
+as a result of getting situational awareness, but this seems
+possible, especially if we assume that training leaves
+significant "slack.") Of course, there's still a question of why the model irons
+itself out into something with suitably-ambitious,
+beyond-episode goals in particular. But here, per my discussion
+of "what if you train it to have long-term goals" above, perhaps
+we can appeal to the fact that we were trying to point it at an
+ambitious long-horizon task, and this pointing was somewhat
+inaccurate/hazy, such that when it figured out how it wanted to
+generalize, this generalization landed on something sufficiently
+long-term and ambitious as to motivate scheming. Indeed, as I noted above, I think there's a case to be made that
+current alignment work is already trying to point our systems
+at long-horizon, beyond-episode goals – e.g., forms of
+"harmlessness" that avoid helping with bomb-making even if the
+bombs won't go off for decades. So overall, I think that conditional on scheming being a good
+instrumental strategy for pursuing (suitably-ambitious) beyond-episode
+goals, the training-game-independent proxy-goals story seems to me like
+a real concern. The "nearest max-reward goal" story We can also tell a different story, focused on training-game dependent beyond-episode goals. I'll call this the "nearest max-reward goal"
+story. [5] Here, the story goes: By the time the model becomes situationally aware, it probably won't
+be pursuing a max-reward goal (that is, a goal pursuit of which on
+the training data leads to roughly the maximum reward consistent
+with the model's other capabilities). Rather, it will be pursuing
+some less-than-max-reward proxy goal. But at that point, the world-model will contain all the information
+the model needs in order to training-game. (However, because we're
+here focused on "training-game- dependent " stories about scheming,
+we assume that at the point of getting situational awareness, the
+model's goal is not yet such that it will motivate
+scheming – rather, some further modification would be required for
+that.) The easiest way for SGD to modify the model into getting maximum
+reward, at that point, will be to make it a schemer. So: SGD will make the model a schemer. Now, one option, here, is to try to make (1) false. Indeed, as discussed
+above, trying to shape a model's goals in good ways prior to situational
+awareness seems like a key potential avenue for reducing the probability
+of scheming. Note, though, that in this case, the challenge at stake is
+harder than with training-game- independent proxy goals. That is, with
+training-game-independent proxy goals, one only needs to avoid giving
+the model a schemer-like goal prior to situational awareness, so it is
+tolerant of other ways the goal in question might not yet be
+max-reward. By contrast, in the context of the "nearest max-reward goal"
+argument, one needs to either actually create a max-reward,
+non-schemer-like goal, or to get near enough to one that (3) doesn't
+apply. That is, you can't just prevent "natural scheming" from arising;
+you need to make it the case that when SGD later "goes searching" for
+the nearest max-reward goal, it doesn't find a schemer first. For now, let's assume that we haven't fully mastered this, and (1) is
+true (though: the degree of mastery we've attained matters to the
+"nearness competitions" I'll discuss below). And (2) follows from the
+definition of situational awareness (or at least, a loose definition
+like "that understanding of the world necessary to engage in, and
+recognize the benefits of, scheming"), so let's grant that as well. But what about (3)? Here, I think, the argument has more work to do. Why
+think that making the model into a schemer will be the easiest way to
+cause it to get max reward? For example, why not instead make it into a
+training-saint, or a reward-on-the-episode seeker, or a misgeneralized
+non-training-gamer pursuing some max-reward proxy goal? By hypothesis,
+the model has the conceptual tools to represent any of these goals.
+(And note that in this respect, it differs from e.g. humans for most
+evolutionary history, who didn't have the conceptual tools to
+represent goals like "inclusive genetic fitness".) So we need a story
+about why the argument privileges schemer-like goals in particular. For clarity: when I talk about the "ease" with which SGD can make a
+certain modification, or about the "nearness" of the resulting model,
+this is a stand in for "the sort of modification that SGD 'prefers' ",
+which is itself a stand-in for "the sort of modification that SGD will
+in fact make." At a mechanistic level, this means something roughly
+like: the direction of the steepest gradient in the reward landscape.
+And I'll often imagine a hazier sense in which SGD has a limited budget
+of "work" it can do, and so wants to do as little "work" in modifying
+the model's goals as it can, so that it can focus on improving other
+aspects of the model's cognition. On this understanding of "ease," then, which model class should we
+expect it to be "easiest" for SGD to create, out of a
+newly-situationally-aware model with a less-than-max-reward proxy goal
+that wouldn't motivate scheming on its own? As a loose analogy to help prompt intuition: imagine freezing human
+technology at current levels, and letting evolutionary selection run on
+humans for a vastly longer period of time. [6] What sorts of humans
+(or human-descended-creatures) do you expect to dominate in the longer
+term? In particular: would you expect: (a) humans who intrinsically value something like " inclusive genetic
+fitness " or "my
+genes getting selected for by evolution" (this is a loose analogy
+for some combination of "the specified goal" and "the reward
+process"), (b) humans who value something else very closely correlated with
+inclusive genetic fitness (e.g., "having as many kids as possible"),
+but who aren't explicitly optimizing for inclusive genetic fitness
+even instrumentally (this is a loose analogy for mis-generalized
+non-training-gamers), or (c) humans with long-term goals who are optimizing for inclusive genetic
+fitness specifically as a method for gaining power for their values
+in the longer-term (this is a loose analogy for schemers). Here, the analog of the "nearest max-reward goal" story would ask
+something like: what is the smallest modification to existing human
+values (or better: the easiest modification for evolution in particular
+to make) that land us in one of the buckets above, while also being
+compatible with the amount of evolutionary selection pressure at
+stake? [7] Of course, the analogy brings in tons of confounding variables (for
+example, related to the fact that evolution selects over
+genomes-that-build-brains-that-learn-values rather than values
+themselves, the role of cultural accumulation and memetic selection in
+human population dynamics, the lack of a clear analog of a future chance
+for escape/takeover, and so on). To make the analogy one step more
+analogous to ML, it would be best to imagine evolution selecting
+directly over entire human brains, equipped with the full conceptual
+apparatus to represent all of these goals, rather than on
+genomes-that-build-brains. And even better to imagine a version of
+evolution that selected on brains from the get-go, such that human
+values at the point we came to understand evolution might be quite
+different. And regardless, I don't feel any clear conviction about the
+best prediction. But I think it's an evocative intuition pump for the
+"nearest max-reward goal" argument. Barriers to schemer-like modifications from SGD's incrementalism Let's focus, though, on the actual argument, rather than the analogy.
+Which model class should we expect to be "nearest" in the relevant
+sense? Above I discussed one way schemers might get ruled out fast, here:
+namely, if SGD can't "notice" the benefits of a schemer-like
+modification via the gradients it follows in modifying the model. That
+is, as I discussed earlier, in searching out a max-reward goal, SGD
+doesn't just get to "hop" to the nearest one. Rather, it needs to
+incrementally move towards such a goal, on the basis of gradient
+calculations that show that tiny changes to the model's weights, in the
+relevant direction, would increase reward. And in many cases, it's not
+clear that schemer-like modifications could work like that. Thus, for example, Hubinger (2022) considers an example where SGD induces scheming by modifying a model
+from caring about gold coins on the episode to caring about gold coins
+over all time. In the example in question, though, it's not that SGD
+e.g. gradually lengthens the time horizon of the model's
+gold-coin-concern, with each lengthening resulting in an improvement of
+reward. Rather, SGD just makes "one simple change" – namely, dropping
+the goal's temporal restriction entirely – and thereby creates a
+schemer. But the question is: does the gradient in reward-space reflect
+the benefit of doing this? The most natural way for this to happen, to
+my mind, is if there is some ability to smoothly transition from one
+model to the other, such that each modification incrementally gets more
+of the benefits of scheming. But it's not clear that this can happen.
+And as I discussed earlier, if we assume that SGD also needs to build a
+lot of new machinery to perform the sort of instrumental reasoning that
+scheming requires (as opposed to just redirecting the pre-existing
+"goal-achieving engine"), the task becomes even more challenging. Which model is "nearest"? However, per my discussion earlier, I also don't feel like I'm in a
+position to rule out the possibility that incremental transitions of
+this type could occur (e.g., perhaps a sufficiently high-dimensional
+space allows SGD to "find a way"), and I haven't attempted an in-depth
+analysis. So while I think that incrementalism of this type offers a
+relatively strong objection to stories focused on
+training-game-dependent schemer-like goals, I think it's worth
+evaluating the other aspects of those stories as well. That is,
+supposing that SGD can notice the benefits of making the model in the
+"nearest max-reward goal" story into a schemer, would such a
+modification be the easiest way to get high reward? The common-ness of schemer-like goals in goal space One argument for this comes back to what I see as one of the core
+intuitions in favor of expecting scheming: namely, the sheer number of
+possible schemer-like goals. Roughly, the idea is that because so many
+goals can motivate scheming, it's likely that there will be some
+schemer-like goal very nearby to the model's current goal (where
+"nearby," recall, is defined in terms of the amount of work SGD has to
+do to cause a modification of the relevant kind). That is, schemers are
+very common in goal-space – so schemer-like goals are correspondingly
+easy for SGD to "find" from any given starting point. [8] The "gold coins on the episode" → "gold coins over all time" transition
+described above is one illustration of this sort of thought. That is, if
+you work with the assumption that most sufficiently long-term goals will
+motivate scheming, [9] then the most salient way to not be a schemer
+is to have a sufficiently short-term goal. But (assuming we have set
+aside the "incrementalism" problems discussed above), any given
+temporally-limited goal seems quite "nearby" to a temporally-unlimited
+version. [10] But temporal scope isn't the only source of possible "near-ness," here.
+For example, if the model happens to have some long-term goal that
+doesn't yet motivate scheming (for example, because the goal isn't
+suitably "ambitious"), we can vary other relevant variables instead.
+Thus, if the model starts out caring about solving some math problem
+correctly in a not-temporally-limited way, but it can solve the problem
+well enough on the episode that plotting to take over the world to get
+more compute to check and re-check its answer doesn't seem worth it, we
+might imagine SGD e.g., changing the model's tolerance for the risk of
+getting the answer wrong, or changing its goal such that it wants to
+solve more math problems, or what have you. The general point is just:
+in trying to create a schemer, SGD has a ton of options to choose from,
+so it's easy to find one in the broad vicinity of the model's starting
+point. Thus, in the context of evolution and humans, the analogy for this
+thought would be something like: it's comparatively easy to take even
+fairly short-term, modest human values and turn them into long-term,
+ambitious values instead. Human longtermists, for example, plausibly
+take values like "be vaguely nice and helpful to the people in my
+immediate environment who meet various conditions" and turn them into
+much more ambitious goals – goals that would plausibly have an incentive
+to explicitly optimize for getting selected-by-evolution, if this was a
+key bottleneck on future power. And indeed, it does seem plausible to me
+that in practice, if you ran evolutionary selection for a long enough
+time, ideological groups that optimize over long time horizons would end
+up dominating (many of the groups that have come closest to optimizing
+for reproductive fitness, for example, seem like they have something of
+this flavor). [11] Once we've set aside objections about incrementalism above, I see the
+common-ness of schemer-like goals in goal space as a fairly strong
+reason to worry that the nearest max-reward modification of a
+newly-situationally-aware, still-not-max-reward-goal-pursuing model will
+be towards scheming. And what's more, note that once we're imagining SGD
+actively searching in goal space for
+goals-that-would-motivate-scheming, our stories about the origins of
+scheming can be more tolerant of schemer-like goals having to have other
+more specific properties, like resource-hungry-ness. That is, in a
+setting focused on training-game- independent goals, it's possible to
+question the probability of SGD alighting on a schemer-like goal (even
+conditional on it alighting on a beyond-episode goal more generally), in
+virtue of different beyond-episode goals implying different appetites
+for future power, risk, and so on. But in a training-game- dependent setting like this one, SGD is actively seeking out such goals (and the
+relevant goals are still plausibly quite common in goal-space – e.g.,
+you can "maximize instances of x over all of space and time" for many
+values of x ). So no surprise if SGD finds what it's looking for. However, I don't think this sort of argument is decisive, for two
+reasons. The nearness of non-schemer goals The first reason that even if we stick with a pure focus on modifying
+the model's goals, and with a "clean goal-directedness" frame (I'll
+complicate such a focus below), I think there's a countervailing
+"near-ness" consideration that points in favor of at least some
+non-schemer goals – namely, that other things equal, it seems more
+likely that the model's initial training, prior to situational
+awareness, actively points the model in the direction of these
+non-schemer goals. This is clearest with respect to the specified goal, which is rewarded
+by training by definition. This means that, even if the model doesn't
+end up with exactly the specified goal by the time it becomes
+situationally aware, it will plausibly end up with something in the
+broad vicinity. Thus, for example, if the model is being trained to maximize gold
+coins on the episode, and it ended up learning a goal like "maximize
+gold-round-things on the episode" (a goal which isn't quite right,
+because some training environments include round gold non-coins), it
+seems plausible that the easiest modification for SGD to make, here,
+is to make the model into a gold- coins -on-the-episode-getter (that
+is, a training-saint). Or at least, "gold-coins-on-the-episode,"
+here, seems competitive with "round-gold-things-over-all-time,"
+with respect to "nearness." And we might make a similar point with respect to more RLHF-flavored
+specified goals. That is, if you're training a model to follow
+instructions on the episode in a broadly helpful, honest, and
+harmless way (let's say, for simplicity, that your RLHF process only
+gives accurate feedback in this respect), then even if it has
+learned a somewhat off-kilter concept of e.g. honesty by the time it
+becomes situationally aware, improving its conception of honesty
+until it better fits the human concept seems competitive, re:
+nearness, with more schemer-like motivational modifications like "be
+off-kilter-honest over all time in a way that incentivizes planning
+to escape human control and seize power." And note, in the context of humans and evolution, that humans do
+already value various things closely related to inclusive genetic
+fitness – for example, having children, having a flourishing and
+powerful family lineage more generally, etc. And if we imagine
+evolution selecting on entire human brains, equipped with a
+conceptual apparatus that represents "inclusive genetic fitness,"
+humans having originally evolved to value something quite close to
+inclusive genetic fitness seems easier to imagine. [12] And note that we can make a similar point about mis-generalized
+non-training-gamers here, too, provided that they are pursuing a
+max-reward goal (recall that mis-generalized goals can be max reward, on
+my definition, provided that the training data in particular never
+penalizes them – e.g., they would only be penalized by the reward
+process in counterfactual scenarios the model never sees). Thus, for example, imagine a training process that never
+distinguishes between a goal like "get gold coins on the episode"
+and "get gold things in general on the episode," because all of the
+gold things in the training data are coins. And let's say that prior
+to situational awareness, our model learns a goal like "get gold
+things on the episode, but also sometimes follow your curiosity on
+the episode even if it means sacrificing gold things" – a goal which
+does OK (but not maximally well) in training due to curiosity not
+being a very damaging behavior, and sometimes a helpful one. Here,
+it seems like just deleting the model's curiosity drive and focusing
+solely on getting gold-things-on-the-episode (a max-reward goal,
+even though not the specified goal) is a fairly "nearby"
+modification – and one plausibly competitive in "nearness" to e.g.
+modifying the model to so that it pursues its
+gold-stuff-and-curiosity combo over all time instead. And in the context of humans and evolution, if we imagine that
+intrinsically valuing "having as many children as possible" would be
+perform very well by the lights of evolutionary selection (even if
+it's not exactly what evolution is selecting for), it doesn't seem
+very difficult to imagine humans going in this direction. Can we make a similar point about reward-on-the-episode seekers? It's
+somewhat less clear, because prior to situational awareness, it's
+unclear whether models will have enough of a concept of the reward
+process for their motivations to attach to something "in the vicinity"
+of one of its components. That said, it seems plausible to me that this
+could happen in some cases. Thus, for example, even absent situational
+awareness, it seems plausible to me that models trained via RLHF will
+end up motivated by concepts in the vicinity of "human approval." And
+these concepts seem at least somewhat nearby to aspects of the reward
+process like the judgments of human raters and/or reward models, such
+that once the model learns about the reward process, modifying its
+motivations to focus on those components wouldn't be too much of a leap
+for SGD to make. Overall, then, I think non-schemer goals tend to have some sort of
+"nearness" working in their favor by default. And this is unsurprising.
+In particular: non-schemer goals have to have some fairly direct
+connection to the reward process (e.g., they are either directly
+rewarded by that process, or because they are focused on some component
+of the reward process itself), since unlike schemer goals, non-schemer
+goals can't rely on a convergent subgoal like goal-content-integrity or
+long-term-power-seeking to ensure that pursuing them leads to reward. So
+it seems natural to expect that training the model via the reward
+process, in a pre-situational-awareness context where scheming isn't yet
+possible, would lead to motivations focused on something in the vicinity
+of a non-schemer goal. Still, it's an open question whether this sort of consideration suffices
+to make non-schemer goals actively nearer to the model's current goals
+than schemer-like goals are, in a given case. And note, importantly,
+that the relevant competition is with the entire set of nearby
+schemer-like goals (rather than, for example, the particular examples of
+possible schemer-like modifications I discussed above) – which, given
+the wide variety of possible schemer-like goals, could be a serious
+disadvantage. Thus, as analogy: if there are ten Mexican restaurants
+within ten miles of Bob's house, and a hundred Chinese restaurants, then
+even if any given Mexican restaurant is "plausibly competitive" with any
+given Chinese restaurant, re: nearness, then (modulo further
+information) the nearest restaurant is still probably Chinese. [13] And depending on the common-ness of schemer-like goals in model space,
+we might expect the schemer-like goals to be like the Chinese
+restaurants, here. [14] The relevance of messy goal-directedness to nearness However, I also think that non-schemers get another, somewhat distinct
+nearness boost once we bring in considerations about "messy
+goal-directedness." In particular: if we imagine that the model in
+question is not a cleanly separable goal slot + goal-achieving-engine,
+but rather a tangled kludge of different heuristics, patterns of
+attention, impulses, and so on, then we need to analyze the comparative
+"nearness" not just of the current model's current goal to the nearest
+schemer-like and non-schemer-like goals, but the nearness of the model's entire kludge to the nearest schemer and non-schemer-like models. And
+here, I think, non-schemer models may have a more significant advantage. In particular: to the extent that pre-situational-awareness training
+tends to create forms of messy goal-directedness pointed at something in the vicinity of a non-schemer goal – and in particular, a within-episode non-schemer goal – then this implies that the model's
+heuristics, patterns of attention, impulses, and so on will tend to be
+pointed in that broad direction as well, and focused within the episode
+in particular. And this, to me, makes it seem like a more substantive
+and difficult modification to re-orient the model towards longer-term
+power-seeking, especially if the episodes in question are quite short.
+That is, intuitively, it feels to me like "tweaking a cleanly separable
+within-episode goal to make it long-term" is quite a bit easier, for
+SGD, than "redirecting a tangled kludge broadly focused on
+within-episode things to make it (a) focused on something beyond-episode
+instead, and (b) such that this beyond-episode focus back-chains into
+getting-reward for instrumental reasons" – especially if (b) requires
+building new cognitive machinery for implementing the instrumental
+reasoning in question. Whereas "redirecting a tangled kludge focused on
+within-episode things to higher-reward within-episode things in the same
+broad vicinity instead" (e.g., to gold coins, rather than gold round
+things; or to actual honesty, rather than off-kilter honesty) seems to
+me intuitively easier. Overall take on the "nearest max-reward goal" argument Summarizing my take on the "nearest max-reward goal" argument for
+expecting schemers: If SGD can't notice the benefits of turning the model into a schemer
+due to incremental modifications not yielding those benefits, then
+the argument fails. However, I don't feel like we can bank on SGD being unable to notice
+these benefits. And if it can , then I think the common-ness of
+schemer-like goals in goal-space makes the possibility that a
+schemer-like goal is "nearest" to the model's current goal quite
+worrying. That said, because it has been shaped by the reward process in the
+absence of situational awareness, the model's goal will also
+plausibly be already "in the vicinity" of some max-reward
+non-schemer goal as well, which is points in favor of the "nearness"
+of some non-schemer model. And to the extent the goal-directedness
+at stake is quite "messy," creating such a non-schemer might require
+fewer modifications to the model's heuristics, patterns of
+attention, instrumental reasoning, and so on. These considerations leave me with some substantive additional worry
+about schemers. The possible relevance of properties like simplicity and speed to the path SGD takes Arguments like the "nearest max-reward goal argument" proceed most
+naturally if we assume that any given max-reward goal yields
+sufficiently good performance in training that SGD isn't especially
+fussed about which max-reward goal a model ends up with. But as I
+noted above, and as I'll discuss in more detail in the section on final
+properties of the different model classes, there are stories on which
+SGD actively prefers some of these model classes over others, on grounds
+of final properties like simplicity and speed. What's more, this sort of preference isn't just relevant to predictions
+that ignore the path that SGD takes in model space. Rather, they might influence that path at various stages (even if the final result is
+still "path dependent" in some broader sense). Plausibly, for example,
+if SGD biases towards simpler goals, this bias could influence the
+training-game-independent goals that a model tends to form prior to, or
+after, situational awareness, and on a training-game-dependent goal
+story, it might be additional points in favor of the SGD's moving
+specifically to a schemer-like goal from a not-yet-max-reward starting
+point. [15] And similarly, if SGD biases away from schemers in virtue
+of their requiring extra reasoning, this bias might be additional points
+in favor of expecting SGD to move towards a non-schemer from such a
+starting point. As I'll discuss in
+section 4,
+on "final properties," I generally think that the speed costs of
+scheming are more significant than the simplicity benefits, so other
+things equal, I think these sorts of considerations count against
+scheming. But it's not clear to me that the costs/benefits in either
+direction are especially weighty. That said, there's at least some case to be made that these
+costs/benefits matter more early on in training, because models are
+likely to be weaker early on, and so reductions in the sorts of
+resources that simplicity and speed make available (e.g., parameters and
+compute) will have a larger overall effect on the model's cognitive
+power. That is: perhaps, early in training, cognitive resources are more
+scarce, and so more necessary to conserve. Thus, for example, perhaps
+requiring a model to form a long-term, schemer-like plan is a bigger ask
+(and a bigger hit to reward) when it has a smaller budget of
+instrumental reasoning in general available; or perhaps, requiring it to
+use more parameters storing a more complicated goal is more burdensome
+when fewer of its parameters have yet been shaped into useful cognitive
+structures. [16] So to the extent one was tempted by the view that
+these sorts of costs are likely to be "in the noise" relative to other
+considerations (a view I'm tempted by, and which I discuss below), one
+might be less tempted by this with respect to early parts of training
+than with respect to a model's final properties. Overall assessment of arguments that focus on the path SGD takes Overall, though, and despite the possible speed advantages of
+non-schemers, I find the combination of the "training-game-independent
+proxy goals" argument and the "nearest max-reward goal argument" fairly
+worrying. In particular: It seems plausible to me that despite our efforts at mundane
+adversarial training, and especially in a regime where we are
+purposefully shaping our models to have long-term and fairly
+ambitious goals, some kind of suitably ambitious, misaligned,
+beyond-episode goal might pop out of training naturally – either
+before situational awareness, or afterwards – and then cause
+scheming to occur. And even if this doesn't happen naturally, I am additionally
+concerned that by the time it reaches situational awareness, the
+easiest way for SGD to give the model a max-reward goal will be to
+make it into a schemer, because schemer-like goals are sufficiently
+common in goal-space that they'll often show up "nearby" whatever
+less-than-max-reward goal the model has at the time situational
+awareness arises. It's possible that SGD's "incrementalism" obviates
+this concern, and/or that we should expect non-schemer models to be
+"nearer" by default (either because their goals in particular are
+nearer, or because, in a "messy goal-directedness" setting, they
+require easier modifications to the model's current tangled kludge
+of heuristics more generally, or because their "speed" advantages
+will make SGD prefer them). But I don't feel confident. Both these arguments, though, focus on the path that SGD takes through
+model space. What about arguments that focus, instead, on the final
+properties of the models in question? Let's turn to those now. This requires, for example, that models aren't capable of
+" gradient
+hacking "
+a la the introspective goal-guarding methods I discussed above. ↩︎ I also discuss whether their lack of "intrinsic passion" for the
+specified goal/reward might make a difference. ↩︎ Thanks to Rohin Shah for discussion here. ↩︎ Indeed, if we assume that pre-training itself leads to
+situational awareness, but not to beyond-episode,
+scheming-motivating goals, then this would be the default story for
+how schemers arise in a pre-training-then-fine-tuning regime. Thanks
+to Evan Hubinger for flagging this. ↩︎ I see this story as related to, but distinct from, what Hubinger
+calls the "world-model overhang" story, which (as I understand it)
+runs roughly as follows: By the time the model becomes situationally aware, its goals
+probably won't be such that pursuing them perfectly correlates
+with getting high reward. But, at that point, its world-model will contain all the
+information it needs to have in order to training-game. So, after that point, SGD will be able to get a lot of
+bang-for-its-buck, re: reward, by modifying the model to have
+beyond-episode goals that motivate training-gaming. By contrast, it'll probably be able to get less bang-for-buck by
+modifying the model to be more like a training-saint, because
+marginal efforts in this direction will still probably leave the
+model's goal imperfectly correlated with reward (or at least,
+will take longer to reach perfection, due to having to wait on
+correction from future training-episodes that break the
+correlation). So, SGD will create beyond-episode goals that motivate
+training-gaming (and then these goals will crystallize). One issue with Hubinger's framing is that his ontology seems to me
+to neglect reward-on-the-episode seekers in the sense I'm interested
+in  – and SGD's modifying the model into a reward-on-the-episode
+seeker would do at least as well, on this argument, as modifying it
+into a schemer. And it's not clear to me how exactly his thinking
+around "diminishing returns" is supposed to work (though the
+ontology of "near" modifications I use above is one reconstruction). That said, I think that ultimately, the "nearest high-reward goal"
+story and the "world model overhang" story are probably trying to
+point at the same basic thought. ↩︎ Thanks to Daniel Kokotajlo, Rohin Shah, Tom Davidson, and Paul
+Christiano for discussion of this sort of example. ↩︎ Note that while the current regime looks most like (b), the
+"correlates with inclusive genetic fitness" in question (e.g.,
+pleasure, status, etc) seem notably imperfect, and it seems quite
+easy to perform better by the lights of reproductive fitness than
+most humans currently do. Plus, humans didn't gain an understanding
+of evolutionary selection (this is a loose analogy for situational
+awareness) until recently. So the question is: now that we
+understand the selection pressure acting on us, and assuming this
+selection pressure continues for a long time, where would it take
+us? ↩︎ My impression is that some ontologies will try to connect the
+"ease of finding a schemer from a given starting point" to the idea
+that schemers tend to be simple, but I won't attempt this here, and
+my vague sense is that this sort of move muddies the waters. ↩︎ Though: will they be relevantly ambitious? ↩︎ And note that human longtermists start out with un-systematized
+values quite similar to humans who mostly optimize on
+short-timescales – so in the human case, at least, the differences
+that lead in one direction vs. another are plausibly quite small. ↩︎ Thanks to Daniel Kokotajlo for discussion here. ↩︎ Here I'm setting aside concerns about how human values get
+encoded in the genome, and imagining that evolutionary selection is
+more similar to ML than it really is. ↩︎ That said, if the distances of the Chinese restaurants are
+correlated (for example, because they are all in the same
+neighborhood), then this objection functions less smoothly. And
+plausibly, there are at least some similarities between all
+schemer-like goals that might create correlations of this type. For
+example: if the model starts out with a within-episode goal, then
+any schemer-like goal will require extending the temporal horizon of
+the model's concern – so if this sort of extension requires a
+certain type of work from SGD in general, than if the non-schemer
+goal can require less work than that , it might beat all of the
+nearest schemer-like goals. ↩︎ Hubinger (2022) also offers a different objection to the idea that SGD might go for
+a non-schemer goal over a schemer-like goal in this sort of
+competition – namely, that the process of landing on a non-schemer
+max-reward goal will be a "long and difficult path" (see e.g. his
+discussion of the duck learning to care about its mother, in the
+corrigible alignment bit of the high path-dependence section). I
+don't feel that I really understand Hubinger's reasoning here,
+though. My best reconstruction is something like: in order to select
+a non-schemer goal, Hubinger is imagining that SGD keeps picking
+progressively less imperfect (but still not fully max-reward goals),
+and then having to wait to get corrected by training once it runs
+into an episode where the imperfections of these goals are revealed;
+whereas if it just went for a schemer-like goal it could skip this
+long slog. But this doesn't yet explain why SGD can't instead skip
+the long slog by just going for a max-reward non-schemerr goal
+directly. Perhaps the issue is supposed to be something about
+noisiness and variability of the training data? I'm not sure. For
+now, I'm hoping that at least some interpretations of this argument
+will get covered under the discussion of "nearness" above, and/or
+that the best form of Hubinger's argument will get clarified by work
+other than my own. (And see, also, Xu's
+(2020) version of Hubinger's argument, in the section on "corrigibly
+aligned models." Though: on a quick read, Xu seems to me to be
+focusing on the pre-situational-awareness goal-formation process,
+and assuming that basically any misalignment
+post-situational-awareness leads to scheming, such that his is
+really a training-game- independent story, rather than the sort of
+the training-game- dependent story I'm focused on here.) ↩︎ At least if we understand simplicity in a manner that adds
+something to the notion that schemer-like goals are common in
+goal-space, rather than merely defining the simplicity of a goal
+(or: a type of goal?) via its common-ness in goal space. More on
+this sort of distinction in
+section 4.3.1 below. ↩︎ I heard this sort of consideration from Paul Christiano. Prima
+facie, this sort of effect seems to me fairly symmetric between
+simplicity/parameters and speed/compute (and it's unclear to me that
+this is even the right distinction to focus on), so I don't see
+early-training-dynamics as differentially favoring one vs. the
+other as an important resource. ↩︎

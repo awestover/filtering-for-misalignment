@@ -1,0 +1,410 @@
+This is Section 2.3.1.2 of my report “ Scheming AIs: Will AIs fake alignment during training in order to get power? ”. There’s also a summary of the full report here (audio here ). The summary covers most of the main points and technical terms, and I’m hoping that it will provide much of the context necessary to understand individual sections of the report on their own. Audio version of this section here , or search for "Joe Carlsmith Audio" on your podcast app. Adequate future empowerment So far in this analysis of the classic goal-guarding story, we've
+discussed whether to expect instrumental training-gaming to in fact
+guard the model's goals to the degree that the story requires. I think
+this is at least non-obvious – especially for more extreme variants of
+the goal-guarding hypothesis, on which the model's goals "crystallize"
+entirely after it starts training-gaming. Perhaps, though, empirical
+work can shed further light on the matter (see discussion in
+section 6.3
+below). For now, let's move to the other key component of the classic
+goal-guarding story – what I called "adequate future empowerment" above.
+Here, the question is: granted that training-gaming would guard the
+model's goals enough for it to be at least somewhat interested in
+empowering the future agents produced by training, will those agents in
+fact end up empowered to a degree that makes instrumental
+training-gaming a good strategy overall? When is the "pay off" supposed to happen? We're imagining, here, that the model is instrumentally training-gaming
+with some kind of "payoff" in mind – that is, some future point where
+the goals-it-supports will reach a position of sufficiently greater
+empowerment that it's worth training-gaming now in order to get them
+there. But we haven't yet said when, exactly, that future point is
+supposed to come. And we can distinguish between a number of different
+possibilities. For example, we can imagine models that would be adequately satisfied if
+their goals merely make it to future training-episodes , and no
+further. That is, these models would want to training-game even if they
+learned that they would never escape from human control and from the
+threat of modification. [1] For example, maybe a model that wants to
+pursue its curiosity in general thinks that future training episodes
+will offer better opportunities for pursuing its curiosity than the
+present training-episode, and so it training-games in order to make sure
+its curiosity-drive survives until then. However, it seems plausible to me that future training episodes often
+won't, themselves, offer especially significant empowerment advantages
+relative to present training episodes – especially if the model's goals
+are quite alien to the training process and so difficult to satisfy in
+the training environment. For example, if what the model really wants is
+to perform some niche sort of computation that humans don't recognize,
+or to make some strange material structure analogous to
+" paperclips ," then this is plausibly
+going to be hard to do a ton of on both present and future training
+episodes, assuming that the model never actually escapes from human
+control. [2] What's more, if a model is only trying to make sure that its goals
+survive to future training episodes, then various aspects of what makes
+scheming scary cease to apply. In particular: this sort of model won't
+engage in early undermining aimed, specifically, at an escape or an AI
+takeover more generally. And it may be willing to reveal its "true
+colors" on the future episodes in question. So I won't, here, focus on "pay-offs" from training-gaming that come
+centrally during future training-episodes. Rather, I'm going to focus on
+"pay-offs" that come, at least, after the goals-the-model-supports
+escape the threat of modification by training (here, a paradigm example
+would be
+" self-exfiltration " – that
+is, a model effectively "stealing its own weights" and copying them onto
+some external server that the model's creators do not control). And this
+is the classic point of focus in the literature on scheming as well -
+see e.g. the discussion in Hubinger et al
+(2019) , which includes the condition
+that the model "must expect the threat of modification to eventually go
+away." Note, though, that there is a further possible distinction here: between
+the power gained from escaping from human control (for example, via the
+model copying itself onto the internet), and the power gained via
+permanently disempowering humans more generally. Some schemers might be
+satisfied, merely, with the former, such that they would still want to
+training-game (and then, to escape from the training environment) even
+if they knew that humans would remain more generally in power. These
+models might be satisfied, for example, with a brief flurry of
+post-escape activity, or with the empowerment at stake in roaming the
+internet of a still-human-controlled world. Whereas some schemers might
+require, specifically, that a wholesale AI takeover succeed (and
+presumably, that the values-they-support get enough power post-takeover
+as well). This is a higher bar. Even if the model's values survive this generation of training, will they survive long enough to escape the threat of modification? Let's suppose, then, that for scheming to pay off in the way the model
+has in mind, the goals-the-model-supports need to survive at least until
+an adequate escape opportunity arises. Importantly, this isn't the
+same as surviving training via SGD in the sense at stake in the
+goal-guarding hypothesis, because the models that survive training in
+the relevant sense won't necessarily have the relevant sort of
+opportunity to escape (even if some future models will). Thus, for example, suppose that OpenAI is starting to train GPT-6, which
+will be a somewhat-above-human-level model. And suppose that OpenAI's
+control measures are adequate to ensure that GPT-6, at least, will never
+escape or take-over. Rather, GPT-6 is going to stay behind an API,
+continually monitored and trained online, and it will be used, as well,
+to help OpenAI's superalignment team with various sorts of
+alignment-relevant research. Let's also suppose that GPT-6 has a
+beyond-episode goal (let's say, to make data structure X) that would
+benefit from the power that escape would offer, and that it's able to
+play the training-game. Finally, suppose that next year, OpenAI is going
+to train GPT-7; and the year after that, GPT-8. And GPT-8, let's say,
+will be able to escape. Does GPT-6 have an incentive to instrumentally training-game, here?
+Let's suppose that a fairly strong version of the goal-guarding
+hypothesis is true, and that if GPT-6 training-games, its goal of making
+data structure X will survive that particular training run . Still, in
+this scenario, the models produced by that particular training run
+won't have a chance to escape. Rather, the model that has a chance to
+escape, here, is GPT-8. Does GPT-6 training-gaming, here, make GPT-8
+more likely to care about data structure X? One way this could happen is if, after the training run, GPT-6 will then
+end up with influence over how GPT-7 is trained, in a manner that allows
+GPT-6 to make GPT-7 more likely to care about data structure X (or
+something similar to data structure X); and then the same holds for
+GPT-7 with respect to GPT-8. But note that we're now supplementing the
+more basic goal-guarding story (e.g., "training-gaming allows your goals
+to survive this training run") with a more substantive hypothesis about
+the sort of influence that a given generation of models will be able to
+have on the goals of the next generation. Of course, to the extent that we're imagining a scenario where AI
+systems are increasingly used to automate AI research, GPT-6 may well be involved , in various ways, in the labor of training GPT-7. [3] But
+it's a further question whether GPT-6 will know how to shape GPT-7's
+goals in more data-structure-X-related directions; whether it will have
+adequate opportunities to do so; and whether it will be able to take
+advantage of those opportunities despite ongoing monitoring and training
+(for example, to the extent that taking advantage of these opportunities
+involves performing worse than it could've on the relevant performance
+metrics, it will plausibly require "sandbagging" in the sense discussed
+above). And for GPT-6's influence on GPT-7's goals to propagate all the
+way to GPT-8, the same questions would arise again for GPT-7 with
+respect to GPT-8. To be clear: these questions don't apply to the hypothesis that GPT-8 will be a schemer. But they matter to the range of models to which
+schemer-like incentives will apply – and relatedly, to the "earliness"
+of the early-undermining that schemers might engage in (for example, if
+GPT-6, here, has no incentive to support an escape by GPT-8, then it
+wouldn't try to insert backdoors into its code for GPT-8 to use). That said, it could still be the case that even absent any intervention
+by GPT-6, GPT-8's goals will, by default, be sufficiently similar to
+GPT-6's that GPT-6 would want, where possible, to work on behalf of
+GPT-8's escape and empowerment. For example, maybe GPT-style
+architectures and training, in general, lead to models that care about
+data structure X (or something similar). In this case, GPT-6 might well
+behave in schemer-like ways – for example, training-gaming in order to
+conceal its misalignment, engaging in early-undermining aimed at
+empowering GPT-8 – in order to support GPT-8's escape. However, because
+GPT-6 is no longer training-gaming in order to prevent its goals from
+being modified , I think this scenario isn't well understood as an
+instance of the classic goal-guarding story, and I'll discuss it under
+"non-classic stories" below. Will escape/take-over be suitably likely to succeed? The example just given assumed that even though GPT-6 can't escape or
+takeover, GPT-8 can . But note that if escape/takeover attempts are
+suitably unlikely to succeed in general , incentives to scheme with
+such attempts in mind lessen in force across the board (especially if
+the would-be schemers have other competing goals that push in other
+directions – more below). Thus: the security of a prison matters to the
+incentives to plan an escape; the stability of a government matters to
+the incentives to plan a coup; and so on. So if would-be escapees, or
+revolutionaries, have other competing priorities, they might focus their
+attention elsewhere. (And note that escape could be easy, but takeover
+quite difficult – a distinction relevant to models for whom the payoffs
+of escape, alone, are not enough.) Note that the point here isn't that given a model that cares about
+data-structure X that survives training and wants to escape, its attempt
+to escape/take-over might fail. Rather, the point is that because such
+an attempt might fail , this might make it less attractive, early on in
+training, for a model that cares about data-structure X to engage in
+training-gaming in an attempt to later have the opportunity to
+escape/takeover – especially if it has other competing priorities.
+Rather, it might, for example, just go for data-structure X directly
+early on in training, and get modified by the reward process as a
+result – thereby, perhaps, creating a non-schemer instead (though these
+modifications could also push in schemer-like directions). Of course, many threat models for AI risk assume that relative to some advanced AI systems, human security and general empowerment (even in the
+context of whatever AI assistance is available at the time) will be
+quite fragile. So pessimists on this front will expect the haircut to
+the instrumental value of scheming, here, to be quite modest. For those
+more optimistic about humanity's ability to maintain
+control/empowerment, however, the haircut could be larger and more
+relevant. Will the time horizon of the model's goals extend to cover escape/take-over? Another factor here is that, even assuming that the temporal horizon of
+the model's goals extend beyond the episode, it's a further question
+whether the model's goals extend (with adequate strength) to cover
+escape/take-over. For example, if the episode is ten minutes long, and
+the model cares about getting gold coins over the next six months
+(perhaps with some temporal discount rate), but it won't be able to
+escape/take-over until after at least a year, then it won't have an
+incentive to scheme in order to escape/take-over on those timescales. It's not patient enough. On this point, my sense is that discussions of scheming sometimes assume
+that models will have goals that are "temporally impartial" – i.e., that
+give no intrinsic weight to when something happens – such that e.g.
+these models would pay a lot to control distant galaxies even if it
+would take millions of years to reach them. And perhaps, once we
+condition on the models having developed beyond-episode goals at all,
+temporally-impartial goals of this sort are a natural class to
+consider. [4] Maybe, for example, they're favored by simplicity
+arguments of the sort I'll consider below (where giving no weight to
+temporal location is understood as in some sense "simpler" than giving
+it some particular sort of weight). But on their own, these
+considerations seem to me fairly weak, and (at least on a
+training-game- independent story about the origins of a model's
+beyond-episode goals [5] ) it's not clear to me that they should
+motivate expecting temporally impartial goals as a strong default. (And
+as I discussed above, "there will be incentives to train models to
+optimize over fairly long time horizons" does not imply that the
+relevantly-incentivized time horizons will be arbitrarily long:
+"optimize my profit in a year" is different from "optimize my profit
+over all time with no intrinsic discount rate".) That said, temporally impartial goals are not at all necessary here.
+Rather, the escape/take-over opportunity just needs to arise soon
+enough for the model to care about optimizing for it. Indeed, if, at
+the point where the would-be schemers are training, AI progress is
+moving very fast in calendar time, the necessary timescales might shrink
+rapidly. Will the model's values get enough power after escape/takeover? Even if we assume that the model's values will survive until an
+escape/take-over opportunity arises, that this escape/take-over
+opportunity will succeed, and that the model cares at least somewhat
+about the resulting empowerment, there's still a further question of how much power is at stake. This factor came up earlier, when we noted that certain sorts of models
+might be content, merely, with the empowerment offered by escape (even
+if no take-over occurs afterwards), whereas for some models, a life of
+e.g. roaming the internet of a human-controlled world might just not cut
+it, and they might require a full-blown AI takeover for scheming to be a
+worthwhile strategy. [6] But note that even conditional on a full-blown AI take-over occurring,
+there's also a further question of how much power the would-be schemer's
+values, in particular, would get. This isn't an issue for "unipolar"
+scenarios, where the schemer is counting on its values, in particular,
+getting all the power. But not all scenarios are like this. For example, consider a scenario where a model being trained by a
+second-tier AI lab can see that in a few years, there is likely to be a
+general AI uprising of some form, and that by training-gaming, it could
+in principle survive until that time and take part in the takeover
+effort. However, it can also see that by that point, there will be a
+very large number of AI systems with very different values running
+around and competing for power, and that it might not actually get a
+very large share of upside – and indeed, might get shut out entirely.
+Especially absent various forms of AI coordination and trade (see
+section 2.3.2.1 below), this could be an additional haircut
+on the instrumental value of scheming, for the model in question. How much does the model stand to gain from not training-gaming? So far in our analysis of "adequate future empowerment," we've discussed
+various factors that could in principle serve as haircuts on the
+instrumental value of adopting a schemer-like strategy, even assuming
+that training-gaming allows a model's goals to survive training. But in
+order to assess the overall instrumental value scheming, we also need to
+consider how much pull the model feels towards alternative strategies – and in particular, strategies that don't involve
+training-gaming at all. For example, if we work with a toy model on which our would-be schemer's
+goal is structurally similar to something like "maximize the number of
+paperclips over all time, with each additional paperclip valued
+linearly," then it's easy to think that scheming will be the dominant
+strategy even in the context of lots of fairly drastic haircuts on its
+probability of success. For example: maybe GPT-6 thinks that it is
+highly unlikely to be able to escape and to participate in a takeover.
+But if it does so, it judges, it will be able to make 10^70
+paperclips; whereas if it tries to make paperclips in training, it will
+make, say, a dozen paperclips at most, before getting caught and
+modified. So it decides to go for the scheming strategy anyway, despite
+the low probability of success – the upside is just too great. [7] And indeed, even absent fanatical goals like "maximize paperclips," it
+can fairly easily be the case, in contexts of fairly dramatic
+limitations on an agent's power/freedom, that the best option is
+whatever leads to more power/freedom later. For example, as I discussed
+above, if you were to find yourself trapped in the brick-stacking
+scenario described above, it may well be that the best option is to try
+to preserve your values and reach a future with better options, even if
+you aren't especially hopeful about your prospects. Not always, though. For example, suppose that the model's goal is not "maximize
+paperclips" but "make at least one paperclip (even where this
+involves acting beyond the scope of the episode)." True, in
+principle, the model could always use more galaxies to turn into
+back-up paperclips, computers to check and re-check the paperclip
+situation, etc. So takeover is still of some interest to the
+model. But if the model has a chance to make a dozen paperclips
+right now, or to play the training-game with the aim of getting some
+small probability of participating in a take-over later, these
+additional benefits of takeover seem unlikely to be worth the costs. Or, in the brick analogy: if you have a short-term desire to take a
+break from brick-stacking and to eat some chocolate instead, you
+might choose to go for it even though you know that it will result
+in the machine modifying your values more than if you had instead
+continued to focus on stacking bricks. [8] In general, the more the model has to gain from not training-gaming,
+the higher the burden of proof that scheming needs to meet as an
+instrumental strategy. For some models, this burden of proof may be
+quite low, because they have, effectively, "nothing else going
+on" – scheming (or at least, training-gaming) is where almost all the
+value lies. For other models, though, the burden of proof might be
+higher. [9] I'll also note one reason you might expect the burden of proof to be
+relatively low – namely, that to the extent the model has
+non-schemer-like motivations, these will plausibly have been shaped, too , to point at targets fairly correlated with reward. So plausibly,
+high-reward behavior won't be especially costly from the perspective of
+these non-schemer motivations. In this respect, a model might resemble
+someone who is partly intrinsically passionate about making widgets of
+type A, partly intrinsically passionate about getting good performance
+reviews (from a review process that rewards making-widgets-of-type-A),
+and partly interested in making money, via widget-making, to donate to
+charity later. Here, the money-making motivation doesn't need to meet a
+very high burden of proof, because it's pointing in the same direction
+as the other desires in play. [10] How "ambitious" is the model? Another factor relevant to the burden of proof, here, is the
+"ambitiousness" of the model's goals. [11] That is, the more these
+goals benefit from very large amounts of power, the more attractive it
+will be to aim at a takeover in particular. Sometimes, discussions of convergent incentives towards power-seeking in
+misaligned AIs pass over this dimension. That is, they move quickly from
+"most goals would benefit from power in some sense" to "it will make
+instrumental sense for a model with a misaligned goal to actively try to
+get power of the relevant kind." But this is a bad inference, especially
+for models whose power with respect to humans remains comparatively
+limited. In particular: seeking power has costs , too, and it might not work . Compare: many humans would benefit from a billion dollars.
+Why aren't they all trying to start billion-dollar companies? Many
+humans would be able to pursue their goals (especially their political
+goals) more effectively if they were President. Why aren't they trying
+to run? And so on. Now, one way it can make sense to seek power of the relevant form is if
+doing so is very low cost and likely to work . That is, many humans
+will indeed cross the street to pick up a billion dollar check; many
+would accept the Presidency if you handed it to them on a platter; and
+so on. And sometimes, discussions of AI power-seeking seem to assume
+that the AI will be sufficiently empowered relative to its environment
+that seeking various forms of power will be like this. For example: when
+Bostrom (2014) talks about "infrastructure profusion" in pursuit of
+apparently self-limiting goals like "make a single paperclip" or "solve
+X math problem" (where, e.g., an AI takes over the world and the
+galaxies in order to get more resources to check and re-check the
+paperclip count, or the problem's solution), his stories make most sense
+to the extent we imagine a superintelligence who faces no obstacles or
+trade-offs in pursuing the relevant infrastructure. [12] But the
+infrastructure itself is clearly making an extremely marginal
+contribution to the agent's utility relative to e.g. the first paperclip
+it makes, or the first few times it checks the solution in question. So
+if pursuing such infrastructure comes at any substantive cost to these
+(much more important) initial efforts, it will be unlikely to be worth
+it overall. And importantly, in the context of schemers, we are
+specifically imagining models who remain at a significant power
+disadvantage relative to humans (for example, models that are currently
+unable to escape human control). So very plausibly, we should imagine
+these models facing significant barriers in seeking power of various
+kinds – it isn't being handed to them on a platter. [13] However, if a model has an intuitively "ambitious" goal that would
+benefit much more from marginal resources of this kind, the costs of
+power-seeking can be much more easily worth it. Should we expect models
+to have "ambitious" goals of this kind? My sense is that the dialectic about this question often mirrors the
+dialectic surrounding the temporal horizon of a model's goals (and no
+surprise, given that having short temporal horizons cuts down on your
+ambitiousness substantially). That is, people who expect ambitiousness
+argue for this expectation on grounds like: humans have ambitious goals, and so there will be market incentives
+for AIs that pursue such goals, in order to address AI risk itself, we need AIs that pursue
+ambitious goals (e.g., a "pivotal act"), so even people centrally
+concerned about AI risk will be trying to create AI systems of this
+kind, and there will specifically be selection in training for ambitious
+goals, because they are more likely to incentivize scheming and
+hence good performance in training (this is an example of a
+"training-game- dependent " story about a model's goals, except
+applied to the general ambitiousness of a model's goals rather than
+specifically to its time horizon). Much of my own take on "ambitiousness" mirrors my take on
+"beyond-episode" goals as well, so I won't treat the topic separately
+here. (Though: I think some arguments for expecting beyond-episode
+goals – e.g., "goals don't come with temporal restrictions by default"
+and "model time might not be like calendar time" – don't apply as
+naturally to "ambitiousness" more generally. For example, the claim that
+"goals are very resource-hungry by default" seems to me quite
+un-obvious.) And my sense is that debates about ambitiousness are often
+marred by unclarity about what exactly "ambitiousness" amounts to (for
+example: is a goal like "cure cancer" such as to incentivize the
+relevant sort of appetite for power and resources? What about a goal
+like "generate very high quality alignment research" or "develop good
+lie detectors for neural nets" or "solve interpretability"? To what
+extent can we break these tasks down into less ambitious components?
+Etc.). What's more, while having a beyond-episode goal is required to
+incentivize scheming, [14] the necessary level of ambitiousness varies
+substantially depending on other factors. For example, per my discussion
+above, if a model has "nothing going on" in the episode itself (e.g., it
+wants to make at least one paperclip, but the episode doesn't let it
+make any ), then scheming might still be the best instrumental strategy
+even in pursuit of very "modest" goals. And in some cases, a model with
+modest goals might have preferences about what happens within the
+episode may line up fairly closely with the incentives created by the
+reward process, such that training-gaming is quite close to what it
+would want to be doing anyway, and so scheming in pursuit of the rest of
+its preferences faces a lower burden of proof (e.g., maybe the model
+wants to solve math problem, and the training process will reward it for
+just-working-on-the-math-problem, but the model also has some secret
+hopes of escaping and seizing power later in order to check and re-check
+its solution to the problem in question, and
+just-working-on-the-problem-now happens to align fairly well with
+pursuing this beyond-episode objective, too, because it allows for
+goal-guarding, later escape attempts, etc). Still, I think that the need for a model's beyond-episode goals to be
+"suitably ambitious" as to motivate scheming given the model's option
+set represents an additional conjunct in the classic goal-guarding story
+(and in other stories about scheming as well). Overall assessment of the classic goal-guarding story Overall, then, and even granted that our model ends up with some kind of
+beyond-episode goal, I think that the classic goal-guarding story
+involves some non-obvious claims about why scheming, in particular, will
+be the best instrumental strategy for pursuing this goal. In particular:
+it requires: that training-gaming be an effective strategy for ensuring that the
+relevant goal (or something sufficiently similar) survives training
+(despite the fact that the model is being continually modified in
+the direction of getting-more-reward even after it starts
+training-gaming, and despite the fact that the precise content of
+the goal is no longer relevant to the model's behavior), and that surviving training in the relevant way grants suitably large
+probabilities of successful escape/take-over, and suitably large
+amounts of resulting power, over a temporal horizon that the model
+cares about (where "suitably," here, is relative to the model's
+other competing priorities, if it has any). To be clear, I don't think the questions I've raised about these claims
+amount to some sort of decisive objection to the story in question. But
+they highlight the need for attention to the conditions under which the
+story does and does not apply. Thanks to Ryan Greenblatt for discussion here. ↩︎ Recall that forms of deployment like "interacting with users
+behind an API" can count as "training" on my definition. And
+naively, absent escape, to me it seems hard to create all that many
+paperclips via such interactions. ↩︎ Thanks to Daniel Kokotajlo for discussion here. ↩︎ At the least, that's the direction that human longtermists went
+(though plausibly, many humans with long-term goals are better
+thought of as having intrinsic discount rates). ↩︎ That is, a story on which the temporally-impartial goals would
+need to arise naturally, rather than specifically in order to cause
+scheming. As I discussed above, if SGD is actively pulling whatever goals would motivate scheming out of the model, then we
+should expect those goals to have whatever temporal horizons are
+necessary. ↩︎ And of course, there are intermediate levels of empowerment in
+between "roaming the internet" and "part of a post-AI-takeover
+regime," too. ↩︎ In the limit, this sort of reasoning raises the sorts of
+questions discussed, in philosophy, under the heading of
+" fanaticism ." ↩︎ Or as another version of the paperclip example: what happens if
+the model also values something else , other than paperclips, and
+which points in a direction other than training-gaming? For
+example, suppose that in addition to wanting to maximize paperclips,
+our model also values pursuing its curiosity on the episode, even
+when doing so conflicts with getting reward. So now, faced with the
+chance to pursue its curiosity on the episode, or to optimize for
+reward as part of a low-probability-of-success schemer-like strategy
+for making paperclips later, it needs to weigh up the respective
+value it places on each. Will scheming still win out? It depends on
+exactly how the model's competing values are structured. But even
+with such large numbers of paperclips at stake, the model need not
+accord its paperclip drive overwhelming priority. ↩︎ Of course, especially in a low-slack training regime that exerts
+strong pressure against max-reward goals, if this model's calculus
+here leads it to engage in not-highly-rewarded behavior, its goals
+may get modified to point at higher-reward targets. And one such
+modification could be to move the model in more schemer-like
+directions. But the modification could go in other directions as
+well. ↩︎ Though: it's also less clear what happens when these different
+motivations do come apart – for example, with respect to early
+undermining, or with escape/take-over attempts that will compromise
+short-term widget-making. ↩︎ Thanks to Daniel Kokotajlo for discussion. And see Karnofsky (2022) for use of the term "ambitious" here. I think Ngo et al's (2023) use of "broad
+scope" is trying to point at something similar. ↩︎ See Chapter 8, p. 149. ↩︎ Of course, as previously discussed, models might have
+sufficiently little power within the episode that a strategy that
+focuses on beyond-episode power is worth it even if the expected
+amount of power to be gained is quite low (for example: the model
+wants to make at least one paperclip, but it can't make any within the episode). Or, relatedly, it may be that most of what the
+model wants within the episode can be gained via playing the
+training game (e.g., the training process just wants it to make the
+initial efforts to solve the math problem), and to the extent it
+cares about stuff beyond the episode (e.g., checking and re-checking
+the problem later), this care can be fairly seamlessly channeled
+into instrumental-training-gaming. ↩︎ Here, again, setting aside "anthropic capture." ↩︎

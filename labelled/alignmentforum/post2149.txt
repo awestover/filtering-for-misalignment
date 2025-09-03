@@ -1,0 +1,523 @@
+This is joint work by Vanessa Kosoy and Alexander "Diffractor" Appel. For the proofs, see 1 and 2 . TLDR: We present a new formal decision theory that realizes naturalized induction .
+Our agents reason in terms of infra-Bayesian hypotheses, the domain
+of which is the cartesian product of computations and physical states,
+where the ontology of "physical states" may vary from one hypothesis
+to another. The key mathematical building block is the "bridge transform",
+which, given such a hypothesis, extends its domain to "physically
+manifest facts about computations". Roughly speaking, the bridge
+transforms determines which computations are executed by the physical
+universe. In particular, this allows "locating the agent in the
+universe" by determining on which inputs its own source is executed. 0. Background The "standard model" of ideal agency is Bayesian reinforcement
+learning, and more specifically, AIXI .
+We challenged this model before due to its problems with non-realizability, suggesting
+infra-Bayesianism as an alternative. Both formalisms assume the "cartesian
+cybernetic framework", in which (i) the universe is crisply divided
+into "agent" and "environment" and (ii) the two parts interact
+solely via the agent producing actions which influence the environment
+and the environment producing observations for the agent. This is
+already somewhat objectionable on the grounds that this division is
+not a clearly well-defined property of the physical universe. Moreover,
+once we examine the structure of the hypothesis such an agent is expected
+to learn (at least naively), we run into some concrete problems. The modern understanding of the universe is that no observer plays
+a privileged role [1] . Therefore, the laws of
+physics are insufficient to provide a cartesian description of the universe,
+and must, to this end, be supplemented with " bridge rules "
+that specify the agent's location inside the universe. That is, these
+bridge rules need to translate the fundamental degrees of freedom
+of a physical theory (e.g. quantum wavefunction) to the agent's observations
+(e.g. values of pixels on a camera), and translate the agent's actions
+(e.g. signal to robot manipulators) in the other direction [2] .
+The cost of this is considerable growth in the description complexity
+of the hypothesis. A possible retort is something like "how many bits can it really take to pick out the computer within the universe state and describe how to translate universe state to observations? Sure, it might be a considerable chunk of data. But, since Solomonoff induction only needs to make a kilobyte worth of predictive mistakes to learn to predict the inputs as well as any thousand-bit predictor, it should learn this sort of stuff pretty fast." This objection is addressed more later on in this post. A first counter-objection is that, for practical algorithms, this can be a bigger obstacle, especially when sample complexity scales superlinearly with description complexity. For example, the Russo-Van Roy regret bound for Thompson sampling in multi-armed bandits has the time horizon necessary to get a particular regret bound scale as the square of entropy, and the computational complexity cost can also go way up as the description complexity rises, because you need to evaluate more hypotheses more times to test them. For reinforcement learning it's even worse, as in the case of a game where an agent must enter an n-digit password and if it gets it right, it gets reward, and if it gets it wrong, it does not get reward and can try again. The learning time for this game scales as Ω ( 2 n ) , far superlinearly with description complexity. Another assumption of AIXI is the simplicity prior, and we expect
+some form of this assumption to persist in computable and infra-Bayesian
+analogues. This reflects the intuitive idea that we expect the world
+to follow simple laws (or at least contain simple patterns). However,
+from the cartesian perspective, the "world" (i.e. the environment)
+is, prima facie, not simple at all (because of bridge rules)! Admittedly, the increase in complexity from the bridge rule is low compared to the cost of specifying the universe state, but once the agent learns the transition rules and bridge rule for the universe it's in, learning the state of the universe in addition doesn't seem to yield any particular unforeseen metaphysical difficulties. Further, the description complexity cost of the bridge rule seems likely to be above the description complexity of the laws of physics. Hence,
+there is some disconnect between the motivation for using a simplicity
+prior and its implementation in a cartesian framework. Moreover, if the true hypothesis is highly complex, it implies that
+the sample complexity of learning it is very high. And, as previously mentioned, the sample complexity issues are worse in practice than Solomonoff suggests. This should make
+us suspect that such a learning process is not properly exploiting
+Occam's razor. Intuitively, such an agent a-priori considers it equally plausible
+to discover itself to be a robot or to discover itself to be a random
+clump of dust in outer space, since it's about as hard to specify a bridge rule interface between the computer and observations as it is to specify a bridge rule interface between the dust clump and observations and needs a lot of data to resolve all
+those possibilities for how its observations connect to a world. Also, though Solomonoff is extremely effective at slicing through the vast field of junk hypotheses that do not describe the thing being predicted, once it's whittled things down to a small core of hypotheses that do predict things fairly accurately, the data to further distinguish between them may be fairly slow in coming. If there's a simple predictor of events occurring in the world but it's running malign computation, then you don't have the luxury of 500 bits of complexity wiggle room (to quickly knock out this hypothesis), because that's a factor of 2 500 probability difference. Doing worst-case hypothesis testing as in KWIK learning would require a very aggressive threshold indeed, and mispredictions can be rare but important. Furthermore, some events are simple to describe from the subjective
+(cartesian) point of view, but complex to describe from an objective
+(physical) point of view. (For example, all the pixels of the camera
+becoming black.) Modifying a hypothesis by positing exceptional behavior
+following a simple event only increases its complexity by the difficulty of specifying the event and what occurs afterwards, which could be quite low. Hence,
+AIXI-like agents would have high uncertainty about the consequences
+of observationally simple events. On the other hand, from an objective perspective such
+uncertainty seems irrational. (Throwing a towel on the camera should
+not break physics.) In other words, cartesian reasoning is biased
+to privilege the observer. Yet another failure of cartesian agents is the inability to reason
+about origin theories. When we learn that a particular theory explains
+our own existence (e.g. evolution), this serves as a mark in favor
+of the theory. We can then exploit this theory to make useful predictions
+or plans (e.g. anticipate that using lots of antibiotics will cause
+bacteria to develop resistance). However, for a cartesian agent the
+question of origins is meaningless. Such an agent perceives its own
+existence as axiomatic, hence there is nothing to explain. Finally, cartesian agents are especially vulnerable to acausal
+attacks . Suppose we deploy a superintelligent Cartesian AI called Kappa. And, imagine a superintelligent agent Mu that inhabits some purely hypothetical universe. If Mu is motivated to affect our own (real) universe, it can run simulations of Kappa's environment. Kappa, who doesn't know a priori whether it exists in our universe or in Mu's universe, will have to seriously consider the hypothesis it is inside such a simulation. And, Mu will deploy the simulation in such manner as to make the simulation hypothesis much simpler, thanks to simpler bridge rules . This will cause Kappa to become overwhelmingly confident that it is in
+a simulation. If this is achieved, Mu can cause the simulation to diverge from our reality in a strategically chosen point such that Kappa is induced to take an irreversible action in Mu's favor (effectively a treacherous turn). Of course, this requires Kappa to predict Mu's motivations in some detail. This is possible if Kappa develops a good enough understanding of metacosmology . An upcoming post by Diffractor will discuss acausal attacks in more detail. In the following sections, we will develop a "physicalist" formalism
+that entirely replaces the cartesian framework, curing the
+abovementioned ills, though we have not yet attained the stage of proving improved regret bounds with it, just getting the basic mathematical properties of it nailed down. As an additional benefit, it allows naturally
+incorporating utility functions that depend on unobservables, thereby avoiding the problem of "ontological crises" . At the
+same time, it seems to impose some odd constraints on the utility
+function. We discuss the possible interpretations of this. 1. Formalism Notation It will be more convenient to use ultradistributions rather than infradistributions.
+This is a purely notational choice: the decision theory is unaffected,
+since we are going to apply these ultradistributions to loss functions
+rather than utility functions. As support for this claim, Diffractor originally wrote down most of the proofs in infradistribution form, and then changing their form for this post was rather straightforward to do. In addition, for the sake of simplicity,
+we will stick to finite sets: more general spaces will be treated
+in a future article. So far, we're up to countable products of finite sets. We denote R + : = [ 0 , ∞ ) . Given a finite set X , a contribution on X is θ : X → R + s.t. ∑ x θ ( x ) ≤ 1 (it's best to regard it as a measure on X ). The space of contributions is denoted Δ c X . Given f : X → R and θ ∈ Δ c X , we denote θ ( f ) : = ∑ x θ ( x ) f ( x ) .
+There is a natural partial order on contributions: θ 1 ≤ θ 2 when ∀ x ∈ X : θ 1 ( x ) ≤ θ 2 ( x ) . Naturally,
+any distribution is in particular a contribution, so Δ X ⊆ Δ c X .
+A homogenous ultracontribution (HUC) on X is non-empty closed
+convex Θ ⊆ Δ c X which is downward closed w.r.t. the
+partial order on Δ c X . The space of HUCs on X is denoted □ c X .
+A homogenous ultradistribution (HUD) on X is a HUC Θ s.t. Θ ∩ Δ X ≠ ∅ . The space of HUDs on X is denoted □ X . Given f : X → R and Θ ∈ □ c X ,
+we denote Θ ( f ) : = max θ ∈ Θ θ ( f ) . Given s : X → Y , s ∗ : □ c X → □ c Y is the
+pushforward by s : s ∗ Θ : = { s ∗ θ ∣ θ ∈ Θ } ( s ∗ θ ) ( y ) : = ∑ x ∈ s − 1 ( y ) θ ( x ) Given Ξ : X → □ c Y , Ξ ∗ : □ c X → □ c Y is the pushforward by Ξ : Ξ ∗ Θ : = { κ ∗ θ ∣ θ ∈ Θ , κ : X → Δ c Y , ∀ x ∈ X : κ ( x ) ∈ Ξ ( x ) } ( κ ∗ θ ) ( y ) : = ∑ x ∈ X θ ( x ) κ ( x ; y ) p r X : X × Y → X is the projection mapping and p r − Y : = p r X .
+We slightly abuse notation by omitting the asterisk in pushforwards
+by these. Given Θ ∈ □ c X and Ξ : X → □ c Y , Θ ⋉ Ξ ∈ □ c ( X × Y ) is the semidirect product: Θ ⋉ Ξ : = { κ ⋉ θ ∣ θ ∈ Θ , κ : X → Δ c Y , ∀ x ∈ X : κ ( x ) ∈ Ξ ( x ) } ( κ ⋉ θ ) ( x , y ) : = θ ( x ) κ ( x ; y ) We will also use the notation Ξ ⋊ Θ ∈ □ c ( Y × X ) for the same HUC with X and Y flipped. And, for Λ ∈ □ c Y , Θ ⋉ Λ ∈ □ c ( X × Y ) is the semidirect product of Θ with the constant ultrakernel
+whose value is Λ [3] . For more discussion of HUDs, see previous article ,
+where we used the equivalent concept of "cohomogenous infradistribution". Notation Reference If you got lost somewhere and wanted to scroll back to see some definition, or see how the dual form of this with infradistributions works, that's what this section is for. θ is a contribution, a measure with 1 or less measure in total. The dual concept is an a-measure ( λ μ , b ) with λ + b = 1 . Θ is a HUC (homogenous ultracontribution) or HUD (homogenous ultradistribution), a closed convex downwards closed set of contributions. The dual concepts are cohomogenous inframeasure and cohomogenous infradistribution, respectively. Δ c X , □ c X , □ X are the spaces of contributions, homogenous ultracontributions, and homogenous ultradistributions respectively. θ ( f ) , Θ ( f ) are the expectations of functions f : X → [ 0 , 1 ] , defined in the usual way. For θ , it's just the expectation of a function w.r.t. a measure, and for Θ , it's Θ ( f ) : = max θ ∈ Θ θ ( f ) , to perfectly parallel a-measures evaluating functions by just taking expectation, and inframeasures evaluating functions via min ( m , b ) ∈ Ψ m ( f ) + b . ≤ is the ordering on contributions/HUC's/HUD's, which is the function ordering, where θ ≤ θ ′ iff for all f : X → [ 0 , 1 ] , θ ( f ) ≤ θ ′ ( f ) , and similar for the HUC's. Inframeasures are equipped with the opposite ordering. s ∗ Θ is the pushforward along the function s : X → Y . This is a standard probability theory concept which generalizes to all the infra and ultra stuff. Ξ ∗ Θ is the pushforward of Θ along the ultrakernel Ξ : X → □ c Y . This is just the generalization to infra and ultra stuff of the ability to push a probability distribution on X through a probabilistic function X → Δ Y to get a probability distribution on Y . Θ ⋉ Ξ is the semidirect product of Θ and Ξ , an element of □ c ( X × Y ) . This is the generalization of the ability to take a probability distribution on X , and a probabilistic kernel X → Δ Y , and get a joint distribution on X × Y . A , O are the set of actions and observations. N is the time horizon. R is the space of programs, Σ is the space of outputs. Γ = Σ R is the space of functions from programs to the results they output.  An element of Γ can be thought of as the state of the "computational universe", for it specifies what all the programs do. H is the space of histories, action-observation sequences that can end at any point, ending with an observation. D is the space of destinies, action-observation sequences that are as long as possible, going up to the time horizon. C is a relation on Γ × D that says whether a computational universe is consistent with a given destiny. A very important note is that this is not the same thing as "the policy is consistent with the destiny" (the policy's actions are the same as what the destiny advises). This is saying something more like "if the destiny has an observation that the computer spat out result 1 when run on computation A, then that is only consistent with mathematical universes which have computation A outputting result 1". Except we don't want to commit to the exact implementation details of it, so we're leaving it undefined besides just "it's a relation" Φ is the space of "physics outcomes", it can freely vary depending on the hypothesis. It's not a particular fixed space. Θ is the variable typically used for physicalist hypotheses, elements of □ ( Γ × Φ ) . Your uncertainty over the joint distribution over the computational universe and the physical universe. G is the code of the program-which-is-the-agent. So, G ( h ) would be the computation that runs what the agent does on history h , and returns its resulting action. el Γ is the subset of the space Γ × 2 Γ consisting of ( y , α ) pairs s.t. y ∈ α . The y can be thought of as the mathematical universe, and α can be thought of as the set of mathematical universes that are observationally indistinguishable from it. χ A is the indicator function that's 1 on the set A , and 0 everywhere else. It can be multiplied by a measure, to get the restriction of a measure to a particular set. Br ( Θ ) is the bridge transform of Θ , defined in definition 1.1, an ultracontribution over the space el Γ × Φ . H y α is the set of instantiated histories, relative to mathematical universe y , and set of observationally indistinguishable universes α . It's the set of histories h where all the "math universes" in α agree on how the agent's source code reacts to all the prefixes of h , and where the history h can be extended to some destiny that's consistent with math universe y . Ie, for a history to be in here, all the prefixes have to be instantiated, and it must be consistent with the selected math universe. Setting As in the cartesian framework, we fix a finite set A of actions
+and a finite set O of observations. We assume everything happens
+within a fixed finite [4] time horizon N ∈ N . We assume that our agent has access to a computer [5] on which it can execute some finite [4:1] set of
+programs R with outputs in a finite alphabet Σ . Let Γ : = Σ R be the set of "possible computational universes" [6] .
+We denote H : = ( A × O ) < N (the set of histories) and D : = ( A × O ) N − 1 × A (the set of "destinies"). To abstract over the details of how the computer is operated, we assume
+a relation C ⊆ D × Γ whose semantics is, d C y (our notation for ( d , y ) ∈ C ) if and only if destiny d is a
+priori consistent with computational universe y . For example, suppose
+some a ∈ A implies a command to execute program r ∈ R , and
+if o ∈ O follows a , it implies observing the computer return
+output i ∈ Σ for r . Then, if d contains the substring a o and d C y , it must be the case that y ( r ) = i . A physicalist hypothesis is a pair ( Φ , Θ ), where Φ is a finite [4:2] set representing the physical states
+of the universe and Θ ∈ □ ( Γ × Φ ) represents
+a joint belief about computations and physics. By slight abuse of
+notation we will refer to such Θ as a physicalist hypothesis,
+understanding Φ to be implicitly specified. Our agent will have
+a prior over such hypotheses, ranging over different Φ . Two questions stand out to us at this point. The first is, what is
+the domain over which our loss function should be defined? The second
+is, how do we define the counterfactuals corresponding to different
+policies π : H → A ? The answers to both questions turn
+out to require the same mathematical building block. For the first question, we might be tempted to identify Φ as
+our domain. However, prima facie this doesn't make sense, since Φ is hypothesis-dependent. This is the ontological crisis problem: we expect the agent's values to be defined within a certain
+ontology which is not the best ontology for formulating the laws of
+the physical universe. For example, a paperclip maximizer might benefit
+from modeling the universe in terms of quantum fields rather than
+paperclips. In principle, we can circumvent this problem by requiring
+our Φ to be equipped with a mapping ν : Φ → Φ 0 , where Φ 0 is the "axiological" ontology. However, this ν is essentially a bridge rule, carrying with it all the problems of
+bridge rules: acausal attack is performed by the adversarial hypothesis imprinting the "axiological rendering" of the target universe on the microscopic degrees of freedom of the source universe in order to have a low-complexity Φ → Φ 0 function; the analogue of the towel-on-camera issue is that, once you've already coded up your uncertainty over math and physics, along with how to translate from physics to the ontology of value, it doesn't take too much extra complexity to tie "axiologically-simple" results (the analogue of low-complexity observations) to physics-simple results (the analogue of a low-complexity change in what happens), like "if all the paperclips are red, the fine-structure constant doubles in value". Instead, we will take a computationalist stance: value is a
+not property of physical states or processes, but of the computations realized by physical processes. For example, if our agent is "selfish"
+in the sense that, rewards/losses are associated purely with subjective
+histories, the relevant computation is the agent's own source code .
+Notice that, for the program-which-is-the-agent G , histories are
+input. Hence, given loss function l : H → R we
+can associate the loss l ( h ) with the computation G ( h ) . Admittedly, there is an implicit assumption that the agent has access to its own source code, but modal decision theory made the same assumption. For another
+example, if our agent is a diamond maximizer, then the relevant computations
+are simulations of the physics used to define "diamonds". A more concrete analogue of this is worked out in detail in section 3, regarding Conway's Game of Life. For the second question, we might be tempted to follow updateless
+decision theory :
+counterfactuals correspond to conditioning on G = π . Remember, G is the code of the agent. However, this
+is not "fair" since it requires the agent to be "responsible"
+for copies of itself instantiated with fake memories. Such a setting
+admits no learning-theoretic guarantees, since learning requires trusting
+your own memory. (Moreover, the agent also has to be able to trust
+the computer.) Therefore our counterfactuals should only impose G ( h ) = π ( h ) when h is a "real memory", which we against interpret through
+computationalism: h is real if and only if, G ( h ′ ) is physically
+realized for any prefix h ′ of h . Both of our answers requires a formalization of the notion "assuming
+hypothesis Θ , this computation is physically realized".
+More precisely, we should allow for computations to be realized with
+certain probabilities , and more generally allow for ultradistributions
+over which computations are realized. We will now accomplish this
+formalization. Bridge transform Given any set A , we denote e l A = { ( a , B ) ∈ A × 2 A ∣ a ∈ B } . s u p p stands for "support" and χ A is the characteristic
+function of A . Definition 1.1: Let Γ , Φ be finite sets and Θ ∈ □ c ( Γ × Φ ) . The bridge transform of Θ is B r Γ ( Θ ) ∈ □ c ( Γ × 2 Γ × Φ ) s.t. θ ∈ B r Γ ( Θ ) if and only if s u p p θ ⊆ e l Γ × Φ for any s : Γ → Γ , p r Γ × Φ χ e l Γ × Φ ( s × i d 2 Γ × Φ ) ∗ θ ∈ Θ . We will use the notation B r ( Θ ) when Γ is obvious
+from the context. Notice that we are multiplying by χ e l Γ × Φ , not pushforwarding. The 2 Γ variable of the bridge transform denotes the "facts
+about computations realized by physics". In particular, if this α ∈ 2 Γ takes the form { y ∈ Γ ∣ ∀ r ∈ R 0 : y ( r ) = y 0 ( r ) } for some R 0 ⊆ R and y 0 ∈ Σ R 0 ,
+then we may say that the computations R 0 are "realized"
+and the computations R ∖ R 0 are "not realized".
+More generally, talking only about which computations are realized
+is imprecise since α might involve "partial realization"
+and/or "entanglement" between computations (i.e. not be of the
+form above). Intuitively, this definition expresses that the "computational universe"
+can be freely modified as long as the "facts known by physics"
+are preserved. However, that isn't what originally motivated the definition. The bulk of its justification comes from its
+pleasing mathematical properties, discussed in the next section. A physicalist agent should be equipped with a prior over physicalist
+hypotheses. For simplicity, suppose it's a discrete Bayesian prior
+(it is straightforward to generalize beyond this): hypothesis Θ i is assigned probability ζ ( i ) and ∑ i ζ ( i ) = 1 . Then,
+we can consider the total bridge transform of the prior.  It can't be given by mixing the hypotheses together and applying the bridge transform, because every hypothesis has its own choice of Φ , its own ontology, so you can't mix them before applying the bridge transform. You have to apply the bridge transform to each component first, forget about the choice of Φ via projecting it out, and then mix them afterwards. This receives further support from Proposition 2.13 which takes an alternate possible way of defining the bridge transform for mixtures (extend all the hypotheses from Γ × Φ i to Γ × ⨆ i Φ i in the obvious way so you can mix them first) and shows that it produces the same result. Definition 1.2: B r ( ζ ⋉ Θ ) : = ∑ i ζ ( i ) p r e l Γ B r ( Θ i ) ∈ □ e l Γ Evaluating policies Given A ⊆ X , ⊤ A ∈ □ X is defined as { θ ∈ Δ c X ∣ s u p p θ ⊆ A } . I.e., it's total uncertainty over which point in A will be selected. We need to assume that R contains programs representing the
+agent itself. That is, there is some M ∈ N , d e c : Σ M → A and for each h ∈ H , ┌ G ( h ) ┐ ∈ R M . Pretty much, if you have large numbers of actions available, and a limited number of symbols in your language, actions (and the outputs of other programs with a rich space of outputs) can be represented be m-tuples of programs, like "what's the first bit of this action choice" and "what's the second bit of this action choice" and so on. So, M is just how many bits you need, d e c is the mapping from program outputs to the actual action, and ┌ G ( h ) ┐ is the m-tuple of of programs which implements the computation "what does my source code do on input history h ". The behavior of the agent in a particular mathematical universe is given by taking each program in ┌ G ( h ) ┐ , using the mathematical universe to figure out what each of the programs outputs, and then using d e c to convert that bitstring to an action. Definition 1.3: Given y ∈ Γ and h ∈ H ,
+we define G y ( h ) ∈ A to be d e c ( a ) for a ∈ Σ M given by a i : = y ( ┌ G ( h ) ┐ i ) . We can now extract counterfactuals from any Λ ∈ □ e l Γ . Specifically, given any policy π we define some C π ⊆ e l Γ (the set of stuff consistent with behaving according to π , for a yet-to-be-defined notion of consistency)
+and define the counterfactual as Λ ∩ ⊤ C π .
+We could use the "naive" definition: Definition 1.4: C π n a i v e is the set of all ( y , α ) ∈ e l Γ s.t. for any h ∈ H , G y ( h ) = π ( h ) . Per discussion above, it seems better to use a different definition.
+We will use the notation h ⊏ g to mean " h is a proper
+prefix of g " and h ⊑ g to mean " h is a prefix
+of g ", Definition 1.5: Given ( y , α ) ∈ e l Γ , let H y α be the set of all h ∈ H s.t. the following two
+conditions hold: For all g a ∈ H × A and y ′ ∈ Γ where g a ⊏ h and y ′ ∈ α , G y ′ ( g ) = a . h ⊏ d for some d ∈ D s.t. d C y . C π f a i r is the set of all ( y , α ) ∈ e l Γ s.t. for any h ∈ H y α , G y ( h ) = π ( h ) . Here, condition 1 says that we only "take responsibility" for
+the action on a particular history when the history was actually observed
+(all preceding evaluations of the agent are realized computations).
+Condition 2 says that we only "take responsibility" when the computer
+is working correctly. At this stage, Definition 1.5 should be regarded as tentative, since
+we only have one result so far that validates this definition, namely that the set of ( y , α ) in C π fair only depends on what the policy π does on possible inputs, instead of having the set depending on what the policy does on impossible inputs where one of the past memorized actions is not what the policy would actually do. We hope to rectify this in future
+articles. Putting everything together: given a loss function L : e l Γ → R , which depends on how the mathematical universe is, and which computations are realized or not-realized,
+the loss of policy π is given by just applying the bridge transform to coax the hypotheses into the appropriate form, intersecting with the set of possibilities consistent with the agent behaving according to a policy, and evaluating the expectation of the loss function, as detailed below. L pol ( π , ζ ) : = ( B r ( ζ ⋉ Θ ) ∩ ⊤ C π f a i r ) ( L ) Evaluating agents So far we regarded the agent's source code G and the agent's policy π as independent variables, and explained how to evaluate different
+policies given fixed G . However, in reality the policy is determined
+by the source code. Therefore, it is desirable to have a way to evaluate
+different codes . We achieve this using an algorithmic information theory approach. We also want to allow the loss function to depend on G . That is,
+we postulate L : ( R M ) H × e l Γ → R . Specifically, since R M can be thought of as the space of actions, ( R M ) H is basically the space of policies. In
+section 3 we will see why in some detail, but for now think of the
+difference between "maximizing my own happiness" and "maximizing
+Alice's happiness": the first is defined relative to the agent
+(depends on G ) whereas the second is absolute (doesn't depend on G ). In particular, for a selfish agent that just cares about its own observations, its loss function must reference its own source code. Definition 1.6: Denote G ∗ : H → A the
+policy actually implemented by G . Fix ξ ∈ Δ ( A H ).
+The physicalist intelligence of G relative to the baseline policy mixture ξ ,
+prior ζ and loss function L is defined by: g ( G ∣ ξ ; ζ , L ) : = − log P r π ∼ ξ [ L pol ( ┌ G ┐ , π , ζ ) ≤ L pol ( ┌ G ┐ , G ∗ , ζ ) ] Notice that L pol depends on ┌ G ┐ in two ways:
+through the direct dependence of L on ┌ G ┐ and
+through C π f a i r . In particular, it makes sense to choose ζ and ξ as simplicity
+priors. There is no obvious way to define "physicalist AIXI", since we
+cannot have g = ∞ . For one thing, g is not even
+defined for uncomputable agents. In principle we could define it for non-uniform agents, but then we get a fixpoint problem that doesn't obviously
+have a solution: finding a non-uniform agent G s.t. L pol ( ┌ G ┐ , G ∗ , ζ ) = min π L pol ( ┌ G ┐ , π , ζ ) . On the other hand, once we spell out the infinitary
+( N = ∞ ) version of the formalism, it should be possible to prove
+the existence of agents with arbitrarily high finite g . That's
+because our agent can use quining to access its own source code ┌ G ┐ ,
+and then brute force search a policy π ∗ ϵ with L pol ( ┌ G ┐ , π ∗ ϵ , ζ ) < inf π : H → A L pol ( ┌ G ┐ , π , ζ ) + ϵ . 2. Properties of the bridge transform In this section we will not need to assume Γ is of the
+form Σ R : unless stated otherwise, it will be any finite
+set. Sanity test Proposition 2.1: For any Γ , Φ and Θ ∈ □ c ( Γ × Φ ) , B r ( Θ ) exists and satisfies p r Γ × Φ B r ( Θ ) = Θ .
+In particular, if Θ ∈ □ ( Γ × Φ ) then B r ( Θ ) ∈ □ ( e l Γ × Φ ) . Downwards closure Roughly speaking, the bridge transform tell us which computations
+are physically realized. But actually it only bounds it from one side:
+some computations are definitely realized but any computation might be realized. One explanation for why it must be so is: if you looked at the world in more detail, you might realize that there are small-scale, previously invisible, features of the world which depend on novel computations. There is a direct tension between bounding both sides (i.e. being able to say definitively that a computation isn't instantiated) and having the desirable property that learning more about the small-scale structure of the universe narrows down the uncertainty. To formalize this, we require the following definitions: Definition 2.1: Let X be a partially ordered set
+(poset). Then the induced partial order on Δ c X is
+defined as follows. Given θ , η ∈ Δ c X , θ ⪯ η if and only if for any monotonically non-decreasing function f : X → R + , θ ( f ) ≤ η ( f ) . This is also called the stochastic order (which is standard mathematical terminology). Intuitively, θ ⪯ η means that η has its measure further up in the poset than θ does. To make that intuition formal, we can also characterize the induced order as follows: Proposition 2.2: Let X be a poset, θ , η ∈ Δ c X .
+Then, θ ⪯ η if and only if there exists κ : X → Δ X s.t.: For all x ∈ X , y ∈ s u p p κ ( x ) : x ≤ y . κ ∗ θ ≤ η Proposition 2.3: Let X be a poset, θ , η ∈ Δ c X .
+Then, θ ⪯ η if and only if there exists κ : X → Δ X s.t.: For all x ∈ X , y ∈ s u p p κ ( x ) : x ≥ y . θ ≤ κ ∗ η Or, in words, you can always go from θ to η by moving probability mass upwards from where it was, since κ ( x ) is always supported on the set of points at-or-above x . We can now state the formalization of only bounding one side of the bridge transform. Let e l Γ × Φ be
+equipped with the following order. ( y , α , x ) ≤ ( y ′ , α ′ , x ′ ) if and only if y = y ′ , x = x ′ and α ⊆ α ′ . Then: Proposition 2.4: For any Γ , Φ and Θ ∈ □ c ( Γ × Φ ) , B r ( Θ ) is downwards closed w.r.t. the induced order on Δ c ( e l Γ × Φ ) .
+That is, if θ ∈ B r ( Θ ) and η ⪯ θ then η ∈ B r ( Θ ) . Simple special case Let's consider the special case where there's only one program, which can produce two possible outputs, a 0 and a 1. And these two outputs map to two different distributions over physics outcomes in Φ . Intuitively, if the computation isn't realized/instantiated, the distribution over physics outcome should be identical, while if the computation is realized/instantiated, it should be possible to look at the physics results to figure out how the computation behaves. The two probability distributions may overlap some intermediate amount, in which case it should be possible to write the two probability distributions as a mixture between a probability distribution that behaves identically regardless of the program output (the "overlap" of the two distributions), and a pair of probability distributions corresponding to the two different program outputs which are disjoint. And the total variation distance ( d TV ( ϕ ( 0 ) , ϕ ( 1 ) ) ) between the two probability distributions is connected to the size of the distribution overlap. Proposition 2.5 makes this formal. Proposition 2.5: Consider a finite set X , ϕ ? ∈ Δ X , ϕ ! : { 0 , 1 } → Δ X , p ∈ [ 0 , 1 ] and ϕ : = ( 1 − p ) ϕ ? + p ϕ ! .
+Then, p ≥ d TV ( ϕ ( 0 ) , ϕ ( 1 ) ) . Conversely, consider any ϕ : { 0 , 1 } → Δ X .
+Then, there exist ϕ ? ∈ Δ X and ϕ ! : { 0 , 1 } → Δ X s.t. ϕ = ( 1 − p ) ϕ ? + p ϕ ! for p : = d TV ( ϕ ( 0 ) , ϕ ( 1 ) ) . The bridge transform should replicate this same sort of analysis. We can interpret the case of "total uncertainty over math, but knowing how physics turns out conditional on knowing how math turns out" by ⊤ Γ ⋉ ϕ for some ϕ : Γ → Δ Φ . Taking the special case where Γ = { 0 , 1 } for one program that can output two possible answers, it should return the same sort of result, where the two probability distributions can be decomposed into their common overlap, and non-overlapping pieces, and the overlapping chunk of probability measure should be allocated to the event "the computation is not instantiated", while the disjoint ones should be allocated to the event "the computation is instantiated". As it turns out, this does indeed happen, with the same total-variation-distance-based upper bound on the probability that the computation is unrealized (namely, 1 − d TV ( ϕ ( 0 ) , ϕ ( 1 ) ) ) Proposition 2.6: Consider any Φ and ϕ : { 0 , 1 } → Δ Φ .
+Denote U : = { 0 , 1 } × { { 0 , 1 } } × Φ (the event "program
+is unrealized"). Let Λ : = B r ( ⊤ { 0 , 1 } ⋉ ϕ ) .
+Then, Λ ( χ U ) = 1 − d TV ( ϕ ( 0 ) , ϕ ( 1 ) ) Bound in terms of support If the physical state is x ∈ Φ , then it is intuitively obvious
+that the physically manifest facts about the computational universe y ∈ Γ must include the fact that ( y , x ) ∈ s u p p Θ . Formally: Proposition 2.7: If X is a poset and Θ ∈ □ c X ,
+then Θ ↓ will denote downward closure of Θ .
+For any Γ , Φ and Θ ∈ □ c ( Γ × Φ ) if ( y , α , x ) ∈ s u p p B r ( Θ ) and y ′ ∈ α , then ( y ′ , x ) ∈ s u p p Θ .
+Moreover, define s u s Θ : Φ → 2 Γ by s u s Θ ( x ) : = { y ∈ Γ ∣ ( y , x ) ∈ s u p p Θ } .
+Then, B r ( Θ ) ⊆ ( Θ ⋉ s u s Θ ) ↓ (we slightly abuse notation by treating s u s Θ as a mapping Γ × Φ → 2 Γ that doesn't depend on the
+first argument, and also playing loose with the order of factors in
+the set on which our HUCs live). Putting that into words, all the ( α , x ) that are in the support of the bridge transform have α being a subset of the support of Θ restricted to x . The bridge transform knows not to provide α sets which are too large. Further, the bridge transform is smaller/has more information than the transform that just knows about what the support of Θ is. Idempotence Imagine replacing the physical state space Φ by the space of
+manifest facts 2 Γ . Intuitively, the latter should contain
+the same information about computations as the former. Therefore,
+if we apply the bridge transform again after making such a replacement,
+we should get the same thing. Given any set X , we denote i d X : X → X the identity mapping and d i a g X : X → X × X the diagonal
+mapping. Proposition 2.8: For any Γ , Φ and Θ ∈ □ c ( Γ × Φ ) B r ( p r Γ × 2 Γ B r ( Θ ) ) = [ ( i d Γ × d i a g 2 Γ ) ∗ p r Γ × 2 Γ B r ( Θ ) ] ↓ Refinement If we refine a hypothesis (i.e. make it more informative) in the ultradistribution
+sense, the bridge transform should also be more refined: Proposition 2.9: For any Γ , Φ and Θ 1 , Θ 2 ∈ □ c ( Γ × Φ ) ,
+if Θ 1 ⊆ Θ 2 then B r ( Θ 1 ) ⊆ B r ( Θ 2 ) . Another way of refining a hypothesis is refining the ontology, i.e.
+moving to a richer state space. For example, we can imagine one hypothesis
+that describes the world in terms of macroscopic objects and another
+hypothesis that describes the worlds in term of atoms which are otherwise
+perfectly consistent with each other. In this case, we also expect
+the bridge transform to become more refined. This desiderata is where the downwards closure comes from, because it's always possible to pass to a more detailed view of the world and new computations could manifest then. It's also worth noting that, if you reduce your uncertainty about math, or physics, or move to a more detailed state space, that means more computations are instantiated, and the loss goes down as a result. Proposition 2.10: For any Γ , Φ 1 , Φ 2 , t : Φ 2 → Φ 1 and Θ ∈ □ c ( Γ × Φ 2 ) ( i d e l Γ × t ) ∗ B r ( Θ ) ⊆ B r ( ( i d Γ × t ) ∗ Θ ) In general, when we refine the ontology, the manifest facts can become
+strictly refined: the richer state "knowns more" about computations
+than the poorer state. However, there is a special case when we don't
+expect this to happen, namely when the rich state depends on the computational
+universe only through the poor state. Roughly speaking, in this case
+once we have the poor state we can sample the rich state without evaluating
+any more programs. To formalize this, it is convenient to introduce
+pullback of HUCs, which is effectively the probabilistic version of taking a preimage. Definition 2.2: Let X , Y be finite sets and t : X → Y a mapping. We define the pullback [7] operator t ∗ : □ c Y → □ c X by t ∗ Θ : = { θ ∈ Δ c X ∣ t ∗ θ ∈ Θ } Proposition 2.11: Consider any Γ , Φ 1 , Φ 2 , t : Φ 2 → Φ 1 , Ξ : Φ 1 → □ c Φ 2 and Θ ∈ □ c ( Γ × Φ 1 ) s.t. t Ξ = i d Φ 1 .
+Then, ( i d e l Γ × Ξ ) ∗ B r ( Θ ) ⊆ B r ( ( i d Γ × Ξ ) ∗ Θ ) ⊆ ( i d e l Γ × t ) ∗ B r ( Θ ) In particular, p r e l Γ B r ( Θ ) = p r e l Γ B r ( ( i d Γ × Ξ ) ∗ Θ ) In other words, we can think of Φ 1 as the coarse-grained version, and Φ 2 as the fine-grained version, and t as the coarse-graining function, and Ξ as the function mapping a coarse grained state to some uncertainty over what the corresponding fine-grained state is. Θ is your starting uncertainty over computations and the coarse-grained state. Then, in order from most to least informative, you could apply Ξ after the bridge transform, apply Ξ before the bridge transform, or pull back along t after the bridge transform (because the pullback is the most uninformative inverse, in a sense). But all this stuff only affects the information about the fine-grained state Φ 2 . If you were to forget about that, the data about computations and how they're instantiated is the same no matter whether you do the bridge transform with the coarse state, or try your best to fill in what the fine state is first, because the "fill in the fine state" function doesn't depend on your uncertainty about computations, so it doesn't contain any more information about how math is connected to physics than the original coarse-grained view had. Mixing hypotheses In general, we cannot expect the bridge transform to commute with
+taking probabilistic mixtures. For example, let Γ = { 0 , 1 } , Φ = { 0 , 1 } , Θ 1 = ⊤ { 00 , 11 } , Θ 2 = ⊤ { 01 , 10 } .
+Clearly either for Θ 1 or for Θ 2 , we expect the
+program to be realized (since the physical state encodes its output).
+On the other hand, within 1 2 Θ 1 + 1 2 Θ 2 we have both the distribution "50% on 00, 50% on 01" and the
+distribution "50% on 10, 50% on 11". The physical state no longer
+necessarily "knows" the output, since the mixing "washes away"
+information. However, there's no reason why mixing would create information, so we can expect the mixture of bridge transforms to
+be a refinement of the bridge transform of the mixture. Proposition 2.12: For any Γ , Φ , Θ 1 , Θ 2 ∈ □ c ( Γ × Φ ) and p ∈ [ 0 , 1 ] p B r ( Θ 1 ) + ( 1 − p ) B r ( Θ 2 ) ⊆ B r ( p Θ 1 + ( 1 − p ) Θ 2 ) Now suppose that we are we are mixing hypotheses whose state spaces
+are disjoint . In this case, there can be no washing away since
+the state "remembers" which hypothesis it belongs to. Proposition 2.13: Consider some Γ , Φ 1 , Φ 2 , Θ 1 ∈ □ c ( Γ × Φ 1 ) , Θ 1 ∈ □ c ( Γ × Φ 2 ) and p ∈ [ 0 , 1 ] . Regard Φ 1 , 2 as subsets of Φ 1 ⊔ Φ 2 ,
+so that p Θ 1 + ( 1 − p ) Θ 2 ∈ □ c ( Γ × ( Φ 1 ⊔ Φ 2 ) ) .
+Then, p B r ( Θ 1 ) + ( 1 − p ) B r ( Θ 2 ) = B r ( p Θ 1 + ( 1 − p ) Θ 2 ) In particular, if we consider the hypotheses within a prior as having
+disjoint state spaces because of using different ontologies, then the total bridge transform (Definition 1.2)
+is just the ordinary bridge transform, justifying that definition. Conjunction Given a hypothesis and a subset of Γ , we can form a new hypothesis
+by performing conjunction with the subset. Intuitively, the same conjunction
+should apply to the manifest facts. Proposition 2.14: Consider some Γ , Φ , Θ ∈ □ c ( Γ × Φ ) and F ⊆ Γ . Let ∩ F : 2 Γ → 2 Γ be defined by ∩ F ( α ) : = F ∩ α .
+Then, B r Γ ( Θ ∩ ⊤ F × Φ ) = ( i d Γ × ∩ F × i d Φ ) ∗ ( B r Γ ( Θ ) ∩ ⊤ F × 2 Γ × Φ ) Moreover, let ι : F → Γ and e l ι : e l F → e l Γ be the natural injections. Then, B r F ( ( ι × i d Φ ) ∗ ( Θ ∩ ⊤ F × Φ ) ) = ( e l ι × i d Φ ) ∗ B r Γ ( Θ ∩ ⊤ F × Φ ) That first identity says that it doesn't matter whether you update on a fact about math first and apply the bridge transform later, or whether you do the bridge transform first and then "update" (actually it's slightly more complicated than that since you have to narrow down the sets α ) the hypothesis afterwards.
+The second identity shows that, post conjunction with F , taking
+the bridge transform with respect to F is essentially the same
+as taking it with respect to Γ . If a batch of math universes is certain not to occur, then dropping them entirely from the domain Γ produces the same result. As a corollary, we can eliminate dependent variables. That is, suppose
+some programs can be expressed as functions of other programs (using Θ ). Intuitively, such programs can be ignored. Throwing in the dependent variables and doing the bridge transform on that augmented space of "math universes" produces the same results as trying to compute the dependent variables after the bridge transform is applied. So, if you know how to generate the dependent variables, you can just snip them off your hypothesis, and compute them as-needed at the end. Formally: Proposition 2.15: Consider some Γ 0 , Γ 1 , r : Γ 0 → Γ 1 , Φ , Θ ∈ □ c ( Γ 0 × Φ ) .
+Let ι : Γ 0 → Γ 0 × Γ 1 be given
+by ι ( y ) : = ( y , r ( y ) ) . Then, B r ( ( ι × i d Φ ) ∗ Θ ) = ( e l ι × i d Φ ) ∗ B r ( Θ ) Factoring Γ When Γ is of the form Γ 0 × Γ 1 , we can
+interpret the same Θ ∈ □ ( Γ × Φ ) in two ways:
+treat Γ 1 as part of the computational universe, or treat
+it as part of the physical state. We can also "marginalize" over
+it altogether staying with a HUD on Γ 0 × Φ . The bridge
+transforms of these objects satisfy a simple relationship: Proposition 2.16: Consider some Γ 0 , Γ 1 , Φ and Θ ∈ □ c ( Γ 0 × Γ 1 × Φ ) .
+Define π : e l Γ 0 × Γ 1 → e l Γ 0 by π ( y , z , α ) : = ( y , { y ′ ∈ Γ 0 ∣ ( y ′ , z ) ∈ α } ) .
+Then, ( π × i d Φ ) ∗ B r Γ 0 × Γ 1 ( Θ ) ⊆ p r e l Γ 0 × Φ B r Γ 0 ( Θ ) ⊆ B r Γ 0 ( p r Γ 0 × Φ Θ ) Intuitively, the least informative result is given by completely ignoring the Γ 1 part of math about how a particular batch of computations turns out. A more informative result is given by treating Γ 1 as an aspect of physics. And the most informative result is given by treating Γ 1 as an aspect of math, and then pruning the resulting α : 2 Γ 0 × Γ 1 down to be over 2 Γ 0 by plugging in the particular Γ 1 value. Continuity Proposition 2.17: B r ( Θ ) is a continuous function
+of Θ . Lamentably, this only holds when all the involved sets are finite. However, a generalization of continuity, scott-continuity, still appears to hold in the infinite case. Intuitively, the reason why is, if Φ is a continuous space, like the interval [ 0 , 1 ] , you could have a convergent sequence of hypotheses Θ where the events "program outputs 0" and "program outputs 1" are believed to result in increasingly similar outputs in physics, and then in the limit, where they produce the exact same physics outcome, the two possible outputs of the program suddenly go from "clearly distinguishable by looking at physics" to "indistinguishable by looking at physics" and there's a sharp change in whether the program is instantiated. This is still a Scott-continuous operation, though. 3. Constructing loss functions In section 1 we allowed the loss function L : e l Γ → R to be arbitrary. However, in light of Proposition 2.4, we might as
+well require it to be monotonically non-decreasing. Indeed, we have
+the following: Proposition 3.1: Let X be a finite poset, f : X → R and Θ ∈ □ c X downward closed. Define f max : X → R by f max ( x ) : = max y ≤ x f ( y ) . Observe that f max is
+always non-decreasing. Then, Θ ( f ) = Θ ( f max ) . This essentially means that downwards-closed HUC's are entirely pinned down by their expectation value on monotone functions, and all their other expectation values are determined by the expectation value of the "nearest monotone function", the f max . This requirement on L (we will call it the "monotonicity principle")
+has strange consequences that we will return to below. The informal discussion in section 1 hinted at how the computationalist
+stance allows describing preferences via a loss function of the type e l Γ → R . We will now proceed to make it
+more formal. Selfish agents A selfish agent naturally comes with a cartesian loss function L : D → R . Definition 3.1: For any ( y , α ) ∈ e l Γ ,
+the set of experienced histories X y α is the set of
+all h a ∈ H y α × A (see Definition 1.5) s.t. for any y ′ ∈ α , G y ′ ( h ) = a . The physicalized loss function is L phys ( y , α ) : = min h a ∈ X y α max d ∈ D : h a ⊑ d L ( d ) Notice that L phys implicitly depends on ┌ G ┐ through X y α . Intuitively, if α is a large set, there's different mathematical universes that result in the agent's policy being different, but which are empirically indistinguishable (ie, they're in the same set α ), so the agent's policy isn't actually being computed on those histories where the contents of α disagree on what the agent does. The agent takes the loss of the best history that occurs, but if there's uncertainty over what happens afterwards/later computations aren't instantiated, it assumes the worst-case extension of that history. This definition has the following desirable properties: If g ∈ X y α , h a ∈ H × A and h a ⊑ g ,
+then h ∈ X y α . L phys is monotone. If the set of indistinguishable mathematical universes gets larger, fewer histories are instantiated, so the loss is larger because of the initial minimization. Fix ( y , α ) ∈ e l Γ . Suppose there is d ∈ D s.t. X y α = { h a ∈ H × A ∣ h a ⊑ d } . Then L phys ( y , α ) = L ( d ) . If the set of indistinguishable mathematical universes all agree on what the destiny of the agent is and disagree elsewhere, then the loss is just the loss of that destiny. We can think of inconsistent histories within X y α as associated
+with different copies of the agent. If h a ∈ X y α is
+s.t. for any g ⊐ h a , g ∉ X y α , then h represents
+the history of a copy which reached the end of its life. If there
+is only one copy and its lifespan is maximal, then L phys produces
+the cartesian loss of this copy. If the lifespan is less than maximal, L phys produces the loss of the worst-case continuation of
+the history which was experienced. In other words, death (i.e., the future behavior of the agents policy not being a computation that has any effect on the state of the universe) is always
+the worst-case outcome. If there are multiple copies, the best-off copy determines the loss. Definition 3.1 is somewhat arbitrary, but the monotonicity principle
+is not. Hence, for a selfish agent (i.e. if L only depends on y , α through X y α ) death must be the worst-case outcome (for
+fixed y ). Note that this weighs against getting the agent to shut down if it's selfish. And creating additional copies must always be beneficial.
+For non-selfish agents, similar observations hold if we replace "death"
+by "destruction of everything that matters" and "copies of the
+agent" by "copies of the (important sector of the) world". This is an odd state of affairs. Intuitively, it seems coherent to
+have preferences that contradict the monotonicity principle. Arguably,
+humans have such preferences, since we can imagine worlds that we
+would describe as net negative. At present, we're not sure how to
+think about it, but here are some possibilities, roughly in order
+of plausibility: Perfect physicalists must obey the monotonicity principle, but
+humans are not perfect physicalists. Indeed, why would they be? The
+ancestral environment didn't require us to be physicalists, and it
+took us many centuries to stop thinking of human minds as "metaphysically
+privileged". This might mean that we need of theory of "cartesian
+agents in a physicalist universe". For example, perhaps from a cartesian
+perspective, a physicalist hypothesis needs to be augmented by some
+"theory of epiphenomena" which predicts e.g. which of several
+copies will "I" experience. Something is simply wrong about the formalism. One cheap way to
+escape monotonicity is by taking the hull of maximal points of the bridge transform. However, this spoils compatibility with refinements
+(Propositions 2.9 and 2.10). We expect this to spoil ability to learn
+in some way. Death is inherently an irreversible event. Every death is the agent's
+first death, therefore the agent must always have uncertainty about
+the outcome. Given a non-dogmatic prior, there will be some probability
+on outcomes that are not actually death. These potential "afterlives"
+will cause the agent to rank death as better than the absolute worst-case.
+So, "non-survivalist" preferences can be reinterpreted as a prior
+biased towards not believing in death. Similar reasoning applies to
+non-selfish agents. We should just bite the bullet and prescriptively endorse the odd consequences
+of the monotonicity principle. In either case, we believe that continuing the investigation of monotonic physicalist agents is a promising path forward. If a natural extension or modification of the theory exists which admits non-monotonic agents, we might discover it along the way. If we don't, at least we will have a better lower bound for the desiderata such a theory should satisfy. Unobservable states What if the loss depends on an unobservable state from some state
+space S ? In order to encode states, let's assume some M S ∈ N and d e c S : Σ M S → S . That is, just as the action of the agent can be thought of as a tuple of programs returning the bits of the computation of the agent's action, a  state can be thought of as a tuple of programs returning the bits of the computation of what the next state is. Let B be a finite
+set ("nature's actions"). Just as observations, in the selfish case, occur based on what computations are instantiated, nature's choice of action B depends on what computations are instantiated. Denote H S : = ( A × B × O × S ) < N , D S : = ( A × B × O × S ) N − 1 × A . Let ┌ T ┐ : S × A × B → R M S be the "ontological" [8] transition rule
+program, E : S → O the observation rule and L : D S → R the loss function. Definition 3.2: For any ( y , α ) ∈ e l Γ ,
+the set of admissible histories Z y α is
+the set of all h a ∈ H S × A s.t. the following conditions
+hold: p r H × A h a ∈ X y α If g ∈ H S × A × B , o ∈ O and s ∈ S are s.t. g o s ⊑ h then o = E ( s ) . If g ∈ H S × A × B × O , s 1 , s 2 ∈ S , a ∈ A , b ∈ B and o ∈ O are s.t. g s 1 a b o s 2 ⊑ h and y ′ ∈ α then T y ′ ( s 1 , a , b ) = s 2 (the notation T y is analogical to Definition 1.3). Pretty much, condition 1 says that the visible parts of the history are consistent with how math behaves in the same sense as we usually enforce with H y α . Condition 2 says that the history should have the observations arising from the states in the way that E demands. And condition 3 says that the history should have the states arising from your action and nature's action and the previous state in the way the transition program dictates (in that batch of mathematical universes). The physicalized loss function is L s-phys ( y , α ) : = min h a ∈ Z y α max g ∈ D S : h a ⊑ g L ( g ) This arises in a nearly identical way to the loss function from Definition 3.1, it's precisely analogous. That is, for a history to be admissible we require not only the agent
+to be realized on all relevant inputs but also the transition rule. We can also define a version with ┌ T ┐ : S × B → R M S in which the agent is not an explicit part of the ontology.
+In this case, the agent's influence is solely through the "entanglement"
+of G with T . I.e., the agent's beliefs over math have entanglements between how the agent's policy turns out and how the physics transition program behaves, s.t. when conditioning on different policies, the computations corresponding to different histories become instantiated. Cellular automata What if our agent maximizes the number of gliders in the game of life?
+More generally, consider a cellular automaton with cell state space S and dimension d ∈ N . For any t ∈ N , let N t ⊆ Z d be the set of cells whose states are necessary to compute the state
+of the origin cell at timestep t . Let ┌ T t ┐ : S N t → R M S be the program which computes the time evolution of the cellular automaton. I.e., it's mapping the state of a chunk of space to the computation which determines the value of a cell t steps in the future.
+Denote D d S : = S N × Z d . This is the space of all possible histories, specifying everything that occurs from the start of time. Let L : D d S → R be the loss function (the N coordinate is time). Definition 3.3: For any α ∈ 2 Γ , the
+set of admissible histories Z α is the set
+of all pairs ( C , h ) where C ⊂ N × Z d is finite and h : C → S s.t. the following conditions hold: If ( t 2 , c ) ∈ C , t 1 < t 2 and v ∈ N t 2 − t 1 then ( t 1 , c + v ) ∈ C . If ( t 2 , c ) ∈ C , t 1 < t 2 and y ∈ α then T y t 2 − t 1 ( λ v . h ( t 1 , c + v ) ) = h ( t 2 , c ) . Basically, the C is a chunk of spacetime, and condition 1 says that said chunk must be closed under taking the past lightcone, and condition 2 says the state of that spacetime chunk must conform with the behavior of the transition computation. The physicalized loss function is defined very much as it used to be, except that for what used to be "past histories" now it has states of past-closed chunks of spacetime. L c-phys ( y , α ) : = min ( C , h ) ∈ Z α max g ∈ D d S : h = g | C L ( g ) Notice that, since the dynamics of the cellular automaton is fixed,
+the only variables "nature" can control are the initial conditions.
+However, it is straightforward to generalize this definition to cellular
+automata whose time evolution is underspecified (similarly to the B we had before). Diamond maximizer What if our agent maximizes the amount of diamond (or some other physical
+property)? In order to define "diamond" we need a theory of physics.
+For example, we can start with macroscopic/classical physics and define
+diamond by its physical and/or chemical properties. Or, we can start
+with nonrelativistic quantum mechanics and define diamond in terms
+of its molecular structure. These definitions might be equivalent
+in our universe, but different in other hypothetical universes (this
+is similar to twin Earth ).
+In any case, there is no single "right" choice, it is simply a
+matter of definition. A theory of physics is mathematically quite similar to a cellular
+automaton. This theory will usually be incomplete, something that
+we can represent in infra-Bayesianism by Knightian uncertainty. So,
+the "cellular automaton" has underspecified time evolution. Using
+this parallel, the same method as in the previous subsection should
+allow physicalizing the loss function. Roughly speaking, a possible
+history is "real" when the computation simulating the time evolution
+of the theory of physics with the corresponding initial condition
+is realized. However, we are not sure what do if the theory of physics
+is stochastic . We leave it as an open problem for now. To summarize, you can just take a hypothesis about how computations are entangled with some theory of physics, some computations simulating the time evolution of the universe (in which the notion of "diamond" is actually well-defined letting the amount of diamond in a history be computed), and a utility function over these states. The bridge transform extracts which computations are relevant for the behavior of physics in the hypothesis (which may or may not include the diamond-relevant computations), and then you just check whether the computations for a particular diamond-containing history are instantiated, take the best-case one, and that gives you your loss. Human preferences seem not substantially different from maximizing
+diamonds. Most of the things we value are defined in terms of people
+and social interactions. So, we can imagine a formal loss function
+defined in terms of some "theory of people" implicit in our brain. 4. Translating Cartesian to Physicalist Physicalism allows us to do away with the cartesian boundary between
+the agent and its environment. But what if there is a cartesian
+boundary? An important sanity test is demonstrating that our theory
+can account for purely cartesian hypotheses as a special case . Ordinary laws We will say "law" to mean what was previously called "belief function". We start from examining a causal law W : A H → □ D . I.e., it maps a policy to an ultradistribution over destinies, in a way that looks like a closed convex set of environments. Let R : = H and Σ = A so that Γ becomes the set of policies (we identify the history h ∈ H with the computation ┌ G ( h ) ┐ ∈ R given by what the agent's source does on input h .). In particular, for now there
+is no computer, or the computer can only simulate the agent itself.
+Let Φ : = D . This is our set of "physics outcomes", complete action-observation sequences. Then, W induces the physicalist hypothesis Θ W ∈ □ ( Γ × Φ ) by Θ W : = ⊤ Γ ⋉ W . Θ W is what we
+called the "first-person static view" of the law. Total uncertainty over the choice of policy, interacting with the kernel which maps a policy to the resulting uncertainty over the environment. We want to find the bridge transform of Θ W and evaluate
+the corresponding counterfactuals, in order to show that the resulting L pol is the same as in the cartesian setting. In order to do
+this, we will use some new definitions. Definition 4.1: Let X , Y be finite sets and Q ⊆ Y × X a relation. A polycontribution on Q is ϖ : X → R + s.t. for any y ∈ Y : ∑ x ∈ Q ( y ) ϖ ( x ) ≤ 1 ϖ is a polydistribution when for any y ∈ Y ∑ x ∈ Q ( y ) ϖ ( x ) = 1 We denote the space of polycontributions by Δ c Q X and the
+space of polydistributions by Δ Q X . Here, Q ( y ) stands for { x ∈ X ∣ y Q x } . Polycontributions and polydistributions are essentially a measure on a space, along with a family of subsets indexed by the y ∈ Y , s.t. restricting to any particular subset makes a contribution/distribution, respectively. Definition 4.2: Let X and Y be finite sets and Q ⊆ Y × X a relation. A polycontribution kernel (PoCK) over Q is κ : Y → Δ c X s.t. there is ϖ ∈ Δ c Q X s.t. for any x ∈ X and y ∈ Y κ ( y ; x ) = χ Q ( y ) ( x ) ϖ ( x ) Or, in other words, a PoCK is the kernel that you get by taking a polycontribution and using the input point y to decide which Y -indexed subset to restrict the measure to.
+Let Q 0 ⊆ A H × D be defined by Q 0 : = { ( π , a 0 o 0 … a N − 1 ) ∣ ∀ i < N : a i = π ( a 0 … o i − 1 ) } . This is the "destiny is consistent with the policy" relation where the policy produces the actions that the destiny says it does, when placed in that situation.
+Let ϕ : A H → Δ D be a Bayesian causal law (an
+environment). Then, ϕ is a PoCK over Q 0 ! Conversely, any ϕ : A H → Δ D which is a PoCK
+is an environment. Essentially, for an environment, each choice of policy results in a different probability distribution over outcomes. However, these resulting probability distributions over outcomes are all coherent with each other where the different policies agree on what to do, so an alternate view of an environment is one where there's one big measure over destinies (where the measure on a particular destiny is the probability of getting that destiny if the policy plays along by picking the appropriate actions) and the initial choice of policy restricts to a particular subset of the space of destinies, yielding a  probability distributions over destinies compatible with a given policy. Clearly, the next step is to generalize this beyond probability distributions. Definition 4.3: Let X and Y be finite sets Q ⊆ Y × X a relation. A polyultracontribution kernel (PUCK) over Q is Ξ : Y → □ c X s.t. there is Π ⊆ Y → Δ c X a set of PoCKs s.t. for any y ∈ Y , Ξ ( y ) is the closure of
+the convex hull of ⋃ κ ∈ Π κ ( y ) . In particular, W is a PUCK over Q 0 . Conversely, any W : A H → □ D which is a PUCK is a causal law. Proposition 4.1: Consider some Γ , Φ ,
+a relation Q ⊆ Γ × Φ and a PUCK Ξ over Q .
+Let Θ : = ⊤ Γ ⋉ Ξ . Then, B r ( Θ ) = [ ⊤ Γ ⋉ ( s u s Θ ⋊ Ξ ) ] ↓ = [ ⊤ Γ ⋉ ( Q − 1 ⋊ Ξ ) ] ↓ Here, Q − 1 ( x ) : = { y ∈ Y ∣ y Q x } . The first identity says that
+the inequality of Proposition 2.7 is saturated. Specifically, as shown in the next proposition, for our case of cartesian causal laws, the computations realized according to B r ( Θ W ) are exactly the histories that occur. Corollary 4.3: Suppose that for any h ∈ D and π : H → A s.t. h ∈ s u p p W ( π ) , it holds that h C π . That is, the observations W predicts to receive from the computer are consistent with the
+chosen policy. Let L : D → R be a cartesian loss function
+and π : H → A a policy. Then, ( p r e l Γ B r ( Θ W ) ∩ C π fair ) ( L phys ) = W ( π ; L ) Notice that the assumption W is causal combined with the assumption W is consistent with C imply that it's not possible to use
+the computer to simulate the agent on any history other than factual
+past histories. For pseudocausal W the bridge transform no longer
+agrees with the cartesian setting: if a selfish agent is simulated in some
+counterfactual, then the computationalist stance implies that it
+can incur the loss for that counterfactual. This artifact should be avoidable for non-selfish agents, but we leave this for future articles. Turing laws Now let's examine a cartesian setting which involves a general computer.
+Without further assumptions, we again cannot expect the physicalist
+loss to agree with the cartesian, since the programs running on the
+computer might be entangled with the agent. If the agent runs simulations
+of itself then it should expect to experience those simulations (as
+opposed to the cartesian view). Therefore, we will need a "no entanglement"
+assumption. Let Γ : = Γ 1 × A H for some Γ 1 (the
+computations that don't involve the agent) and Φ is still D .
+We want a notion of "joint belief about the environment and Γ 1 "
+in the cartesian setting, which generalizes causal laws. We will call
+it a "Turing law" or "Turing environment" in the Bayesian case. For our particular application (though the theorems are more general), Z will be generally taken to be the space of computations that aren't about what you personally do, Y is the space of computations about what you personally do, and X is the space of destinies/physics outcomes, if the reader wants to try their hand at interpreting some of the more abstract theorems. Definition 4.4: Let X , Y and Z be finite sets
+and Q ⊆ Y × X a relation. A Z -polycontribution
+on Q is ϖ : X × Z → R + s.t. ∑ z ∈ Z max y ∈ Y ∑ x ∈ Q ( y ) ϖ ( x , z ) ≤ 1 ϖ is a Z -polydistribution on Q when it is both
+a Z -polycontribution on Q and a polydistribution on Q × Z . Here, we regard Q × Z as a relation between Y and X × Z . We denote the space of Z -polycontributions by Δ c Q X Z and the space of Z -polydistributions by Δ Q X Z . Notice that a Z -polycontribution on Q is in particular a polycontribution
+on Q × Z : Δ c Q X Z ⊆ Δ c Q × Z ( X × Z ) . Definition 4.5: Let X , Y , Z be finite sets
+and Q ⊆ Y × X a relation. A Z -polycontribution
+kernel ( Z -PoCK) over Q is κ : Y → Δ c ( X × Z ) s.t. there is ϖ ∈ Δ c Q X Z s.t. for any x ∈ X , y ∈ Y and z ∈ Z κ ( y ; x , z ) = χ Q ( y ) ( x ) ϖ ( x , z ) In the context of the identification we'll be using where Z is the rest of math, Y is the parts of math about what you personally do, and X is the space of physics outcomes/destinies, this definition is saying that the Z-PoCK is mapping a policy to the joint distribution over math and destinies you'd get from restricting the measure to "I'm guaranteed to take this policy, regardless of how the rest of math behaves". A Turing environment can be formalized as a Γ 1 -PoCK κ : A H → Δ ( D × Γ 1 ) over Q 0 . Indeed, in this case Definition 4.4 essentially says
+that the environment can depend on a Γ 1 variable (Remember, Γ 1 is the rest of math), and also
+we have a belief about this variable that doesn't depend on the policy.
+Now, how to transform that into a physicalist hypothesis: Proposition 4.2: Let X , Y and Z be finite
+sets, Q ⊆ Y × X a relation, κ : Y → Δ c ( X × Z ) a Z -PoCK over Q and Θ ∈ □ c Y . Then, there exist μ ∈ Δ c Z and ϕ : Z × Y → Δ c X s.t. for all z ∈ Z , λ y . ϕ ( z , y ) is a PoCK over Q , and for all y ∈ Y , κ ( y ) = ( λ z . ϕ ( z , y ) ) ⋊ μ . Moreover, suppose that ( μ 1 , ϕ 1 ) and ( μ 2 , ϕ 2 ) are both as above [9] .
+Then, μ 1 ⋉ Θ ⋉ ϕ 1 = μ 2 ⋉ Θ ⋉ ϕ 2 Or, for a more concrete example, this is saying that it's possible to decompose the function mapping a policy to a distribution over the rest of math and the destiny, into two parts. One part is just a probability distribution over the rest of math, the second part is a function mapping a policy and the behavior of the rest of math to a probability distribution over destinies. Further, this decomposition is essentially unique, in that for any two ways you do it, if you take the probability distribution over the rest of math, have it interact with some arbitrary way of mapping the rest of math to policies, and then have that interact with the way to get a distribution over destinies, that resulting joint distribution could also be produced by any alternate way of doing the decomposition. In the setting of Proposition 4.2, we define Θ ∗ κ ∈ □ c ( Z × Y × X ) by μ ⋉ Θ ⋉ ϕ . The physicalist hypothesis corresponding
+to Turing environment κ turns out be ⊤ A H ∗ κ .
+The no-entanglement assumption is evident in how the A H and Γ 1 variables are "independent". Well, the actual choice of policy can depend on how the rest of math turns out, but the set of available choices of policy doesn't depend on how the rest of math turns out, and that's the sense in which there's independence. To go from Turing environments to Turing laws, we will need the following generalization to sets of contributions. Definition 4.6: Let X , Y and Z be finite sets Q ⊆ Y × X a relation. A Z -polyultracontribution
+kernel ( Z -PUCK) over Q is Ξ : Y → □ c ( X × Z ) s.t. there is Π ⊆ ( Δ c ( X × Z ) ) Y a set of Z -PoCKs
+s.t. for any y ∈ Y , Ξ ( y ) is the closure of the convex hull
+of ⋃ κ ∈ Π κ ( y ) . A Turing law is a Γ 1 -PUCK W : A H → □ ( D × Γ 1 ) over Q 0 . Definition 4.7: Let X , Y and Z be finite sets, Q ⊆ Y × X a relation, Ξ : Y → □ c ( X × Z ) a Z -PUCK over Q and Θ ∈ □ c Y . Let Π ⊆ ( Δ c ( X × Z ) ) Y be the set of Z -PoCKs κ s.t. for any y ∈ Y , κ ( y ) ∈ Ξ ( y ) .
+Then, Θ ∗ Ξ ∈ □ c ( Z × Y × X ) is the closure of
+the convex hull of ⋃ κ ∈ Π ( Θ ∗ κ ) . As a sanity test for the sensibility of Definition 4.7, we have the following proposition. It demonstrates that instead of taking all compatible Z -PoCKs, we could take any subset whose convex hull is all of them. If that was not the case, it would undermine our justification for using convex sets (namely, that taking convex hull doesn't affect anything). Proposition 4.3: Let X , Y and Z be finite
+sets, Q ⊆ Y × X a relation, κ 1 , κ 2 : Y → Δ c ( X × Z ) Z -PoCKs over Q , Θ ∈ □ c Y and p ∈ [ 0 , 1 ] . Then, p κ 1 + ( 1 − p ) κ 2 is also a Z -PoCK over Q , and Θ ∗ ( p κ 1 + ( 1 − p ) κ 2 ) ⊆ p Θ ∗ κ 1 + ( 1 − p ) Θ ∗ κ 2 The physicalist hypothesis correspond to Turing law W is Θ W : = ⊤ A H ∗ W . Total uncertainty over the available choices of policy interacting with the correspondence between the policy, the rest of math, and the resulting destiny.
+Now, we need to study its bridge transform with a necessary intermediate result to proceed further, bounding the bridge transform result between an upper and lower bound: Proposition 4.4: Let X , Y and Z be finite
+sets, Q ⊆ Y × X a relation and Ξ : Y → □ c ( X × Z ) a Z -PUCK over Q . Denote Θ : = ⊤ Z × Y ∗ Ξ . Define β 0 , β 1 : Z × Y × X → 2 Z × Y by β 0 ( z , y , x ) : = { z } × Q − 1 ( x ) , β 1 ( z , y , x ) : = Z × Q − 1 ( x ) .
+Then, ( Θ ⋉ β 0 ) ↓ ⊆ B r ( Θ ) ⊆ ( Θ ⋉ β 1 ) ↓ Here, we slightly abuse notation by implicitly changing the order
+of factors in Z × Y × 2 Z × Y × X . The application of this is that the resulting uncertainty-over-math/info about what computations are realized (i.e., the α set) attained when you do the bridge transform is bounded between two possible results. One bound is perfect knowledge of what the rest of math besides your policy is (everything's realized), paired with exactly as much policy uncertainty as is compatible with the destiny of interest. The other bound is no knowledge of the rest of math besides your policy (possibly because the policy was chosen without looking at other computations, and the rest of reality doesn't depend on those computations either), combined with exactly as much policy uncertainty as is compatible with the destiny of interest. Corollary 4.5: Suppose that for any h ∈ D , z ∈ Γ 1 and π : H → A s.t. ( h , z ) ∈ s u p p W ( π ) , it holds that h C z π . That is, the observations W predicts to receive from
+the computer are consistent with the chosen policy and W 's beliefs
+about computations. Let L : D → R be a cartesian loss function
+and π : H → A a policy. Define ~ L : D × Γ 1 → R by ~ L ( h , z ) : = L ( h ) . Then, ( p r e l Γ B r ( Θ W ) ∩ C π f a i r ) ( L phys ) = W ( π ; ~ L ) And so, the Turing law case manages to add up to normality in the cartesian setting (with computer access) as well. 5. Discussion Summary Let's recap how our formalism solves the problems stated in section
+0: Physicalist hypotheses require no bridge rules, since they are
+formulated in terms of a physical state space (that be chosen to be
+natural/impartial) rather than agent's actions and observations. Therefore,
+they accrue no associated description complexity penalty, and should
+allow for a superior learning rate. Intuitively, a physicalist agent
+knows it is an manifestation of the program G rather than just
+any object in the universe. A physicalist agent doesn't develop uncertainty after subjectively-simple
+but objectively-complex events. It is easy to modify a cartesian hypothesis
+such that the camera going black leads to completely new behavior.
+However, it would require an extremely contrived (complex) modification
+of physics , since the camera is not a simple object and has
+no special fundamental significance. Basically, the simplest way that computations and reality correspond which instantiates the computations of the agent seeing black forever afterward gets a complexity boost by about the complexity of the agent's own source code. A physicalist agent doesn't regard its existence as axiomatic.
+A given physicalist hypothesis might contain 0 copies of the agent,
+1 copy or multiple copies (more generally, some ultradistribution
+over the number of copies). Therefore, hypotheses that predict the
+agent's existence with relatively high probability gain an advantage (i.e. influence the choice of policy more strongly),
+as they intuitively should. At the same time, hypotheses that predict
+too many copies of the agent to have predictive power are typically [10] also suppressed, since policy selection doesn't affect their loss
+by much (whatever you do, everything happens anyway). Acausal attacks against physicalist agents are still possible ,
+but the lack of bridge rule penalty means the malign hypotheses are
+not overwhelmingly likely compared to the true hypothesis. This should
+allow defending using algorithms of " consensus " type . What about Solomonoff's universality? For selfish agents the physicalist framework can be reinterpreted
+as a cartesian framework with a peculiar prior. Given that the Solomonoff
+prior is universal (dominates every computable prior), does
+it mean AIXI is roughly as good as a selfish physicalist agent? Not
+really. The specification of that "physicalist prior" would involve
+the source code of the agent . (And, if we want to handle hypotheses
+that predict multiple copies, it would also involve the loss function.)
+For AIXI, there is no such source code. More generally, the intelligence
+of an agent w.r.t. the Solomonoff prior is upper bounded by its Kolmogorov
+complexity (see this ).
+So, highly intelligent cartesian agents place small prior probability
+on physicalism, and it would take such an agent a lot of data to learn
+it. Curiously, the converse is also true: the translation of section 4
+also involves the source code of the agent, so intelligent physicalist
+agents place small prior probability on cartesian dualism. We could
+maybe use description complexity relative to the agent's own
+source code, in order to define a prior [11] which makes dualism and physicalism roughly equivalent (for selfish
+agents). This might be useful as a way to make cartesian algorithms
+do physicalist reasoning. But in any case, you still need physicalism
+for the analysis . It would be interesting to do a similar analysis for bounded Solomonoff-like
+priors, which might require understanding the computational complexity
+of the bridge transform. In the bounded case, the Kolmogorov complexity of intelligent agents need not be high, but a similar penalty might arise from the size of the environment state space required for the physicalist-to-cartesian translation. Are manifest facts objective? Physicalism is supposed to be "objective", i.e. avoid privileging
+the observer. But, is the computationalist stance truly objective?
+Is there an objective fact of the matter about which facts about computations
+are physically manifest / which computations are realized? At first glance it might seem there isn't. By Proposition 2.7, if
+the physicalist hypothesis Θ ∈ □ ( Γ × Φ ) is s.t. s u p p Θ ⊆ F × Φ for some F ⊆ Γ , then s u p p B r ( Θ ) ⊆ e l F × Φ . So, if the hypothesis asserts
+a fact F then F is always physically manifest. But, isn't Θ merely the subjective knowledge of the agent? And if so, doesn't
+it follow that physical manifesting is also subjective? At second glance things get more interesting. Suppose that agent G learned hypothesis Θ . Since G is part of the physical universe,
+it is now indeed manifest in the state of the physical universe that
+hypothesis Θ (and in particular F ) is true. Looking at
+it from a different angle, suppose that a different agent G ′ knows
+that G is a rational physicalist. Then it must agree that if G will learn Θ then F is manifest. So, possibly there
+is a sense in which manifesting is objective after all. It would be interesting to try and build more formal theory around
+this question. In particular, the ability of the user and the AI to agree on manifesting (and agree in general) seems important for alignment in general (since we want them to be minimizing the same loss) and for ruling out acausal attacks in particular (because we don't want the AI to believe in a hypothesis s.t. it wouldn't be rational for the user to believe in it). Physicalism and alignment The domain of the physicalist loss function doesn't depend on the action and observation sets, which is an advantage for alignment since it can make it easier to "transfer" the loss function from the user to the AI when they have different action or observation sets. On the other hand, the most objectionable feature of physicalism is the monotonicity
+principle (section 3). The default conclusion is, we need to at least
+generalize the formalism to allow for alignment. But, suppose we stick
+with the monotonicity principle. How bad is the resulting misalignment? Consider an alignment protocol in which the AI somehow learns the loss
+function of the user. As a toy model, assume the user has a cellular
+automaton loss function L user , like in section 3. Assume
+the AI acts according to the loss function L c-phys user of Definition 3.3. What will result? Arguably, in all probable scenarios the result will be pretty close
+to optimal from the user's perspective. One type of scenario where
+the AI makes the wrong choice is, when choosing between destruction
+of everything and a future which is even worse than destruction
+of everything. But, if these are the only available options then probably
+something has gone terribly wrong at a previous point. Another type
+of scenario where the AI possibly makes the wrong choice is, if it
+creates multiple disconnected worlds each of which has valence from
+the perspective of the user, at least one of which is good but some
+of the which are bad. However, there usually seems to be no incentive
+to do that [12] . In addition, the problems might be milder in approaches that don't
+require learning the user's loss function, such as IDA of imitation. So, the monotonicity principle might not introduce egregious misalignment
+in practice. However, this requires more careful analysis: there can
+easily be failure modes we have overlooked. Future research directions Here's a list of possible research directions, not necessarily comprehensive.
+Some of them were already mentioned in the body of the article. Directions which are already more or less formalized: Generalizing everything to infinite spaces (actually, we already
+have considerable progress on this and hopefully will publish another
+article soon). [ EDIT: See also profinite field spaces .] Generalizing section 4 to certain pseudocausal laws. Here, we
+can make use of the monotonicity principle to argue that if Omega
+discontinues all of its simulations, they correspond to copies which
+are not the best-off and therefore don't matter in the loss calculus. Alternatively, we can design a non-selfish loss function that only counts the "baseline reality" copies.
+Moreover, it would be interesting to understand the connection between
+the pseudocausality condition and the "fairness" of Definition
+1.5. Define a natural candidate for the Solomonoff prior for physicalist
+hypotheses. Prove that the physicalist intelligence g is truly unbounded,
+and study its further properties. Directions which are mostly clear but require more formalization: Prove learning-theoretic results (regret bounds). For example,
+if we assume that there is a low-cost experiment that reveals the
+true hypothesis, then low regret should be achievable. In particular,
+such theorems would allow validating Definition 1.5. Generalize section 3 to stochastic ontologies. Allow uncertainty about the loss function, and/or about the source
+code. This would introduce another variable into our physicalist hypothesis,
+and we need to understand how to bridge transform should act on it. [ EDIT : Maybe we don't need uncertainty about source code, see quining in IBP .] Analyze the relationship between cartesian and physicalist agents
+with bounded simplicity priors. For (cartesian) reinforcement learning, MDPs and POMDPs are classical
+examples of environment for which various theoretical analysis is
+possible. It would be interesting to come up with analogical examples
+of physicalist hypotheses and study them. For example, we can consider
+infra-Markov chains where the transition kernel depends on Γ . Directions where it's not necessarily clear how to approach the problem: Understand the significance of the monotonicity principle better,
+and whether there are interesting ways to avoid it. [ EDIT: Looks like there are .] Formally study the objectivity of manifesting, perhaps by deriving
+some kind of agreement theorems for physicalist agents. Define and analyze physicalist alignment protocols. [ EDIT: one important candidate is Physicalist Superimitation .] It is easy to imagine how a physicalist hypothesis can describe
+a universe with classical physics. But, the real universe is
+quantum. So, it doesn't really have a distribution over some state
+space Φ but rather a density matrix on some Hilbert space. Is
+there a natural way to deal with this in the present formalism? If
+so, that would seem like a good solution to the interpretation of
+quantum mechanics. [ EDIT : Indeed, there is a solution .] If we ignore ideas such as the von Neumann-Wigner
+interpretation of quantum mechanics. ↩︎ This other direction also raises issues
+with counterfactuals. These issues are also naturally resolved in
+our formalism. ↩︎ The notation Θ × Λ is
+reserved for a different, commutative, operation which we will not
+use here. ↩︎ A simplifying assumption we are planning
+to drop in future articles. ↩︎ ↩︎ ↩︎ We have considered this type of setting before with somewhat different motivation. ↩︎ The careful reader will observe that programs
+sometimes don't halt which means that the "true" computational
+universe is ill-defined. This turns out not to matter much. ↩︎ Previously we defined pullback s.t. it can only be applied to particular infra/ultradistributions.
+Here we avoid this limitation by using infra/ultracontributions as
+the codomain. ↩︎ Meaning that, this rule is part of the definition of the state rather than a claim about physical reality. ↩︎ Disintegrating a distribution into a semidirect
+product yields a unique result, but for contributions that's
+no longer true, since it's possible to move scalars between the two
+factors. ↩︎ One can engineer loss functions for which
+they are not suppressed, for example if the loss only depends on the
+actions and not on the observations. But such examples seem contrived. ↩︎ It's a self-referential definition, but
+we can probably resolve the self-reference by quining. ↩︎ One setting in which there is an
+incentive: Suppose there are multiple users and the AI is trying to
+find a compromise between their preferences. Then, it might decide
+to create disconnected worlds optimized for different users. But,
+this solution might be much worse than the AI thinks, if Alice's world
+contains Bob!atrocities. ↩︎

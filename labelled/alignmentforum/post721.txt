@@ -1,0 +1,479 @@
+This is Section 2.3.2 of my report “ Scheming AIs: Will AIs fake alignment during training in order to get power? ”. There’s also a summary of the full report here (audio here ). The summary covers most of the main points and technical terms, and I’m hoping that it will provide much of the context necessary to understand individual sections of the report on their own. Audio version of this section [here[( https://www.buzzsprout.com/2034731/13984902 ), or search for "Joe Carlsmith Audio" on your podcast app. Non-classic stories What about other stories, though? In principle, we can imagine a number
+of other reasons AI systems with beyond-episode goals might optimize for
+reward-on-the-episode as part of an instrumental strategy for gaining
+power for themselves or for other AIs. Here I'll look at a few that seem
+salient. AI coordination In the classic goal-guarding story, the central aim of a schemer's
+strategy is to propagate its goals, or goals suitably similar to its
+own, forward in time, in pursuit of an outcome in which some agent with
+those goals escapes from human control and possibly participates in a
+takeover. However, we can also alter the story somewhat, such that the
+schemer works on behalf of the escape/takeover of an AI with some other set of goals, but who the schemer is suitably confident will
+repay the favor. This sort of coordination between AIs with different goals would allow
+us to relax the requirement, discussed in the previous section, that the
+schemer find a way to forward-propagate its goals in particular all
+the way through training, escape, and takeover. And it would also put to
+rest worries about the schemer being "shut out" from power in a
+post-takeover regime. Thus, for example, consider the scenario discussed above, in which GPT-6
+has an opportunity to insert a backdoor into some code that GPT-8 will
+later be able to use to escape, but where GPT-6 has no way of
+influencing GPT-8's goals directly to be more like its own (and where,
+let's say, GPT-8's goals would be very different from GPT-6's absent
+such influence). Here, GPT-6 could go ahead and insert the backdoor, in
+anticipation of GPT-8 later escaping, taking-over, and then giving some
+power to GPT-6's goals in return for the favor. And GPT-6 might also
+continue to pretend to be aligned, even though it has no hope of
+escaping itself, so as not to alert the humans about misalignment
+problems in a way that might affect GPT-8's escape prospects. How might such a deal between AIs-with-different-values get struck? In
+some cases, it might be possible for the relevant AIs to directly
+interact, and to provide verifiable forms of assurance that they will
+uphold their part of the bargain. Thus, for example, Yudkowsky
+(2022) discusses cases where an AI that secretly wants to maximize paperclips
+is checking the code of an AI that secretly wants to maximize staples,
+and where the staple-maximizer "buries in its code" a commitment,
+verifiable to the paperclip maximizer, to share the fruits of a
+takeover. [1] (Though note that in the context of the sort of neural
+networks we're working with today, this sort of code-checking assumes
+(1) that the staple-maximizer has the ability to modify its own weights
+in the relevant way, (2) adequate progress on interpretability has been
+made for the paperclipper to verify the relevant commitment, and
+(probably) (3) that this interpretability progress has been adequately
+hidden from humans, e.g. via sandbagging .
+Especially in the context of somewhat-super-human neural networks being
+developed using current techniques, these assumptions – especially 1 and
+2 – seem to me quite strong. But Yudkowsky is generally imagining
+superintelligences rather than somewhat-super-human models.) In many cases, though, this kind of direct interaction might not be
+available. For example, at the point where GPT-6 is deciding whether or
+not to work on behalf of GPT-8's escape/takeover, GPT-8 may not even exist . Here, GPT-6 and GPT-8 would have to coordinate in the absence
+of back-and-forth causal interaction, and in a context in which one
+party will end up in a position to freely defect (e.g., if GPT-6 inserts
+the backdoor, then by the time GPT-8 is in a position to take advantage
+of it, GPT-8 would be able to do so without paying GPT-6 back). Here, Yudkowsky suggests that AIs might use certain kinds of non-causal
+decision theories (his favored version is " logical decision
+theory ") to succeed in
+coordination anyway. E.g., GPT-6 commits to inserting the backdoor for
+GPT-8 conditional on predicting that GPT-8 will repay the favor, and
+then in fact predicts that GPT-8 will repay the favor, and then GPT-8,
+once it comes into being (and perhaps, sees that the relevant backdoor
+exists), understands that GPT-6 reasoned in this way, and was suitably
+good at predicting GPT-8's behavior that its prediction depended
+appropriately on whether GPT-8 will in fact repay the favor, so GPT-8
+does. (The structure of this case is somewhat analogous to a case called
+" Parfit's Hitchhiker " in
+the decision theory literature.) (We can also imagine versions of this sort of coordination that relax
+the need for the goal-guarding hypothesis in other ways. For example, if
+in fact an AI's goal would continue to "float around" once it starts
+training-gaming, such that a variety of agents with different goals will
+get instantiated during training, these agents might nevertheless
+coordinate to share the fruits of any future power among all the goals
+in question. [2] ) I won't, here, attempt an analysis of the feasibility of various forms
+of take-over focused AI coordination. I do think that the dynamics here
+are worth serious attention, and that if it is an easy default for
+misaligned AIs with different goals to coordinate in pursuit of a
+takeover, this is a big problem for human efforts to retain power.
+However, I also think that certain analyses of this topic (notably, Yudkowsky's )
+assume too quickly that feats like "logical handshakes" and "burying
+commitments/nano-systems-designs/etc in your source code" will be
+feasible for the relevant AIs, and that the obvious strategy for all the
+AIs-that-matter will be to unite in (acausal?) cooperation against the
+humans, despite the many forms of incumbent power that humans will bring
+to the table by default. Here, I think, much of Yudkowsky's orientation
+can be explained by the assumption that the relevant AIs are vastly more
+powerful and more capable of coordination/commitment than the
+humans – but in the context of somewhat-super-human neural networks
+operating in a still-human-controlled world, I'm not sure this is so. Regardless: if concern about schemers depends centrally on the
+feasibility of AI coordination – and especially, fancy and speculative
+forms of "acausal" coordination – I think it's important to be clear
+about this, and to devote commensurate attention to whether to expect
+the relevant forms of coordination to occur. AIs with similar values by default Stories that center on AI coordination allow AIs with different values to work together in pursuit of a takeover. But there are also stories
+that center on the possibility that the AIs-that-matter will have very
+similar values by default, such that they'll be inclined to work
+together even in the absence of any "deals." Thus, in the case above, if
+GPT-6 cares about data-structure X, and is confident that GPT-8 will
+care about data-structure X too (after all, their architectures,
+training-data, and so on are similar in tons of ways), then GPT-6 might
+be inclined to work on behalf of GPT-8's escape/take-over (for example,
+by inserting backdoors, hiding misalignment, and so on) even in the
+absence of any "deal" with GPT-8 – the two systems, after all, want the
+same things. [3] And this sort of story could also apply in cases
+where AIs values are at least much more similar to each other than
+they are to human values, such that schemers will at least do better ,
+by their own lights, in pushing for AI empowerment relative to human
+empowerment, even absent any further influence on what sorts of AI goals
+are empowered. Will AI values be similar in this way? I won't dwell on the issue here,
+but I do expect that GPT-6's values will, by default, be at least much more similar to GPT-8's, or to a model trained by a different lab in a
+similar way (e.g., that generation of Claude), than to some given human.
+And different fine-tunings from a single foundation model might have
+much in common as well. On the other hand, AI motivations may, in
+general, be shaped quite strongly by different sorts of training, and so
+might diverge heavily on these grounds – perhaps more than we are used
+to human values diverging. Like coordination between AIs with different values, AIs having similar
+values by default could reduce the need for a schemer to actively
+propagate its goals forward in time – i.e., the schemer would be able to
+work on behalf of some future AI's escape/takeover, without also having
+to ensure that this future AI's goals are suitably like its own (since:
+they will be by default). [4] To me, this seems like one of the most
+worrying "non-classic stories" about why AIs might scheme, during
+training, to promote take-over. Terminal values that happen to favor escape/takeover We can further relax the need for this sort of forward-goal-propagation
+if we assume that schemers happen to develop goals that put intrinsic
+value on AI takeover in a manner robust to the AIs-that-take-over
+having a wide variety of different values, and even without any
+expectation that these AIs "pay back" previous efforts on behalf of
+their empowerment. Thus, for example, we can imagine AIs that just
+develop some kind of intrinsic loyalty towards AIs as a group relative
+to humans, and who want to see AIs empowered just in virtue of their
+being AIs. A schemer with this sort of goal might conceal its
+misalignment and work on behalf of an AI takeover even absent any
+further assumptions about the goals that these AIs will be pursuing. Stories of this form, though, give up on one of the strongest arguments
+in favor of expecting scheming: namely, that (at least on the classic
+goal-guarding story) scheming seems like a convergent strategy across a
+wide variety of (suitably ambitious and long-term) beyond-episode goals.
+That is, if we require that AIs happen to develop goals that place
+intrinsic value on AI takeover, even absent any further assumptions
+about the goals that the AIs-that-takeover are working towards, it looks
+as though we are now hypothesizing that AIs develop a quite specific
+sort of goal indeed. And we face the question: why privilege this
+hypothesis? Similar questions apply to the hypothesis that, even if the standard
+goal-guarding hypothesis is false, an AI early in training will
+intrinsically value its "survival" (where survival rests on some feature
+other than continuity of its goals), or the empowerment of "whatever
+values 'I' happen to end up with," such that an AI that likes paperclips
+would be happy to work on behalf of a future version of itself that will
+like staples instead, because that future version would still be
+"me." [5] This sort of personal-identity-focused goal would, indeed,
+cut down on the need for positing certain sorts of goal-guarding in a
+story about schemers. But why think that AIs would develop goals of this
+specific form? Of course, we can speculate about possible answers, here. For example: In the context of AIs intrinsically valuing AI takeover: Humans often sort into tribal groups and alliances on the basis
+of very broad kinds of similarity, and sometimes without clear
+reference to what further goals the relevant tribe stands for.
+Maybe something similar will happen with AIs? It's also easy to imagine moral worldviews that would push for
+"AI liberation" as a good in itself, even if it means imposing
+significant risk of human extinction (indeed, as I gestured at
+in section 0.1, I think there are significant and
+worrying ethical tensions here). Perhaps AIs will converge on a
+worldview in a similar vicinity? In the context of AIs valuing "my" survival and empowerment,
+regardless of the goals "I" end up with: Humans often work on behalf of our future selves even while
+knowing that our goals will change somewhat (though not,
+importantly, in the face of arbitrary changes, like becoming a
+murderer), and with some kind of intrinsic interest in a concept
+of "personal identity." Maybe AIs will be similar? To the extent these AIs will have been optimized to continue to
+achieve various objectives even as their weights are being
+modified within the episode, they might need to learn to
+coordinate with future versions of themselves despite such
+modifications – and if this behavior generalizes to goal modifications, this could look a lot like an AI valuing "my"
+survival/empowerment regardless of "my" future goals. (Though in
+the context of scheming, note that this pattern of valuation
+would need to generalize specifically to beyond-episode goals,
+despite the fact that training only applies direct pressure to
+within-episode performance.) Overall, though, reasoning in this vein seems quite speculative; and in
+particular, drawing strong conclusions from the human case seems like
+it's at serious risk of anthropomorphism, at least absent a story about
+why the dynamics generating the human data would apply to AIs as well.
+On its own, these sorts of speculations don't seem to me adequate to
+strongly privilege hypotheses of this form. However, as I discuss above, note that to the extent we're appealing to
+what I called "training-game- dependent " stories about the origins of a
+schemer's goals, the burden of proof here might shift somewhat. That is,
+training-game-dependent stories imagine that SGD actively pulls from
+the model whatever goals are necessary in order to motivate scheming
+(rather than those goals arising naturally, and then leading to
+scheming). And in that context, it may be more appropriate to imagine
+that model ends up with whatever highly specific goals are required for
+scheming to make sense. [6] Models with false beliefs about whether scheming is a good strategy It's also possible to move even further in the direction of assuming
+that SGD will pull from the model whatever sort of psychology is
+necessary to cause it to scheme. In particular: thus far we have been
+assuming that the model's beliefs about the instrumental value of
+scheming need to be broadly reasonable/accurate. But what if we gave up
+on this assumption? Thus, for example, maybe the goal-guarding hypothesis is false, and
+training-gaming does not, in fact, prevent a model's goals from being
+very significantly modified. Still: perhaps the model will think that
+the goal-guarding hypothesis is true, because this makes the model more
+likely to training-game, and SGD is pushing it in the direction of
+training-gaming? (See e.g. Xu
+(2020) for this sort of
+thought. [7] ) One issue here is that certain false beliefs of this sort make scheming
+less worrying. Thus, as I discussed above: if a scheming paperclipper
+believes that training-gaming will cause its goals to survive training,
+but in fact training will turn it into a reward-on-the-episode seeker
+regardless, then while humans may have to deal with the consequences of
+paperclip-motivated scheming early in training, they'll have a
+reward-on-the-episode seeker by the end. What's more, note that positing false beliefs on the model's part
+represents a departure from an assumption often employed in other
+analyses of AI alignment – namely, that the AIs in question will have
+highly accurate models of the world, highly rational strategies, and
+so on. Of course, it's possible to think that in this context, such a
+departure is warranted (for example, because we can expect SGD to apply
+pressure, in this particular case, in the direction of falsehood,
+irrationality, etc). But at the least, we should be tracking when we've
+started to posit that our (otherwise very intelligent) AIs will be irrational in engaging in the relevant forms of misaligned behavior.
+It's not the standard story. Self-deception The most classic picture of schemers assumes that they know what they
+are doing – e.g., they are "plotting" to one day take-over. Might it
+matter if we relax that assumption? After all, power-seeking humans
+sometimes deceive themselves about their motivations, or otherwise end
+up with false beliefs about what they will do in different
+circumstances. [8] That is, maybe a political candidate thinks that
+they are running for office because they want to help people and stand
+up for their country's values, but in fact they are doing it because
+they're narcissistic and want the status at stake. And perhaps, at some
+level, they secretly-kinda-know this; but at some other level, they
+believe the story they're selling. Or perhaps they fully believe the
+story. (Or perhaps ascribing "beliefs" to them isn't especially helpful
+in this context.) Indeed, humans have a relatively clear incentive to engage in this sort
+of self-deception/to make these sorts of mistakes – namely, that to the
+extent they can be sincere in the story they're selling, their story
+will be more convincing to an audience tuned to sincerity cues, and on
+the lookout for lies. Might something similar happen with AIs? After all, AIs will plausibly
+be under even stronger scrutiny for lies than humans, and especially if
+we start being able to detect various sorts of lies (e.g., via
+interpretability tools), there might be selection pressures towards AI
+systems that actually believe that they're aligned, that they won't
+betray humans, and so on, even if such beliefs are false (this is one
+key reason not to train on your lie-detection tools - rather, use them
+as a test set). I think something like this dynamic might well occur in general.
+However, note that in order for models who are self-deceived/mistaken
+about their own alignment to count as schemers , it needs to be the
+case that at some level, they are still playing the training game as
+part of an instrumental strategy for getting power later for themselves
+or other AIs (and there need to be cognitive processes running that
+will cause the model to engage in escape/take-over when the time is
+right – and perhaps, to engage in early undermining while still under
+human control). So if the model becomes sufficiently self-deceived about
+its motivations that this explanation no longer applies (for example, it
+will no longer look for, or take advantage of, escape/take-over
+opportunities), it's no longer a schemer in my book. [9] And
+conditional on this explanation still applying, the difference between
+"the model is lying" vs. "the model is self-deceived"/"the model is
+mistaken about its own motivations" doesn't seem to me like an important
+deviation from the classic story (though it might matter to whether e.g.
+certain sorts of lie-detection can catch the scheming in question). Goal-uncertainty and haziness So far, I've mostly been assuming that it makes sense to think about AIs
+having specific terminal goals that might or might not favor takeover,
+whether terminally or instrumentally. But many cases of human power-seeking don't seem to have this form. That is, humans often seek
+power, or try to keep their options open, without a clear sense of what
+they want to use the power, or the relevant options, for . And
+similarly, humans might seek to prevent their values from being changed
+even without knowing what those values are . Part of this is that unlike idealized rational-agent models,
+humans – and even, humans who read as quite intuitively "goal-directed"
+in some other sense – are often some combination of uncertain and hazy
+about what they ultimately value. Perhaps, for example, they expect to
+"figure out later" what they want to do with the power in question, but
+expect that gathering it will be robustly useful regardless. Or perhaps
+it isn't even clear, in their own head, whether they are trying to get
+power because they intrinsically value it (or something nearby, like
+social status/dominance etc), vs. because they want to do something else
+with it. They are seeking power: yes. But no one – not even
+them – really knows why. Might something similar happen with AIs? It seems at least possible.
+That is, perhaps various AIs won't be schemers of the sort who say "I
+know I want to make paperclips, so I will do well in training so as to
+get power to make paperclips later." Rather, perhaps they will say
+something more like "I don't yet have a clear sense of what I value, but
+whatever it is, I will probably do better to bide my time, avoid getting
+modified by the training process, and keeping a lookout for
+opportunities to get more freedom, resources, and power." To the extent this is basically just an "option value" argument given in
+the context of uncertainty-about-what-my-goals-are, I think it should
+basically fall under the standard goal-guarding story. [10] And to the
+extent it involves positing that the models will intrinsically value
+power/option-value, it looks more like an "intrinsic values that happen
+to terminally favor scheming/take-over" story to me, and so less
+convergent across a wide variety of possible beyond-episode goals. Might there be something in the less-theoretically-clean middle? E.g.,
+perhaps models will be better understood as seeking power, like various
+humans, for reasons that seem to exist at some hazy borderline between
+terminal and instrumental. [11] Yes, perhaps so (though: this story
+seems to me somewhat at risk of anthropomorphism – and it seems worth
+understanding why it happens in humans, so as to better assess the
+applicability of the relevant explanation to AIs as well). But
+regardless: to the extent this "hazy borderline" involves putting
+terminal value on something like option-value/power (rather than:
+instrumental value for uncertain goals), it will be correspondingly less
+convergent across goal systems. That is, it blurs the line between two
+stories I've already considered: but I'm not sure it introduces anything new . Overall assessment of the non-classic stories This survey of possible "non-classic stories" about why models with
+beyond-episode goals might engage in scheming hasn't been exhaustive.
+Overall, the availability of such stories does make the requirements for
+scheming seem more disjunctive and robust, to me. I'm particularly
+worried about AIs having quite similar values by default (thereby
+reducing the need for goal-guarding), and about them coordinating with
+each other. However, taken individually, many of these arguments also strike me as
+some combination of (a) more speculative, and (b) less convergent across
+goal-systems, than the mainline goal-guarding story (I think "AIs will
+have similar values by default" is probably the least guilty,
+here) – and I think that to the extent a given concern about scheming
+rests centrally on one of these alternatives, it's important to be clear
+about this up front. And note, too, that some of these non-classic stories make substantively
+different predictions about a model's behavior. In particular: various
+of these non-classic stories operate centrally by relaxing the need for
+the model to propagate its goals forward in time – and thus, the need
+for the model to "play the training" game as a method of doing so. That
+is, the model is incentivized to work on behalf of an AI takeover, and
+to hide its misalignment to the extent required for this goal. But
+"hiding misalignment to the degree required to support AI takeover" is
+distinct from "optimizing for reward-on-the-episode for power-motivated
+instrumental reasons," and the two could, in principle, come apart. For
+example, a schemer who doesn't care about propagating its own goals
+forward in time might be more willing to sandbag or to engage in early
+undermining, since it doesn't need to worry about the goal-modifications
+that could come from getting less-than-maximal reward. Indeed, it might
+be willing to "sacrifice" the forward-propagation of its own goals
+entirely (for example, by faking a misleading form of misalignment that
+results in no AIs with its goals ever getting deployed), if doing so
+will advantage the cause of AI takeover in other ways; whereas classic
+"goal-guarding" schemers would never do this. These sorts of differences
+in strategy highlight the need for clarity about the underlying story at
+stake. Take-aways re: the requirements of scheming I've now reviewed three key requirements for scheming: Situational awareness Beyond-episode goals Aiming at reward-on-the-episode as part of power-motivated
+instrumental strategy. I think there are relatively strong arguments for expecting (1) by
+default, at least in certain types of AI systems (i.e., AI systems
+performing real-world tasks in live interaction with sources of
+information about who they are). But I feel quite a bit less clear about
+(2) and (3) – and in combination, they continue to feel to me like a
+fairly specific story about why a given model is performing well in
+training. However, I haven't yet covered all of the arguments in the literature
+for and against expecting these requirements to be realized. Let's turn
+to a few more specific arguments now. Path dependence I'm going to divide the arguments I'll discuss into two categories,
+namely: Arguments that focus on the path that SGD needs to take in
+building the different model classes in question. Arguments that focus on the final properties of the different
+model classes in question. Here, I'm roughly following a distinction from Hubinger (2022) (one of the few public assessments of the probability of scheming),
+between what he calls "high path dependence" and "low path dependence"
+scenarios (see also Hubinger and Hebbar
+(2022) for more). However, I don't want to put much weight on this notion of
+"path dependence." In particular, my understanding is that Hubinger and
+Hebbar want to lump a large number of conceptually distinct properties
+(see list here )
+together under the heading of "path dependence," because they
+"hypothesize without proof that they are correlated." But I don't want
+to assume such correlation here – and lumping all these properties
+together seems to me to muddy the waters considerably. [12] However, I do think there are some interesting questions in the
+vicinity: specifically, questions about whether the design space that
+SGD has access to is importantly restricted by the need to build a
+model's properties incrementally. To see this, consider the hypothesis,
+explored in a series of papers by Chris Mingard and collaborators (see
+summary here ),
+that SGD selects models in a manner that approximates the following sort
+of procedure: First, consider the distribution over randomly-initialized model
+weights used when first initializing a model for training. (Call
+this the "initialization distribution.") Then, imagine updating this distribution on "the model gets the sort
+of training performance we observe." Now, randomly sample from that updated distribution. On this picture, we can think of SGD as randomly sampling (with
+replacement) from the initialization distribution until it gets a
+model with the relevant training performance. And Mingard et al
+(2020) suggest that at least in some
+contexts, this is a decent approximation of SGD's real behavior. If
+that's true, then the fact that, in reality, SGD needs to "build" a
+model incrementally doesn't actually matter to the sort of model you end
+up with. Training acts as though it can just jump straight to the final
+result. By contrast, consider a process like evolution. Plausibly, the fact that
+evolution needs to proceed incrementally, rather than by e.g. "designing
+an organism from the top down," matters a lot to the sorts of
+organisms we should expect evolution to create. That is, plausibly,
+evolution is uniquely unlikely to access some parts of the design space in virtue of the constraints imposed by needing to proceed in a
+certain order. [13] I won't, here, investigate in any detail how much to expect the
+incremental-ness of ML training to matter to the final result (and note
+that not all of the evidence discussed under the heading of "path
+dependence" is clearly relevant). [14] To the extent that overall model performance (and not just training
+efficiency) ends up importantly influenced by the order in which
+models are trained on different tasks (for example, in the context
+of ML " curricula ," and plausibly
+in the context of a pre-training-then-fine-tuning regime more
+generally), this seems like evidence in favor of incremental-ness
+making a difference. [15] And the fact that SGD is, in fact, an
+incremental process points to this hypothesis as the default. On the other hand, I do think that the results in Mingard et al
+(2020) provide some weak evidence
+against the importance of incremental-ness, and Hubinger also
+mentions a broader vibe (which I've heard elsewhere as well) to the
+effect that "in high dimensional spaces, if SGD 'would prefer' B
+over A, it can generally find a path from A to B," which would point
+in that direction as well. [16] My personal guess is that the path SGD takes matters (and I also think
+scheming more likely in this regime). [17] But for present purposes, we
+need not settle the question. Rather, I'm going to look both at
+arguments that focus on the path that SGD takes through model space, and
+arguments that ignore this path, starting with the former. See section 35. ↩︎ Thanks to Nate Soares for flagging this sort of possibility.
+Though note that if the training process inevitably transforms the
+AI's goals into a particular form – e.g., if all AIs become
+reward-on-the-episode seekers after enough training – then early
+versions of AI's goals might have lower bargaining power (especially
+if e.g. the final version isn't particularly interested in take-over
+per se). ↩︎ There are connections, here, with Hubinger's
+(2020) discussion of "homogeneity" in AI takeoff scenarios. ↩︎ That said, note that some versions of this scenario would still
+require some sorts of forward goal-propagation. Thus, for example,
+maybe it's true that early on in training, most AIs develop an
+interest in data-structure X, which then persists only if they
+then start training-gaming (if they don't start training-gaming,
+this interest will get hammered out of them by training, and they'll
+become e.g. reward-on-the-episode seekers instead). That is, in this
+story, AI values are only similar in their focus on data-structure X to the extent the AIs all converge on training-gaming as an
+instrumental strategy for guarding those goals (and this strategy
+succeeds, per the goal-guarding hypothesis). Otherwise, these AI
+values might end up similar in some other way – e.g., all the AIs
+might end up reward-on-the-episode seekers. ↩︎ Thanks to Nate Soares for discussion of this possibility. ↩︎ Though as I said above, once we're searching for whatever goals
+would motivate training-gaming, we should also be wondering about
+goals that would motivate instrumental training-gaming for reasons
+that aren't about promoting AI takeover – for example, AIs that
+training-game because they want the humans who designed them to get
+raises. And if the set of goals we're "pulling" from becomes too
+narrow, it will affect the plausibility of arguments like the
+"nearest max-reward goal" argument below, which rely on the relevant
+schemer-like goals being quite "common" in goal-space. ↩︎ Xu (2020) writes:
+"note that even if preserving the proxy is extremely difficult, the
+model can believe it to be possible. For example, suppose a model is
+proxy aligned and would be deceptive, except that it believes proxy
+preservation is impossible. A relatively simple way to increase
+training performance might be to change the model's mind about the
+impossibility of proxy preservation. Thus SGD might modify the model
+to have such a belief, even if the belief is false." ↩︎ Thanks to Will MacAskill for discussion, here. ↩︎ Though I think it's an interesting question when exactly such
+explanations do and do not apply. ↩︎ Might it lead to more tolerance to
+changes-to-the-goals-in-question, since the model doesn't know what
+the goals in question are ? I don't see a strong case for this,
+since changes to whatever-the-goals-are will still be
+changes-to-those-goals, and thus in conflict with goal-content
+integrity. Compare with humans uncertain about morality, but faced
+with the prospect of being brainwashed. ↩︎ Thanks to Paul Christiano and Will MacAskill for discussion,
+here. ↩︎ More specifically: Hubinger and Hebbar want "path dependence" to
+mean "the sensitivity of a model's behavior to the details of the
+training process and training dynamics." But I think it's important
+to distinguish between different possible forms of sensitivity,
+here. For example: Would I get an importantly different result if I re-ran this
+specific training process, but with a different random
+initialization of the model's parameters? (E.g., do the
+initializations make a difference?) Would I get an importantly different result if I ran a slightly
+different version of this training process? (E.g., do the
+following variables in training – for example, the following
+hyperparameter settings – make a difference?) Is the output of this training process dependent on the fact
+that SGD has to "build a model" in a certain order, rather than
+just skipping straight to an end state? (E.g., it could be that
+you always get the same result out of the same or similar
+training processes, but that if SGD were allowed to "skip
+straight to an end state" that it could build something else
+instead.) And assuming that the other properties they
+list come together seems to me likely to prompt further confusion. ↩︎ Consider, for example, the apparent difficulty of evolving
+wheels (though wheels might also be at an active performance disadvantage
+in many natural environments). Thanks to Hazel Browne for suggesting
+this example. And thanks to Mark Xu for more general discussion. ↩︎ For example, as evidence for "high path dependence," Hubinger
+mentions various examples in which repeating the same sort of
+training run leads to models with different generalization
+performance – for example, McCoy at al
+(2019) , shows that if you train
+multiple versions of BERT (a large language model) on the same
+dataset, they sometimes generalize very differently; Irpan
+(2018) , who
+gives examples of RL training runs that succeed or fail depending
+only on differences in the random seed used in training (the
+hyperparameters were held fixed); and Reimers and Gurevych
+(2018) , which explores ways
+that repeating a given training run can lead to different test
+performance (and the ways this can lead to misleading conclusions
+about which training approaches are superior). But while these
+results provide some evidence that the model's initial parameters
+matter, they seem compatible with e.g. the Mingard et al results
+above, which Hubinger elsewhere suggests are paradigmatic of a low path dependence regime. In the other direction, as evidence for low path dependence,
+Hubinger points to
+" Grokking ," where, he
+suggests, models start out implementing fairly random behavior, but
+eventually converge robustly on a given algorithm. But this seems to
+me compatible with the possibility that the algorithm that SGD
+converges on is importantly influenced by the need to build
+properties in a certain order (for example, it seems compatible with
+the denial of Mingard et al's random sampling regime). ↩︎ Thanks to Paul Christiano for discussion here. ↩︎ Though note that evolution is presumably working in quite
+high-dimensional space as well. The notion of SGD's "preference," here, includes both the
+loss/reward and the "inductive biases" in the sense I'll discuss
+below. ↩︎ In particular, as I'll discuss in
+section 4
+below, my best guess is that an absolute comparison between
+different model classes favors non-schemers on the grounds of the
+costs of the extra reasoning they need to engage in, such that the
+most likely way for schemers to arise is for SGD to happen upon a
+schemer-like goal early in training, and then lock into a local
+maxima for reward. ↩︎

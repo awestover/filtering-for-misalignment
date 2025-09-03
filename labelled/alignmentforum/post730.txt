@@ -1,0 +1,115 @@
+This is Section 1.5 of my report “ Scheming AIs: Will AIs fake alignment during training in order to get power? ”. There’s also a summary of the full report here (audio here ). The summary covers most of the main points and technical terms, and I’m hoping that it will provide much of the context necessary to understand individual sections of the report on their own. Audio version of this section here , or search "Joe Carlsmith Audio" on your podcast app. On "slack" in training Before diving into an assessment of the arguments for expecting
+scheming, I also want to flag a factor that will come up repeatedly in
+what follows: namely, the degree of "slack" that we should expect
+training to allow. By this I mean something like: how much is the
+training process ruthlessly and relentlessly pressuring the model to
+perform in a manner that yields maximum reward, vs. shaping the model in
+a more "relaxed" way, that leaves more room for less-than-maximally
+rewarded behavior. That is, in a low-slack regime, "but that sort of
+model would be getting less reward than would be possible given its
+capabilities" is a strong counterargument against training creating a
+model of the relevant kind, whereas in a high-slack regime, it's not (so
+high slack regimes will generally involve greater uncertainty about the
+type of model you end up with, since models that get less-than-maximal
+reward are still in the running). Or, in more human terms: a low-slack regime is more like a hyper-intense
+financial firm that immediately fires any employees who fall behind in
+generating profits (and where you'd therefore expect surviving employees
+to be hyper-focused on generating profits – or perhaps, hyper-focused on
+the profits that their supervisors think they're generating), whereas
+a high-slack regime is more like a firm where employees can freely goof
+off, drink martinis at lunch, and pursue projects only vaguely related
+to the company's bottom line, and who only need to generate some amount of profit for the firm sometimes . (Or at least, that's the broad distinction I'm trying to point at.
+Unfortunately, I don't have a great way of making it much more precise,
+and I think it's possible that thinking in these terms will ultimately
+be misleading.) Slack matters here partly because below, I'm going to be making various
+arguments that appeal to possibly-quite-small differences in the amount
+of reward that different models will get. And the force of these
+arguments depends on how sensitive training is to these differences. But
+I also think it can inform our sense of what models to expect more
+generally. For example, I think slack matters to the probability that training will
+create models that pursue proxy goals imperfectly correlated with reward
+on the training inputs. Thus, in a low-slack regime, it may be fairly
+unlikely for a model trained to help humans with science to end up
+pursuing a general "curiosity drive" (in a manner that doesn't then
+motivate instrumental training-gaming), because a model's pursuing its
+curiosity in training would sometimes deviate from maximally
+helping-the-humans-with-science. That said, note that the degree of slack is conceptually distinct from
+the diversity and robustness of the efforts made in training to root out
+goal misgeneralization. Thus, for example, if you're rewarding a model
+when it gets gold coins, but you only ever show your model environments
+where the only gold things are coins, then a model that tries to get
+gold-stuff-in-general will perform just as well a model that gets gold
+coins in particular, regardless of how intensely training pressures the
+model to get maximum reward on those environments. E.g., a low-slack
+regime could in principle select either of these models, whereas a
+high-slack regime would leave more room for models that just get fewer
+gold coins period (for example, models that sometimes pursue red things
+instead, or who waste lots of time thinking before they pursue their
+gold coins). In this sense, a low-slack regime doesn't speak all that strongly
+against mis-generalized non-training-gamers. Rather, it speaks against
+models that aren't pursuing what I'll call a "max reward goal
+target" – that is, a goal target very closely correlated with reward on
+the inputs the model in fact receives in training . The specified goal,
+by definition, is a max reward goal target (since it is the
+"thing-being-rewarded"), as is the reward process itself (whether
+optimized for terminally or instrumentally). But in principle,
+misgeneralized goals (e.g., "get gold stuff in general") could be "max
+reward" as well, if you never show the model the inputs where the reward
+process would punish them. (The thing that speaks against mis-generalized
+non-training-gamers – though, not decisively – is what I'll call
+"mundane adversarial training" – that is, showing the model a wide
+diversity of training inputs designed to differentiate between the
+specified goal and other mis-generalized goals. [1] Thus, for example,
+if you show your "get-gold-stuff-in-general" model a situation where
+it's easier to get gold cupcakes than gold coins, then giving reward for
+gold-coin-getting will punish the misgeneralized goal.) Finally, I think slack may be a useful concept in understanding various
+biological analogies for ML training. Thus, for example, people sometimes analogize the human
+dopamine/pleasure system to the reward process, and note that many
+humans don't end up pursuing "reward" in this sense directly – for
+example, they would turn down the chance to
+" wirehead "
+in experience machines. I'll leave the question of whether this is a
+good analogy for another day (though note, at the least, that humans
+who "wirehead" in this sense would've been selected against by
+evolution). If we go with this analogy, though, then it seems worth
+noting that this sort of reward process, at least, plausibly leaves
+quite a bit slack – e.g., many humans plausibly could get quite a
+bit more reward than they do (for example, by optimizing more
+directly for their own pleasure), but the reward process doesn't
+pressure them very hard to do so. Similarly, to the extent we analogize evolutionary selection to ML
+training, it seems to have left humans quite a bit of "slack," at
+least thus far – that is, we could plausibly be performing much
+better by the lights of inclusive genetic fitness (though if you
+imagine evolutionary selection persisting for much longer, one can
+imagine ending up with creatures that optimize for their inclusive
+genetic fitness much more actively). How much slack will there be in training? I'm not sure, and I think it
+will plausibly vary according to the stage of the training process. For
+example, naively, pre-training currently looks to me like a lower-slack
+regime than RL fine-tuning. What's more, to the extent that "slack" ends
+up pointing at something real and important, I think it plausible that
+it will be a parameter that we can control – for example, by training
+longer and on more data. Assuming we can control it, is it preferable to have less slack, or
+more? Again, I'm not sure. Currently, though, I lean towards the view
+that less slack is preferable, because less slack gives you higher
+confidence about what sort of model you end up with. [2] Indeed,
+counting on slack to ensure alignment in particular smacks, to me, of
+wishful thinking – and in particular, of counting on greater uncertainty about the model's goals to speak in favor of the specific
+goals you want it to have. Thus, for example, my sense is that some
+people acknowledge that the goals specified by our training process will
+be misaligned to some extent (for example, human raters will sometimes
+reward dishonest, misleading, or manipulative responses), but they hope
+that our models learn an aligned policy regardless. But even granted
+that the slack in training allows this deviation from max-reward
+behavior, why think that the deviation will land on an aligned policy in
+particular? (There are possible answers here – for example, that an
+aligned policy like "just be honest" is in some sense simpler or more
+natural. [3] But I'm wary of wishful thinking here as well.) My main point at present, though, is just that the degree of slack in
+training may be an important factor shaping our expectations about what
+sorts of models training will produce. I'm calling this "mundane" adversarial training because it
+investigates what the model does in situations we're able to
+actually put it in. This is in contrast with fancier and more
+speculative forms of adversarial training, which attempt to get
+information about what a model would do in situations we can't actually show it, at least not in a controlled setting – for
+example, what it would do if it were no longer under our control, or
+what it would do if the true date was ten years in the future, etc. ↩︎ Thanks to Daniel Kokotajlo for discussion here. ↩︎ Various humans, for example, plausibly settle on a policy like
+"just be honest" even though it doesn't always get rewarded. ↩︎

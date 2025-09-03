@@ -1,0 +1,119 @@
+Introduction Summary This post is a comparison of various existing decision theories, with a focus
+on decision theories that use logical counterfactuals (a.k.a. the kind of decision theories most discussed on LessWrong). The post compares the
+decision theories along outermost iteration (action vs policy vs algorithm),
+updatelessness (updateless or updateful), and type of counterfactual used
+(causal, conditional, logical). It then explains the decision theories in more
+detail, in particular giving an expected utility formula for each. The post then gives
+examples of specific existing decision problems where the decision theories
+give different answers. Value-added There are some other comparisons of decision theories (see the “Other comparisons” section),
+but they either (1)
+don’t focus on logical-counterfactual decision theories; or (2) are outdated
+(written before the new functional/logical decision theory terminology came about). To give a more personal motivation, after reading through a bunch of papers and posts about these
+decision theories, and feeling like I understood the basic ideas, I
+remained highly confused about basic things like “How is UDT different from
+FDT?”, “Why was TDT deprecated?”, and “If TDT performs worse than FDT, then
+what’s one decision problem where they give different outputs?”
+This post hopes to clarify these and other questions. None of the decision theory material in this post is novel. I am still learning
+the basics myself, and I would appreciate any corrections (even about subtle/nitpicky stuff). Audience This post is intended for people who are similarly confused about the
+differences between TDT, UDT, FDT, and LDT. In terms of reader background assumed,
+it would be good to know the statements to some standard decision theory
+problems (Newcomb’s problem, smoking lesion, Parfit’s hitchhiker, transparent
+box Newcomb’s problem, counterfactual mugging (a.k.a. curious benefactor ; see page 56, footnote 89)) and the “correct” answers to
+them, and having enough background in math to understand the expected utility
+formulas. If you don’t have the background, I would recommend reading
+chapters 5 and 6 of
+Gary Drescher’s Good and Real (explains well the idea of subjunctive means–end relations),
+the FDT paper (explains well how FDT’s action selection variant works, and how FDT differs from CDT and EDT), “Cheating Death in Damascus” , and “Toward Idealized Decision Theory” (explains the difference between policy selection and logical counterfactuals well), and understanding
+what Wei Dai calls “decision theoretic thinking” (see comments: 1 , 2 , 3 ).
+I think a lot of (especially old) content on decision theory is confusingly
+written or unfriendly to beginners, and would recommend skipping around to find
+explanations that “click”. Comparison dimensions My main motivation is to try to distinguish between TDT, UDT, and FDT, so I
+focus on three dimensions for comparison that I think best display the differences
+between these decision theories. Outermost iteration All of the decision theories in this post iterate through some set of “options” (intentionally vague)
+at the outermost layer of execution to find the best “option”. However, the
+nature (type) of these “options” differs among the various theories.
+Most decision theories iterate through either actions or policies .
+When a decision theory iterates through actions (to find the best action),
+it is doing “action selection”, and the decision theory outputs a single action.
+When a decision theory iterates through policies (to find the best policy),
+it is doing “policy selection”, and outputs a single policy , which is an
+observation-to-action mapping. To get an action out of a decision theory
+that does policy selection (because what we really care about is knowing which
+action to take), we must call the policy on the actual observation. Using the notation of the FDT paper ,
+an action has type A while a policy has type X → A ,
+where X is the set of observations.
+So given a policy π : X → A and observation x ∈ X ,
+we get the action by calling π on x , i.e. π ( x ) ∈ A . From the expected utility formula of the decision theory,
+you can tell action vs policy selection by seeing what variable comes beneath
+the a r g m a x operator (the a r g m a x operator is what does the outermost iteration); if it is a ∈ A (or similar) then it is iterating over actions, and if it is π ∈ Π (or similar), then it is iterating over policies. One exception to the above is UDT2, which seems to iterate over algorithms . Updatelessness In some decision problems, the agent makes an observation, and has the choice
+of updating on this observation before acting. Two examples of this are: in
+counterfactual mugging (a.k.a. curious benefactor), where the agent makes the observation that the coin has
+come up tails; and in the transparent box Newcomb’s problem, where the agent
+sees whether the big box is full or empty. If the decision algorithm updates on the observation, it is updateful (a.k.a.
+“not updateless”). If it doesn’t update on the observation, it is updateless . This idea is similar to how in Rawls’s “ veil of ignorance ”, you must pick your
+moral principles, societal policies, etc., before you find out who
+you are in the world or as if you don’t know who you are in the world. How can you tell if a decision theory is
+updateless? In its expected utility formula, if it conditions
+on the observation, it is updateful. In this case
+the probability factor looks like P ( … ∣ … , O B S = x ) ,
+where x is the observation (sometimes the observation is called “sense data” and is denoted by s ).
+If a decision theory is updateless, the conditioning on
+“ O B S = x ” is absent.
+Updatelessness only makes a difference in decision problems that
+have observations. There seem to be different meanings of “updateless” in use. In this post I will
+use the above meaning. (I will try to post a question on LessWrong soon about these
+different meanings.) Type of counterfactual In the course of reasoning about a decision problem, the agent
+can construct counterfactuals or hypotheticals like “if I do this ,
+then that happens”. There are several different kinds of counterfactuals,
+and decision theories are divided among them. The three types of counterfactuals that will concern us are: causal, conditional/evidential, and logical/subjunctive.
+The distinctions between these are explained clearly in the FDT paper so I recommend reading that (and I won’t explain them here). In the expected utility formula, if the probability factor
+looks like P ( … ∣ … , A C T = a ) then it is evidential, and
+if it looks like P ( … ∣ … , d o ( A C T = a ) ) then it is causal.
+I have seen the logical counterfactual written in many ways: P ( … ∣ … , d o ( D T ( … ) = … ) ) e.g. in the FDT paper , p. 14 P ( … ∣ … , t r u e ( D T ( … ) = … ) ) e.g. in the FDT paper , p. 14 P ( ┌ D T ( … ) = … ┐ □ → … ∣ … ) e.g. in Hintze , p. 4 P ( ┌ D T ( … ) = … ┐ ▹ … ∣ … ) e.g. on Arbital Other dimensions that I ignore There are many more dimensions along which decision theories differ, but I
+don’t understand these and they seem less relevant for comparing among the main
+logical-counterfactual decision theories, so I will just list them here but
+won’t go into them much later on in the post: Reflective consistency (in particular dynamic consistency ): I think this is about whether an agent
+would use precommitment mechanisms or self-modify to use a
+different decision theory.  Can this be seen immediately from
+the expected utility formula? If not, it might be unlike the
+other three above. My current guess is that reflective consistency
+is a higher-level property that follows from the above three. Emphasis on graphical models: FDT is formalized using graphical models (of the kind you can read about in Judea Pearl’s book Causality ) while UDT isn’t. Recent developments like using logical inductors. Uncertainty about where your decision algorithm is: I think this is some combination of the three that I’m already covering. For previous discussions, see this section of Andrew Critch’s post, this comment by Wei Dai, and this post by Vladimir Slepnev. Different versions of UDT (e.g. proof-based, modal). Comparison table along the given dimensions Given the comparison dimensions above, the decision theories can be summarized as follows: Decision theory Outermost iteration Updateless Type of counterfactual Updateless decision theory 1 (UDT1) action yes logical Updateless decision theory 1.1 (UDT1.1) policy yes logical Updateless decision theory 2 (UDT2) algorithm yes logical Functional decision theory, iterating over actions (FDT-action) action yes logical Functional decision theory, iterating over policies (FDT-policy) policy yes logical Logical decision theory (LDT) unspecified unspecified logical Timeless decision theory (TDT) action no logical Causal decision theory (CDT) action no causal Evidential decision theory (EDT, “naive EDT”) action no conditional The general “shape” of the expected utility formulas will be: a r g m a x outermost iteration N ∑ j = 1 U ( o j ) ⋅ P ( O U T C O M E = o j ∣ updatelessness , counterfactual ) Or sometimes: a r g m a x outermost iteration N ∑ j = 1 U ( o j ) ⋅ P ( counterfactual □ → O U T C O M E = o j ∣ updatelessness ) Explanations of each decision theory This section elaborates on the comparison above by giving an expected value
+formula for each decision theory and explaining why each cell in the table
+takes that particular value. I won’t define the notation very clearly, since I
+am mostly collecting the various notations that have been used (so that you can
+look at the linked sources for the details). My goals are to explain how to fill
+in the table above and to show how all the existing variants in notation are
+saying the same thing. UDT1 and FDT (iterate over actions) I will describe UDT1 and FDT’s action variant together, because I think they
+give the same decisions (if there’s a decision problem where they differ, I would like to know about it). The main differences between the two seem to be: The way they are formalized, where FDT uses graphical models and UDT1 uses some kind of non-graphical “mathematical intuition module”. The naming, where UDT1 emphasizes the “updateless” aspect and FDT emphasizes the logical counterfactual aspect. Some additional assumptions that UDT has that FDT doesn’t. Rob Bensinger says “accepting FDT doesn’t necessarily require a commitment to some of the philosophical ideas associated with updatelessness and logical prior probability that MIRI, Wei Dai, or other FDT proponents happen to accept” and also says UDT “built in some debatable assumptions (over and above what’s needed to show why TDT, CDT, and EDT don’t work)”. I’m not sure what these additional assumptions are, but my guess is it has to do with viewing the world as a program, Tegmark’s level IV multiverse, and things like that (I would be interested in hearing more about the exact assumptions). In the original UDT post , the expected utility formula is written like this: Y ∗ = a r g m a x Y ∑ P Y ( ⟨ E 1 , E 2 , E 3 , … ⟩ ) U ( ⟨ E 1 , E 2 , E 3 , … ⟩ ) Here Y is an “output string” (which is basically an action). The sum is taken over all possible vectors of the execution histories.
+I prefer Tyrrell McAllister’s notation : a r g m a x Y ∈ Y ∑ E ∈ E M ( X , Y , E ) U ( E ) To explain the UDT1 row in the comparison table, note that: The outermost iteration is a r g m a x Y ∈ Y (over output strings, a.k.a. actions), so it is doing action selection. We don’t update on the observation. This isn’t really clear from the notation, since M ( X , Y , E ) still depends on the input string X . However, the original post clarifies this, saying “Bayesian updating is not done explicitly in this decision theory”. The counterfactual is logical because P Y and M use the “mathematical intuition module”. In the FDT paper (p. 14), the action selection variant of FDT is written as follows: F D T ( P , G , x ) = a r g m a x a ∈ A E ( U ( O U T C O M E ) ∣ d o ( F D T ( P – – , G – – , x – – ) = a ) ) = a r g m a x a ∈ A N ∑ j = 1 U ( o j ) ⋅ P ( O U T C O M E = o j ∣ d o ( F D T ( P – – , G – – , x – – ) = a ) ) Again, note that we are doing action selection (“ a r g m a x a ∈ A ”), using logical counterfactuals (“ d o ( F D T ( P – – , G – – , x – – ) = a ) ”), and being updateless (absence of “ O B S = x ”). UDT1.1 and FDT (iterate over policies) UDT1.1 is a decision theory introduced by Wei Dai’s post “Explicit Optimization of Global Strategy (Fixing a Bug in UDT1)” . In Hintze (p. 4, 12) UDT1.1 is written as follows: U D T ( s ) = a r g m a x f n ∑ i = 1 U ( O i ) ⋅ P ( ┌ U D T : = f : s ↦ a ┐ □ → O i ) Here f iterates over functions that map sense data ( s ) to actions ( a ), U is the utility function, and O 1 , … , O n are outcomes. Using Tyrrell McAllister’s notation , UDT1.1 looks like: U D T 1.1 ( X , Y , E , M , I ) = a r g m a x f ∈ I ∑ E ∈ E M ( f , E ) U ( E ) Using notation from the FDT paper plus a trick I saw on this Arbital page we can write the policy selection variant of FDT as: ( F D T ( P , x ) ) ( x ) = ( a r g m a x π ∈ Π N ∑ j = 1 U ( o j ) ⋅ P ( O U T C O M E = o j ∣ t r u e ( F D T ( P – – , x – – ) = π ) ) ) ( x ) On the right hand side, the large expression (the part inside and including the a r g m a x ) returns a policy, so to get the action we call the policy on the observation x . The important things to note are that UDT1.1 and the policy selection variant of FDT: Do policy selection because the outermost iteration is over policies (“ a r g m a x f ” or “ a r g m a x π ∈ Π ” depending on the notation). Quotes about policy selection: The FDT paper (p. 11, footnote 7) says “In the authors’ preferred formalization of FDT, agents actually iterate over policies (mappings from observations to actions) rather than actions. This makes a difference in certain multi-agent dilemmas, but will not make a difference in this paper.” See also comments by Vladimir Slepnev ( 1 , 2 ). Use logical counterfactuals (denoted by corner quotes and boxed arrow, the mathematical intuition M , or the t r u e operator). Are updateless because they don’t condition on the observation (note the absence of conditioning of the form O B S = x ). TDT My understanding of TDT is mainly from Hintze .
+I am aware of the TDT paper and skimmed it a while back,
+but did not revisit it in the course of writing this post. Using notation from Hintze (p. 4, 11) the expected utility formula for TDT can be written as follows: T D T ( s ) = a r g m a x a ∈ A n ∑ i = 1 U ( O i ) P ( ┌ T D T ( s ) : = a ┐ □ → O i ∣ s ) Here, s is a string of sense data (a.k.a. observation), A is the set of actions, U is the utility function, O 1 , … , O n are outcomes, the corner quotes and boxed arrow □ → denote a logical counterfactual (“if the TDT algorithm were to output a given input s ”). If I were to rewrite the above using notation from the FDT paper , it would look like: T D T ( P , x ) = a r g m a x a ∈ A N ∑ j = 1 U ( o j ) ⋅ P ( O U T C O M E = o j ∣ O B S = x , t r u e ( T D T ( P – – , x – – ) = a ) ) The things to note are: The outermost iteration is over actions (“ a r g m a x a ∈ A ”), so TDT does action selection. We condition on the sense data s or observation O B S = x , so TDT is updateful. Quotes about TDT’s updatefulness: this post describes TDT as “a theory by MIRI senior researcher Eliezer Yudkowsky that made the mistake of conditioning on observations”. The Updateless decision theories page on Arbital calls TDT “updateful”. Hintze (p. 11): “TDP’s failure on the Curious Benefactor is straightforward. Upon seeing the coinflip has come up tails, it updates on the sensory data and realizes that it is in the causal branch where there is no possibility of getting a million.” We use corner quotes and the boxed arrow, or the t r u e operator, to denote a logical counterfactual. UDT2 I know very little about UDT2, but based on this
+comment by Wei Dai
+and this
+post by Vladimir Slepnev, it seems to iterate over algorithms rather than actions or
+policies, and I am assuming it didn’t abandon updatelessness and logical counterfactuals. The following search queries might have more information: “UDT2” site:agentfoundations.org “UDT2” site:lesswrong.com “UDT2” LDT LDT (logical decision theory) seems to be an umbrella decision theory that only requires the use of
+logical counterfactuals, leaving the iteration type and updatelessness
+unspecified. So my understanding is that UDT1, UDT1.1, UDT2, FDT, and TDT are
+all logical decision theories.
+See this Arbital page , which says: “Logical decision theories” are really a family of recently proposed decision
+theories, none of which stands out as being clearly ahead of the others in
+all regards, but which are allegedly all better than causal decision theory. The page also calls TDT a logical decision theory (listed under “non-general
+but useful logical decision theories”). CDT Using notation from the FDT paper (p. 13), we can write the expected utility formula for CDT as follows: C D T ( P , G , x ) = a r g m a x a ∈ A E ( U ( O U T C O M E ) ∣ d o ( A C T = a ) , O B S = x ) = a r g m a x a ∈ A N ∑ j = 1 U ( o j ) ⋅ P ( O U T C O M E = o j ∣ d o ( A C T = a ) , O B S = x ) Things to note: The outermost iteration is a r g m a x a ∈ A so CDT does action selection. We condition on O B S = x so CDT is updateful. The presence of d o ( A C T = a ) means we use causal counterfactuals. EDT Using notation from the FDT paper (p. 12), we can write the expected utility formula for EDT as follows: E D T ( P , x ) = a r g m a x a ∈ A E ( U ( O U T C O M E ) ∣ O B S = x , A C T = a ) = a r g m a x a ∈ A N ∑ j = 1 U ( o j ) ⋅ P ( O U T C O M E = o j ∣ O B S = x , A C T = a ) Things to note: The outermost iteration is a r g m a x a ∈ A so EDT does action selection. We condition on O B S = x so EDT is updateful. We condition on A C T = a so EDT uses conditional probability as its counterfactual. There are various versions of EDT (e.g. versions that smoke on the smoking
+lesion problem). The EDT in this post is the “naive” version. I don’t
+understand the more sophisticated versions of EDT, but the keyword for learning
+more about them seems to be the tickle defense . Comparison on specific decision problems If two decision theories are actually different, there should be some decision problem where they return different answers. The FDT paper does a great job of distinguishing the logical-counterfactual decision theories from EDT and CDT.
+However, it doesn’t distinguish between different logical-counterfactual decision theories. The following is a table that shows the disagreements between decision theories.
+For each pair of decision theories specified by a row and column, the decision problem named in the cell is one where the decision theories return different answers.
+The diagonal is blank because the decision theories are the same. The lower left triangle is blank because it repeats the entries in the mirror image (along the diagonal) spots. UDT1.1/FDT-policy UDT1/FDT-action TDT EDT CDT UDT1.1/FDT-policy – Number assignment problem described in the UDT1.1 post (both UDT1 copies output “A”, the UDT1.1 copies output “A” and “B”) Counterfactual mugging (a.k.a. curious benefactor) (TDT refuses, UDT1.1 pays) Parfit’s hitchhiker (EDT refuses, UDT1.1 pays) Newcomb’s problem (CDT two-boxes, UDT1.1 one-boxes) UDT1/FDT-action – – Counterfactual mugging (a.k.a. curious benefactor) (TDT refuses, UDT1 pays) Parfit’s hitchhiker (EDT refuses, UDT1 pays) Newcomb’s problem (CDT two-boxes, UDT1 one-boxes) TDT – – – Parfit’s hitchhiker (EDT refuses, TDT pays) Newcomb’s problem (CDT two-boxes, TDT one-boxes) EDT – – – – Newcomb’s problem (CDT two-boxes, EDT one-boxes) CDT – – – – – Other comparisons Here are some existing comparisons between decision theories that I found
+useful, along with reasons why I felt the current post was needed. “Decision-theoretic problems and Theories; An (Incomplete) comparative list” by somervta.
+This list is useful and modern but doesn’t include the different versions of UDT and FDT. “A comprehensive list of decision
+theories” by Caspar Oesterheld and/or Johannes Treutlein. I think my motivation is
+different from that of the author(s) of this list; I mainly want to
+distinguish between all the UDTs, TDT, and FDT, so my tables and columns of
+those tables are chosen in a way so as to make the differences apparent. “Problem Class Dominance in Predictive
+Dilemmas” by Daniel Hintze. This paper is from 2014 so doesn’t include the FDT/LDT
+terminology, and also doesn’t include the various versions of UDT. “Timeline of decision theory” .
+This is an incomplete timeline I’ve been working on sporadically. It gives a
+chronological ordering of some decision theories and decision problems with a
+focus on logical-counterfactual decision theories, but doesn’t really compare
+them.

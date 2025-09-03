@@ -1,0 +1,89 @@
+(note: this is not an official MIRI statement, this is a personal statement.  I am not speaking for others who have been involved with the agenda.) The AAMLS (Alignment for Advanced Machine Learning Systems) agenda is a project at MIRI that is about determining how to use hypothetical highly advanced machine learning systems safely.  I was previously working on problems in this agenda and am currently not. The agenda See the paper .  The agenda lists 8 theoretical problems relevant to
+aligning AI systems substantially similar to current machine learning systems. History Around March 2016, I had thoughts about research prioritization: I thought it
+made sense to AI safety researchers spend more time thinking about machine learning systems.
+In a similar timeframe, some other researchers updated towards shorter timelines.  I had some
+discussions with Eliezer, Paul, Nate, and others, and
+came up with a list of problems that seemed useful to think about. Then some of us (mostly me, with significant help from others) wrote up the paper about the problems.  The plan was
+for some subset of the researchers to work on them. Progress since the paper Since writing the paper, progress has been slow: I had concrete thoughts about inductive ambiguity identification (with Ryan's
+help); some of this is written up on the forum here , here , here , here .  Retrospectively, this line
+of thinking seems like a dead end, though I'm not highly confident of this
+judgment. Some researchers and I have thought about many of the problems and gained a
+slightly improved conceptualization of them, but this improved
+conceptualization is still quite vague and hasn't led to concrete progress
+towards solutions. Why was little progress made? Difficulty I think the main reason is that the problems were
+very difficult.  In particular, they were mostly selected on the basis of "this
+seems important and seems plausibly solveable", rather than any strong intuition that it's possible to make progress. In comparison, problems in the agent foundations agenda have seen more progress: Logical uncertainty (Definability of truth, reflective oracles, logical inductors) Decision theory (Modal UDT, reflective oracles, logical inductors) Vingean reflection (Model polymorphism, logical inductors) One thing to note about these problems is that they were formulated on the basis of
+a strong intuition that they ought to be solveable.  Before logical induction,
+it was possible to have the intuition that some sort of asymptotic approach
+could solve many logical uncertainty problems in the limit.  It was also
+possible to strongly think that some sort of self-trust is possible. With problems in the AAMLS agenda, the plausibility argument was something like: Here's an existing, flawed approach to the problem (e.g. using a reinforcement
+signal for environmental goals, or modifications of this approach) Here's a vague intuition about why it's possible to do better (e.g. humans do
+a different thing) which, empirically, turned out not to make for tractable research problems. Going for the throat In an important sense, the AAMLS agenda is "going for the throat" in a way that
+other agendas (e.g. the agent foundations agenda) are to a lesser extent: it
+is attempting to solve the whole alignment problem (including goal
+specification) given access to resources such as powerful reinforcement
+learning.  Thus, the difficulties of the whole alignment problem (e.g.
+specification of environmental goals) are more exposed in the problems. Theory vs. empiricism Personally, I strongly lean towards preferring theoretical rather than empirical
+approaches.  I don't know how much I endorse this bias overall for the set of
+people working on AI safety as a whole, but it is definitely a personal bias of
+mine. Problems in the AAMLS agenda turned out not to be very amenable to
+purely-theoretical investigation.  This is probably due to the fact that there
+is not a clear mathematical aesthetic for determining what counts as a solution
+(e.g. for the environmental goals problem, it's not actually clear that there's
+a recognizable mathematical statement for what the problem is). With the agent foundations agenda, there's a
+clearer aesthetic for recognizing good solutions.  Most of the problems in the
+AAMLS agenda have a less-clear aesthetic.  (There are probably additional ways of
+investigating the AI alignment problem in a highly aesthetic fashion other than
+the agent foundations agenda, but I don't know of them yet). Doing other things Perhaps related to the fact that the problems were so hard, I repeatedly found
+other things to feel better to think about and work on than AAMLS: Logical induction (math related to it, and the paper) (around September 2016) Thinking about why Paul and Eliezer disagree; some thoughts written up here and here (November-December 2016) The benign induction problem and weird philosophy related to it (January-Februrary 2016) Social epistemology and strategy (Februrary-April 2016) That is, though I was officially lead on AAMLS, I mostly did other things in
+that time period.  I think this was mostly correct (though unfortunately made
+the official story somewhat misleading): I intuitively expect that the other
+things I did had a greater payoff than working on AAMLS would have. Relevant updates I've made I've made some updates (some due to AAMLS, some not) that make AAMLS look like a
+worse idea now than before. Against plausibility arguments As discussed before, I included problems based on plausibility rather than a
+strong intuition that the problem is solveable.  I've updated against this being
+a useful research strategy; I think strong intuitions about things being
+solveable is a better guide as to what to work on.  Note that strong intuitions
+can be miscalibrated; however, even in these cases there is still a strong model behind the
+intuition that can be tested by pursuing the research implied by the intutiion. In favor of lots of philosophical hardness I've updated in favor of the proposition that essential AI safety problems
+(especially those related to benign induction, bounded logical uncertainty, and
+environmental goals) are philosophically hard rather than only mathematically hard.  That is: just taking our current philosophical thinking
+and attempting to formalize it will fail, because our current philosophical
+thinking is confused. The main reason for this intuition is thinking about these problems for a significant time and then
+noticing that, in near mode, I don't expect to be able to find satisfying
+solutions (e.g. a particular thing and a mathematical proof related to the thing
+that yields high confidence it will work; it's hard to imagine what the premises or
+conclusions of the mathematical proof would be).
+So it looks like large
+ontological shifts will be necessary to even get to the stage of picking the
+right problems to formalize and solve. Against particular agendas I've moved towards a research approach that is less "rigid" than
+working on a particular agenda.  Every particular research agenda for AI alignment that
+I know of (agent foundations, AAMLS, concrete problems in AI safety, Paul's
+agenda) offers a useful perspective on the problem, but is quite limited in
+itself.  Each agenda does some combination of (a) containing "impossible"
+problems, or (b) ignoring large parts of the AI safety problem.  If the overall
+alignment problem is solved, it will probably be solved through researchers obtaining
+new, not-currently-existing perspectives on the problem. In general I think the purpose of technical agendas is something like: offering problems for people to puzzle over (this can be a good introduction
+to AI alignment) offering a useful perspective on the problem (breaking it into some set of
+subproblems, such that the breaking-up reveals something important) containing tractable problems at least somewhat related to the
+overall alignment problem (such that the view of the overall problem changes after solving one
+of the agenda problems) Against research being optimized for outside understandability I've updated against the idea that research should be significantly optimized
+for being understandable to outsiders.  (I previously considered
+understandability a significant point in favor of working on AAMLS but not one
+of the
+main considerations).  The intuitions in favor of this type of research are
+fairly obvious: it can get more people to work on AI safety it can result in getting more social credit (e.g. money, prestige) for research I now have additional intuitions against: discernment ability : people who aren't alignment researchers have less
+ability to discern good research from bad, so requiring research to be understandable to them
+creates local pressures in favor of worse research.  Furthermore, there's a
+narrative force in favor of confusing "research good according to people
+with low discernment ability" with "research that's actually good". "mainstream" epistemology being corrupt : see my post on this
+topic . Overall it still seems like outside understandability is weakly net-positive, but I don't plan to use it as a significant optimization criterion when deciding which research to do (i.e. I'll aim to just do research good according to my aesthetics and then figure out how to make it understandable later). The current state of the agenda I would still recommend the paper to people.  I think, for someone who hasn't
+spent a lot of time thinking about AI safety, it is helpful to have lists
+of problems and approaches to them to think about.  The agenda conveys a
+certain style of thinking about AI alignment that I think is valuable (though
+turned out to be difficult to develop on). I am continuing to think about how to use ML systems to safely do things to
+reduce existential risk, and am using ML abstractions to think about AI
+alignment in general, without focusing on specific agenda problems as much.  I
+think this is useful. I think people from a machine learning background who want to think about AI
+alignment should start by thinking about problems including those on Paul's
+research path, the AAMLS agenda, the Concrete Problems in AI Safety agenda,
+and the Agent Foundations Agenda, but should additionally be aiming to get their own inside view about how to solve the overall alignment problem.

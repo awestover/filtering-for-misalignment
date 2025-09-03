@@ -1,0 +1,1 @@
+What are some substantial critiques of the agent foundations research agenda? Where by agent foundations I am referrring the area of research referred to by Critch in this post , which I understand as developing concepts and theoretical solutions for idealized problems related to AI safety such as logical induction.

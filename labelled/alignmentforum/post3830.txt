@@ -1,0 +1,218 @@
+Paul Christiano and "MIRI" have disagreed on an important research question for a long
+time: should we focus research on aligning "messy" AGI (e.g. one found through
+gradient descent or brute force search) with human values, or on developing
+"principled" AGI (based on theories similar to Bayesian probability theory)?  I'm going to present my current model of this disagreement and additional thoughts about it. I put "MIRI" in quotes because MIRI is an organization composed of people who
+have differing views.  I'm going to use the term "MIRI view" to refer to some
+combination of the views of Eliezer, Benya, and Nate.  I think these three
+researchers have quite similar views, such that it is appropriate in some
+contexts to attribute a view to all of them collectively; and that these
+researchers' views constitute what most people think of as the "MIRI view". ( KANSI AI complicates this disagreement
+somewhat; the story here is that we can use "messy" components in a KANSI AI but
+these components have to have their capabilities restricted significantly.  Such
+restriction isn't necessary if we think messy AGI can be aligned in general.) Intuitions and research approaches I'm generally going to take the perspective of looking for the intuitions
+motivating a particular research approach or produced by a particular research
+approach, rather than looking at the research approaches themselves.  I expect
+it is easier to reach agreement about the how compelling a particular intuition
+is (at least when other intuitions are temporarily ignored), than to reach
+agreement on particular research approaches. In general, it's quite possible for a research approach to be inefficient while
+still being based on, or giving rise to, useful intuitions.  So a criticism of a
+particular research approach is not necessarily a criticism of the intuitions
+behind it. Terminology A learning problem is a task for which the AI is supposed to output some
+information, and if we wanted, we could give the information a score
+measuring how good it is the task, using less than ~2 weeks of labor.  In
+other words, there's an inexpensive "ground truth" we have access to.  This
+looks a little weird but I think this is a natural category, and some of the
+intuitions relate to learning and non-learning problems.  Paul has written
+about learning and non-learning problems here . An AI system is aligned if it is pursuing some combination of different
+humans' values and not significantly pursuing other values that could impact
+the long term future of humanity.  If it is pursuing other values
+significantly it is unaligned . An AI system is competitive if it is nearly as efficient as other AI systems
+(aligned or unaligned) that people could build. Listing out intuitions I'm going to list out a bunch of relevant intuitions.  Usually I can't actually convey
+the intuition through text; at best I can write "what someone who has this
+intuition would feel like saying" and "how someone might go about gaining this
+intuition".  Perhaps the text will make "logical" sense to you without feeling
+compelling; this could be a sign that you don't have the underlying intuition. Background AI safety intuitions These background intuitions ones that I think are shared by both Paul and MIRI. 1. Weak orthogonality . It is possible
+to build highly intelligent agents with silly goals such as maximizing
+paperclips.  Random "minds from mindspace" (e.g.  found through brute force
+search) will have values that significantly diverge from human values. 2. Instrumental convergence . Highly advanced agents will by default pursue strategies such as gaining
+resources and deceiving their operators (performing a "treacherous turn"). 3. Edge instantiation . For most objective functions that naively seem useful, the maximum is quite
+"weird" in a way that is bad for human values. 4. Patch resistance . Most AI alignment problems (e.g. edge instantiation) are very difficult to
+"patch"; adding a patch that deals with a specific failure
+will fail to fix the underlying problem and instead lead to further unintended
+solutions. Intuitions motivating the agent foundations approach I think the following intuitions are sufficient to motivate the agent foundations
+approach to AI safety (thinking about idealized models of advanced agents to
+become less confused), and something similar to the agent foundations
+agenda , at least if one
+ignores contradictory intuitions for a moment.  In particular, when considering
+these intuitions at once, I feel compelled to become less confused about
+advanced agents through research questions similar to those in the agent
+foundations agenda. I've confirmed with Nate that these are similar to some of his main intuitions
+motivating the agent foundations approach. 5. Cognitive reductions are great . When we feel confused about something, there is often a way out of this
+confusion, by figuring out which algorithm would have generated that confusion.
+Often, this works even when the original problem seemed "messy" or "subjective";
+something that looks messy can have simple principles behind it that haven't
+been discovered yet. 6. If you don't do cognitive reductions, you will put your confusion in boxes
+and hide the actual
+problem . By default, a lot of people studying a problem will fail to take the perspective
+of cognitive reductions and thereby not actually become less confused.  The free
+will debate is a good example of this: most discussion of free will contains
+confusions that could be resolved using Daniel Dennett's cognitive reduction of
+free will .  (This is
+essentially the same as the cognitive reduction discussed in the sequences .) 7. We should expect mainstream AGI research to be inefficient at learning
+much about the confusing aspects of intelligence, for this reason. It's pretty easy to look at most AI research and see where it's hiding
+fundamental confusions such as logical uncertainty without actually resolving
+them.  E.g. if neural networks are used to predict math, then the confusion
+about how to do logical uncertainty is placed in the black box of "what this
+neural net learns to do".  This isn't that helpful for actually understanding
+logical uncertainty in a "cognitive reduction" sense; such an understanding
+could lead to much more principled algorithms. 8. If we apply cognitive reductions to intelligence, we can design agents we
+expect to be aligned. Suppose we are able to observe "how intelligence feels
+from the inside" and distill these observations into an idealized cognitive algorithm for
+intelligence (similar to the idealized algorithm Daniel Dennett discusses to
+resolve free will).  The minimax
+algorithm is one example of this: it's
+an idealized version of planning that in principle could have been derived by
+observing the mental motions humans do when playing games.  If we implement an
+AI system that approximates this idealized algorithm, then we
+have a story for why the AI is doing what it is doing: it is taking action X for the same reason that an "idealized human" would take action X.  That is,
+it "goes through mental motions" that we can imagine going through (or
+approximates doing so), if we were solving the task we programmed the AI to do.
+If we're programming the AI to assist us, we could imagine the mental motions we
+would take if we were assisting aliens. 9. If we don't resolve our confusions about intelligence, then we don't have this
+story, and this is suspicious. Suppose we haven't actually resolved our confusions
+about intelligence.  Then we don't have the story in the previous point, so it's
+pretty weird to think our AI is aligned.
+We must have a pretty different story, and it's hard to imagine different
+stories that could allow us to conclude that an AI is aligned. 10. Simple reasoning rules will correctly generalize even for
+non-learning problems. That is, there's some way that agents can learn rules
+for making good judgments that generalize to tasks they can't get fast feedback
+on.  Humans seem to be an existence proof that simple reasoning rules can generalize;
+science can make predictions about far-away galaxies even when there isn't an
+observable ground truth for the state of the galaxy (only indirect
+observations).  Plausibly, it is possible to use "brute force" to find agents using these
+reasoning rules by searching for agents that perform
+well on small tasks and then hoping that they generalize to large tasks, but this can result in misalignment.   For example, Solomonoff induction is controlled by malign consequentialists who have learned good rules for how to reason; approximating Solomonoff induction is one way to make an unaligned AI.  If an aligned AI is to be roughly
+competitive with these "brute force" unaligned AIs, we should have some story
+for why the aligned AI system is also able to acquire simple reasoning rules that
+generalize well.  Note that Paul mostly agrees with this intuition and is in
+favor of agent foundations approaches to solving this problem, although
+his research approach would significantly differ from the current agent
+foundations agenda. (This point is somewhat confusing; see my other post for clarification) Intuitions motivating act-based agents I think these following intuitions are all intuitions that Paul has that motivate his current
+research approach. 11. Almost all technical problems are either tractable to solve or are
+intractable/impossible for a good reason. This is based on Paul's experience
+in technical research.
+For example, consider a statistical learning problem where we are trying to
+predict a Y value from an X value using some model.  It's possible to get good statistical guarantees on problems where
+the training distribution of X values is the same as the test distribution of X
+values, but when those distributions are distinguishable (i.e. there's a
+classifier that can separate them pretty well), there's a fundamental
+obstruction to getting the same guarantees: given the information available,
+there is no way to distinguish a model that will generalize from one that won't,
+since they could behave in arbitrary ways on test data that is distinctly
+different from training data.  An exception to the rule is NP-complete problems; we
+don't have a good argument yet for why they can't be solved in polynomial time.
+However, even in this case, NP-hardness forms a useful boundary between
+tractable and intractable problems. 12. If the previous intuition is true, we should search for solutions and fundamental obstructions. If there is either a solution or a fundamental obstruction to a problem, then an
+obvious way to make progress on the problem is to alternate between generating
+obvious solutions and finding good reasons why a class of solutions (or all
+solutions) won't work.  In the case of AI alignment, we should try getting a
+very good solution (e.g. one that allows the aligned AI to be competitive with
+unprincipled AI systems such as ones based on deep learning by exploiting the
+same techniques) until we have a fundamental obstruction to this.  Such a
+fundamental obstruction would tell us which relaxations to the "full problem" we
+should consider, and be useful for convincing others that coordination is
+required to ensure that aligned AI can prevail even if it is not competitive
+with unaligned AI.  (Paul's research approach looks quite optimistic partially
+because he is pursuing this strategy). 13. We should be looking for ways of turning
+arbitrary AI capabilities into equally powerful aligned AI capabilities. On priors, we should expect it to be hard for AI safety researchers to make
+capabilities advances; AI safety researchers make up only a small percentage of AI
+researchers.  If this is the case, then aligned AI will be quite uncompetitive unless
+it takes advantage of the most effective AI technology that's already around.
+It would be really great if we could take an arbitrary AI technology (e.g. deep
+learning), do a bit of thinking, and come up with a way to direct that
+technology towards human values.  There isn't a crisp fundamental obstruction to
+doing this yet, so it is the natural first place to look.  To be more specific
+about what this research strategy entails, suppose it is possible to build
+built an unaligned AI system.  We expect it to be competent; say it is competent for reason
+X.  We ought to be able to either build an aligned AI system that also works for
+reason X, or else find a fundamental obstruction.  For example, reason X could
+be "it does gradient descent to find weights optimizing a proxy for competence";
+then we'd seek to build a system that works because it does gradient descent to
+find weights optimizing a proxy for competence and alignment. 14. Pursuing human narrow values presents a much more optimistic picture of AI alignment. See Paul's posts on narrow value
+learning , act-based
+agents ,
+and abstract approval
+direction .
+The agent foundations agenda often considers problems of the form "let's use
+Bayesian VNM agents as our starting point and look for relaxations appropriate
+to realistic agents, which are naturalized".  This leads to problems such as
+decision theory, naturalized induction, and ontology identification.  However,
+there isn't a clear argument for why they are subproblems of the problem we
+actually care about (which is close to something like "pursuing human narrow
+values").
+For example, perhaps we can understand how to have an AI pursue human narrow values without
+solving decision theory, since maybe humans don't actually have a utility function or
+a decision theory yet (though we might upon long-term reflection; pursuing
+narrow values should preserve the conditions for such long-term reflection).
+These research questions might be useful threads to pull on if solving them
+would tell us more about the problems we actually care about.  But I think Paul
+has a strong intuition that working on these problems isn't the right way to
+make progress on pursuing human narrow values. 15. There are important considerations in favor of focusing on alignment for
+foreseeable AI
+technologies. See posts here and here .
+In particular, this motivates work related to alignment for systems solving
+learning problems. 16. It is, in principle, possible to automate a large fraction of human labor
+using robust learning. That is, a human can use X amount of labor to
+oversee the AI doing something like X 3 / 2 amount of labor in a robust
+fashion. KWIK learning is a
+particularly clean (though impractical) demonstration of this.  This enables
+the human to spend much more time overseeing a particular decision than the AI
+takes to make it (e.g. spending 1 day to oversee a decision made in 1 second),
+since only a small fraction of decisions are overseen. 17. The above is quite powerful, due to bootstrapping. "Automating a
+large fraction of human labor" is significantly more impressive than it first seems,
+since the human can use other AI systems in the course of evaluating a specific
+decision.  See ALBA .  We don't yet have a fundamental obstruction to any of ALBA's subproblems, and we have an argument that solving these subproblems is sufficient to create an aligned learning system. 18. There are reasons to expect the details of reasoning well to be "messy". That is, there are reasons why we might expect cognition to be as messy and hard to
+formalize as biology is.  While biology has some important large-scale features
+(e.g. evolution), overall it is quite hard to capture using simple rules.  We
+can take the history of AI as evidence for this; AI research often does consist of people trying to figure out how humans do something at an idealized
+level and formalize it (roughly similar to the agent foundations approach), and
+this kind of AI research does not always lead to the most capable AI systems.
+The success of deep learning is evidence that the most effective way for AI
+systems to acquire good rules of reasoning is usually to learn them, rather than having
+them be hardcoded. What to do from here? I find all the intuitions above at least somewhat compelling.  Given this, I
+have made some tentative conclusions: I think the intuition 10 ("simple reasoning rules generalize for non-learning
+problems") is particularly important.  I don't quite understand Paul's research
+approach for this question, but it seems that there is
+convergence that this intuition is useful and that we should take an agent
+foundations approach to solve the problem.  I think this convergence
+represents a great deal of progress in the overall disagreement. If we can resolve the above problem by creating intractable algorithms for
+finding simple reasoning rules that generalize, then plausibly something like
+ALBA could "distill" these algorithms into a competitive aligned agent
+making use of e.g. deep learning technology.  My picture of this is
+vague but if this is correct, then the agent foundations approach and ALBA
+are quite synergistic. Paul has written a bit about the relation between
+ALBA and non-learning problems here . I'm still somewhat optimistic about Paul's approach of "turn arbitrary
+capabilities into aligned capabilities" and pessimistic about the alternatives
+to this approach.  If this approach is ultimately doomed, I think it's likely
+because it's far easier to find a single good AI system than to turn arbitrary
+unaligned AI systems into competitive aligned AI systems; there's a kind of
+"universal quantifier" implicit in the second approach.  However, I don't see
+this as a good reason not to use this research approach.  It seems like if it
+is doomed, we will likely find some kind of fundamental obstruction somewhere
+along the way, and I expect a crisply stated fundamental obstruction to be
+quite useful for knowing exactly which relaxation of the "competitive aligned
+AI" problem to pursue.  Though this does argue for pursuing other approaches
+in parallel that are motivated by this particular difficulty. I think intuition 14 ("pursuing human narrow values presents a much more
+optimistic picture of AI alignment") is quite important, and would strongly
+inform research I do using the agent foundations approach.  I think the main
+reason "MIRI" is wary of this is that it seems quite vague and confusing, and
+maybe fundamental confusions like decision theory and ontology identification
+will re-emerge if we try to make it more precise.  Personally, I expect that,
+though narrow value learning is confusing, it really ought to dodge decision
+theory and ontology identification.  One way of testing this expectation would
+be for me to think about narrow value learning by creating toy models of
+agents that have narrow values but not proper utility functions.
+Unfortunately, I wouldn't be too surprised if this turns out to be super messy
+and hard to formalize. Acknowledgements Thanks to Paul, Nate, Eliezer, and Benya for a lot of conversations on this
+topic.  Thanks to John Salvatier for helping me to think
+about intuitions and teaching me skills for learning intuitions from other people.

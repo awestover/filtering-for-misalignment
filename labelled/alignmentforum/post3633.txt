@@ -1,0 +1,1 @@
+New paper and blog post by Geoffrey Irving, Paul Christiano, and Dario Amodei (the OpenAI safety team).

@@ -1,0 +1,1 @@
+This is a linkpost for: https://www.governance.ai/post/sharing-powerful-ai-models On the GovAI blog, Toby Shevlane (FHI) argues in favour of labs granting "structured access" to AI models.

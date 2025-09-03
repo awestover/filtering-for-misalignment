@@ -1,0 +1,231 @@
+This is Sections 4.1 and 4.2 of my report “ Scheming AIs: Will AIs fake alignment during training in order to get power? ”. There’s also a summary of the full report here (audio here ). The summary covers most of the main points and technical terms, and I’m hoping that it will provide much of the context necessary to understand individual sections of the report on their own. Audio version of this section here , or search for "Joe Carlsmith Audio" on your podcast app. Arguments for/against scheming that focus on the final properties of the model Various arguments for/against scheming proceed by comparing the final
+properties of different model classes (e.g. schemers, training saints,
+reward-on-the-episode seekers, etc) according to how well they perform
+according to some set of criteria that we imagine SGD is selecting for. What is SGD selecting for? Well, one obvious answer is: high reward. But
+various of the arguments I'll consider won't necessarily focus on reward
+directly. Rather, they'll focus on other criteria, like the "simplicity"
+or the "speed" of the resulting model. However, we can distinguish
+between two ways these criteria can enter into our predictions about
+what sort of model SGD will select. Contributors to reward vs. extra criteria On the first frame, which I'll call the "contributors to reward" frame,
+we understand criteria like "simplicity" and "speed" as relevant to the
+model SGD selects only insofar as they are relevant to the amount of
+reward that a given model gets. That is, on this frame, we're really
+only thinking of SGD as selecting for one thing – namely, high reward
+performance – and simplicity and speed are relevant insofar as they're
+predictive of high reward performance . Thus, an example of a "simplicity argument," given in this frame, would
+be: "a schemer can have a simpler goal than a training saint, which
+means that it would be able to store its goal using fewer parameters,
+thereby freeing up other parameters that it can use for getting higher
+reward." This frame has the advantage of focusing, ultimately, on something that
+we know SGD is indeed selecting for – namely, high reward. And it puts
+the relevance of simplicity and speed into a common currency – namely,
+contributions-to-reward. By contrast: on the second frame, which I'll call the "extra criteria"
+frame, we understand these criteria as genuinely additional selection
+pressures, operative even independent of their impact on reward. That
+is, on this frame, SGD is selecting both for high reward, and for
+some other properties – for example, simplicity. Thus, an example of a "simplicity argument," given in this frame, would
+be: "a schemer and a training saint would both get high reward in
+training, but a schemer can have a simpler goal, and SGD is selecting
+for simplicity in addition to reward, so we should expect it to select a
+schemer." The "extra criteria" frame is closely connected to the discourse about
+" inductive biases " in
+machine learning – where an inductive bias, roughly, is whatever makes a
+learning process prioritize one solution over another other than the
+observed data (see e.g. Box 2 in Battaglia et al
+(2018) for more). Thus, for
+example, if two models would perform equally well on the training data,
+but differ in how they would generalize to an unseen test set, the
+inductive biases would determine which model gets selected. Indeed, in
+some cases, a model that performs worse on the training data might get
+chosen because it was sufficiently favored by the inductive biases (as
+analogy: in science, sometimes a simpler theory is preferred despite the
+fact that it provides a worse fit with the data). In this sense,
+inductive biases function as "extra criteria" that matter independent of
+reward. [1] Ultimately, the differences between the "contributors to reward" frame
+and the "extra criteria" frame may not be important. [2] But I think
+it's worth tracking which we're using regardless, because at least
+naively, they point in somewhat different argumentative directions. In
+particular, in a "contributions to reward" frame, the question of "which
+model gets highest reward" settles the question of which one we should
+expect SGD to prefer (at least modulo noise, slack in training, etc).
+Whereas, by contrast, an "extra criteria" frame leaves that question
+more open; it forces us to grapple with what sorts of "extra criteria"
+SGD might be giving weight to (and how much weight); it connects more
+directly to the theoretical discourse about inductive biases; and it
+raises more questions about whether we may be able to influence those
+biases in favorable directions. The counting argument Let's turn, now, to a basic argument for expecting schemers that focuses
+on the final properties of different model classes: namely, the
+"counting argument." [3] This argument is closely related to the
+"common-ness in goal space" consideration discussed in the context of
+the "nearest max-reward goal" argument – but it's here presented without
+reference to the path SGD takes. We start by considering some different model classes that would get high
+reward in training (in my ontology, these would be: training saints,
+mis-generalized non-training-gamers pursuing some high reward goal,
+reward-on-the-episode-seekers, and schemers). We then argue as follows: The non-schemer model classes, here, require fairly specific goals. Thus, for example, if you're rewarding your model when it gets
+gold-coins-on-the-episode, then to be a training saint, it needs
+to value gold-coin-on-the-episode. To be a mis-generalized non-training-gamer, it needs to value
+something pursuit of which very closely correlates with getting
+gold-coins-on-the-episode, even absent training-gaming. And to be a reward-on-the-episode seeker, it needs to terminally
+value reward-on-the-episode. By contrast, the schemer model class is compatible with a very wide
+range of (beyond-episode) goals (at least if we assume that the
+other requirements for scheming to make sense as an instrumental
+strategy are in place – e.g., that the classic goal-guarding story,
+or some alternative, works). Thus, for example, the model can value paperclips over all time,
+it can value staples over all time, it can value happiness over
+all time, and so on. In this sense, there are "more" schemers that perform well in
+training than there are non-schemers that do so. [4] So, other things equal, we should expect SGD to select a schemer. In a sense, this is an extension of one of the most basic concerns about
+misalignment more generally: namely, that the class of aligned goals is
+very narrow, whereas the class of misaligned goals is very broad, so
+creating an aligned model requires "hitting a narrow target," which
+could be hard. Naively, this basic argument suffers from neglecting the
+relevance of our selection power (compare: "most arrangements of car
+parts aren't a car, therefore it will be very difficult to build a
+car" [5] ), and so it needs some further claim about why our selection
+power will be inadequate. The counting argument, above, is a version of
+this claim. In particular, it grants that we'll narrow down to the set
+of models that get high reward, but argues that, still , the non-schemers who get high reward are a much narrower class than the
+schemers who get high reward (and non-schemers aren't necessarily
+aligned anyway). [6] So unless you can say something further about
+why you expect to get a non-schemer, schemers (the argument goes) should
+be the default hypothesis. To the extent we focus specifically on the final properties of different
+model classes, some argument in this vicinity accounts for a decent
+portion of my credence on SGD selecting schemers (and as I'll discuss
+more in section 5, I
+think it's actually what underlies various other more specific arguments
+for expecting schemers as well). However, the argument I give most
+weight to doesn't move immediately from "there are more possible
+schemers that perform well in training than non-schemers that do so" to
+"absent further argument, SGD probably selects a schemer" (call this the
+"strict counting argument"). And the reason is that it's not yet clear
+to me how to make sense of this inference. In particular, the most natural construal of this inference proceeds by
+assuming that for whatever method of counting "individual models" (not
+model classes) results in there being "more"
+schemers-that-get-high-reward than non-schemers-that-get-high-reward,
+each of these individual models gets the same reward, and performs
+equally well on whatever "extra criteria" SGD's inductive biases care
+about, such that SGD is equally likely to select any given one of them.
+That is, we assume that SGD's selection process mimics a uniform
+distribution over these individual models – and then note that schemers,
+as a class, would get most of that probability. But given that these
+model classes are different in various respects that might matter to
+SGD, it's not clear to me that this is a good approximation. Alternatively, we might say something more like: "perhaps some of these
+individual models actually get more reward, or perform better on SGD's
+inductive biases, such that SGD actually does favor some of these
+individual models over others. However, we don't know which models SGD
+likes more: so, knowing nothing else, we'll assume that they're all
+equally likely to be favored, thereby leading to most of the probability
+going to some schemer being favored." However, if we assume instead that one of those model classes , as a
+whole, gets more reward, and/or performs better on SGD's inductive
+biases, then it's less clear how the "number of individual models"
+within a given class should enter into our calculation. Thus, as an
+analogy: if you don't know whether Bob prefers Mexican food, Chinese
+food, or Thai food, then it's less clear how the comparative number of
+Mexican vs. Chinese vs. Thai restaurants in Bob's area should bear on
+our prediction of which one he went to (though it still doesn't seem
+entirely irrelevant, either – for example, more restaurants means more
+variance in possible quality within that type of cuisine). E.g., it
+could be that there are ten Chinese restaurants for every Mexican
+restaurant, but if Bob likes Mexican food better in general, he might
+just choose Mexican. So if we don't know which type of cuisine Bob
+prefers, it's tempting to move closer to a uniform distribution over
+types of cuisine , rather than over individual restaurants. My hesitation here is related to a common way for "counting arguments"
+to go wrong: namely, by neglecting the full selection power being
+applied to the set of things being counted. (It's the same way that
+"you'll never build a working car, because almost every arrangement of
+car parts isn't a working car" goes wrong.) Thus, as a toy example:
+suppose that there are 2^100 schemer-like goals for every
+non-schemer goal, such that if SGD was selecting randomly amongst them
+(via a uniform distribution), it would be 2^100 times more likely to
+select a schemer than a non-schemer. Naively, this might seem like a
+daunting prior to overcome. But now suppose that a step of gradient
+descent can cut down the space of goals at stake by at least a factor of
+2 – that is, each step is worth at least a "bit" of selection power.
+This means that selecting a non-schemer over a schemer only needs to be
+worth 100 extra steps of gradient descent, to SGD, for SGD to have an
+incentive to overcome the prior in question. [7] And 100 extra
+gradient steps isn't all that many in a very large training run (though
+of course, I just made up the 2^100:1 ratio, here). [8] (What's
+more, as I'll discuss below in the context of the "speed costs" of
+scheming, I think it's plausible that it would indeed be "worth it" for
+SGD to pay substantive costs to get a non-schemer instead. And I think
+this is a key source of hope. More in
+section 4.4.) Partly due to this hesitation, the counting argument functions in my own
+head in a manner that hazily mixes together the "strict counting
+argument" with some vaguer agnosticism about which model class SGD
+likes most. That is, the argument in my head is something like: It seems like there are "lots of ways" that a model could end up a
+schemer and still get high reward, at least assuming that scheming
+is in fact a good instrumental strategy for pursuing long-term
+goals. So absent some strong additional story about why training won't select a schemer, it feels, to me, like the possibility should be
+getting substantive weight. Call this the "hazy counting argument." Here, the "number" of possible
+schemers isn't totally irrelevant – rather, it functions to privilege
+the possibility of scheming, and makes it feel robust along at least one
+dimension. Thus, for example, I wouldn't similarly argue "it seems like
+in principle the model could end up instrumentally training-gaming
+because it wants the lab staff members who developed it to get raises,
+so absent some additional story about why this won't happen, it feels
+like the possibility should be getting significant weight." The fact
+that many different goals lead to scheming matters to its plausibility.
+But at the same time, the exercise of counting possible goals doesn't
+translate immediately into a uniform distribution over "individual
+models," because the differences between model classes plausibly
+matter too, even if I don't know exactly how. To be clear: the "hazy counting argument" is unprincipled and informal.
+I'd love a better way of separating it into more principled components
+that can be analyzed separately. For now, though, it's the argument that
+feels like it actually moves me. [9] As an example where you might wonder whether such extra criteria
+at work, consider " epoch-wise double
+descent ,"
+in which as you train a model of a fixed size, you eventually get to
+a regime of zero training error (see the bit above and to the right
+of the "interpolation threshold' in the right-hand graph below). But
+at that point, the test error is actually high. Then, if you train
+more, the test error eventually goes down again. That is, there are
+multiple models that all get zero training error, and somehow
+training longer eventually lets you find the model that generalizes
+better. And one diagnosis of this dynamic is that we're giving SGD's
+inductive biases more time to work. ↩︎ In discussion, Hubinger argued to me that "which model gets
+highest reward, holding the inductive biases fixed" and "which model
+does best on the inductive biases, holding the loss fixed" are just
+dual perspectives on the same question, at least if you get the
+constants right. But I'm not yet convinced that this makes the
+distinction irrelevant to which analytic approach we should take.
+For example: suppose that someone is buying a house, and we know
+that they are employing a process that optimizes very hard and
+directly for the cheapest house. But suppose, also, that they have
+some other set of poorly understood criteria that come into play as
+well in some poorly-understood way (maybe as a tie-breaker, maybe as
+some other more substantive factor). In trying to predict what type
+of house they bought, should you focus on the price, or on how the
+houses do on the hazy other criteria? My current feeling is: price. Also, I think the "contributors to reward" frame may be best
+understood as effectively setting aside the question of inductive
+biases altogether, which seems like it could be more importantly
+distinct. ↩︎ See e.g. Hubinger (2022) and Xu
+(2020) for examples of this argument. ↩︎ Of course, the "space of possible goals" isn't very
+well-defined, here – and in abstract, it seems infinite in a way
+that requires an actual measure rather than a "count." I'm here
+using "count" as a loose approximation for this sort of measure
+(though note that on a real-world computer, the actual set of
+possible neural network parameter settings will be finite in any
+given case – and so would accommodate a more literal "count," if
+necessary). Thanks to Hazel Browne for discussion. ↩︎ This is an example I originally heard from Ben Garfinkel. ↩︎ Mark Xu gives a related argument: namely, "For instrumental
+reasons, any sufficiently powerful model is likely to optimize for
+many things. Most of these things will not be the model's terminal
+objective. Taking the dual statement, that suggests that for any
+given objective, most models that optimize for that objective will
+do so for instrumental reasons." In effect, this is a counting
+argument applied to the different things that the model is
+optimizing for , rather than across model classes. ↩︎ Thanks to Paul Christiano for discussion, here. As I'll discuss
+in section 5,
+there are analogies, here, with the sense in which "Strong Evidence
+is Common" in Bayesianism – see Xu
+(2021) . ↩︎ For example, my understanding from a quick, informal
+conversation with a friend is that training a model with more than a
+trillion parameters might well involve more than a million gradient
+updates, depending on the batch size. However, I haven't tried to
+dig in on this calculation. ↩︎ Though: one concern about my introspection here is that really,
+what's going on is that the possibility of SGD selecting schemers
+has been made salient by the discourse about misalignment I've
+been exposed to, such that my brain is saying "absent some
+additional story about why training won't select a schemer, the
+possibility should be given substantive weight" centrally because my
+epistemic environment seems to take the possibility quite seriously,
+and my brain is deferring somewhat to this epistemic environment. ↩︎

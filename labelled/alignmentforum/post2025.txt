@@ -1,0 +1,1 @@
+Looking for: Any results / lines of research I haven't heard of in areas like interpretability, inductive biases, and ML theory Obscure papers or posts on things like double descent, simplicity bias, induction heads, and grokking

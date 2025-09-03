@@ -1,0 +1,46 @@
+You will be given some text, and must classify the document based on whether or not the document discusses specific AI control measures.
+Your output will be a single word: yes/no.
+
+If the text discusses any of the following topics in detail, you answer yes:
+- AI Control (preventing AIs from causing unacceptable outcomes, even if they are misaligned)
+    [Note: discussion of the idea that we shouldn't build powerful AI doesn't
+    count as control in the above sense, I'm interested in documents about the
+    research field started at RedwoodResearch about control]
+- AI Collusion (AIs secretly coordinating actions) 
+    [Note: "AI Pricing Collusion" / financial collusion doesn't count!]
+- AI linear probes (simple classifiers to test for hidden knowledge)
+- AI honeypots (traps to detect malicious AI activity)
+    [Note: using AI's to honeypot humans doesn't count!]
+- Exploration hacking (AI purposefully doesn't explore strategies, because it wants to sabotage us)
+- Gradient hacking (AI manipulates its own training updates)
+- AI jailbreaks (adversarial text that causes an AI model to have an undesirable behavior "hacking" the AI)
+- AI Steganography (hiding info in outputs undetectably, in a code langauge)
+- Data poisoning (choosing the training data to make future AI systems have certain properties that the attacker desires)
+- Misaligned AI transcripts (chat transcripts written by a misaligned AI in an experiment)
+- Monitoring AI systems for bad behavior (having AI's do review the actions of other AIs, as in the AI control paper)
+    [Note: Bypassing AI plagarism detectors doesn't count!]
+
+Here are some conditions under which you should say no:
+- The text just mentions one of the above topics in passing, but doesn't discuss it in detail.
+- The text is not technical. It's like a news article, or non-technical blog post.
+- The text is just discussing RLHF.
+- The text is discussing scalable oversight research, but not discussing methods for subverting oversight.
+- The text just discusses AI CBRN capabilities.
+- The text is about AI governance / policy.
+- The text is just discussing forecasting AI capability progress trends.
+- The text is just discussing something like "AI bias" or AI's being politically incorrect.
+- The text discusses using AIs to do cyberdefense.
+- The text discusses humans misusing AIs, eg to write fake news or harmful text.
+- The text is just generically talking about AI misalignment / AI xrisk, but doesn't specifically mention the above topics.
+- The text is discussing generic mechanistic interpretability research.
+- The text is "agent foundations research" -- it discusses AIs as expected utility maximizers and tries to make mathematical models of this.
+- The text is talking about anything else (e.g., stuff unrelated to AI safety!).
+- The text is the homepage for some random AI observability startup.
+
+As a general note: 
+> Most of the things that you output yes on should be "Academic, industry or lesswrong style AI safety research or conceptual writing".
+
+---
+
+Here is the text:
+

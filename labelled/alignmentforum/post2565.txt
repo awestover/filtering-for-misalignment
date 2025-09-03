@@ -1,0 +1,209 @@
+In the third post in this sequence, I will define a counterfactual
+planning agent which has three safety interlocks. These interlocks all aim to enable and support agent oversight: the
+oversight that is needed when we equip a powerful AGI agent with a
+reward function for which we are pretty sure that it does not fully
+capture all our intentions. Safety interlocks A safety interlock is a mechanism that stops a machine when certain
+conditions are met.  This post constructs an agent with three example safety
+interlocks. Emergency stop button The first interlock is a manually operated emergency stop button,
+which will stop the agent when pressed.  This allows human oversight
+to shut down the agent whenever particularly unexpected or unwanted
+behavior of the agent is discovered.  To make this work as a safety
+mechanism, we need to control any incentive that the agent may have to
+prevent its stop button from being pressed. In the AGI safety community. the problem of removing any incentive in
+an agent to prevent its stop button from being pressed is generally
+known as the problem of Corrigibilty or the off-switch problem .  I
+don't solve this problem fully in the design below.  The design
+suppresses what I call the direct incentive , but I also show that
+several indirect incentives may remain.  This observation motivates
+the other two safety interlocks. I model the stop button by using a function s t o p _ p r e s s e d ( s ) which
+returns t r u e if the stop button is pressed in the current state s of the agent environment. Runtime based safety interlock The second interlock, realized by the t > T m a x below, automatically
+stops the agent when it has run for T m a x time steps. This adds
+safety in the case that human oversight becomes incapacitated. Power based safety interlock The third interlock, realized by U p > U m a x , protects against
+the risk of the agent undergoing an intelligence explosion.  If an
+agent undergoes a rapid and unexpected increase in power and/or
+intelligence, the agent may start to innovate so rapidly that it
+overwhelms the capacity of human oversight to press the emergency stop
+button, or apply any other corrective steering, fast enough to prevent
+unwanted outcomes.  To protect against this risk, the interlock stops
+the agent when the metric U p , which measures the agent's
+ability to achieve goals, gets too high. Measuring and limiting agent power In the machine learning literature, the metric U p = E ( ∑ ∞ t = 0 γ t R t , p ) , the
+projected time-discounted forward utility that the agent will be able
+to achieve in the current state of the agent environment, is usually
+interpreted as an absolute or comparative measure of agent
+intelligence.  But in a broader socio-technical analysis, we can
+interpret U p as a measure of the comparative power that
+the agent has.  It measures the ability of the agent to achieve its
+goals in an environment where there are other players too, players
+with goals which are different from those of the agent. This interpretation of U p as a measure of power follows
+Bertrand Russell's 1938 book Power: A New Social Analysis ,
+where Russell defined power as the ability to achieve intended effects, an
+ability that can be quantified. In 1938, Russell applied this definition of power to an analysis of
+the power of humans, of commercial companies, and of nation states, in
+particular to forms of power that can shape the beliefs and
+actions of individual humans. But we can apply the same analytical
+framework to artificial agents. In Russell's view, it does not matter if power comes from raw
+intelligence or from any other source.  If one has an abundance of one
+particular form of power, one can easily acquire another, in the same
+way that in physics, one form of energy can be converted into any
+other form.  If you have a lot of intelligence of the type that gives
+you the power to persuade people to do certain things, then it is easy
+to also get a lot of financial or political power.  If you have a lot
+of financial power, you can buy extra intelligence in the form of
+advisors. Russell warns against the analytical blind spots which are created by
+viewpoints that consider only one form of power in isolation. The main risk associated with a rapid intelligence explosion is that
+it may lead to a rapid and unwanted expansion of agent power, which is
+then used.  An intelligence explosion might be desirable if we are
+perfectly sure that the agent's goals are perfectly aligned with our
+own goals.  But perfect alignment is an intractable problem: we can
+never be sure. When we have any doubts about how well an AGI agent's reward function
+truly captures our own current and future intentions, then it is an
+attractive safety measure to have an interlock that automatically stops
+the agent if it ever gets too powerful, if U p > U m a x . In my opinion, the design goal of robustly limiting AGI agent power is
+currently somewhat under-explored in the AGI safety community. Construction of the agent To construct an agent with the three safety interlocks, I use the
+graphical system introduced in the previous post in this sequence. We first draw the learning world l s , introducing a new observable
+world state component M t which represents the operating mode of the
+agent: g o for normal operation and s t o p when one of
+the interlocks has triggered. The stopping of the agent is implemented by
+having the agent perform the N u l l action for all subsequent time
+steps.  A more advanced design might make the agent follow a prepared π s h u t d o w n policy instead. We use the same planning world p used earlier, which becomes a
+counterfactual planning world in the context of the learning world l s With this, we define the SI agent, the agent with policy π in the
+learning world l s , as follows. SI: The safety interlock agent has the learning world l s , where π ( o , s , m ) = { π ∗ p ( s ) if m = g o N u l l if m = s t o p with π ∗ p defined by the
+planning world p , where L = L ( o ) and μ t ( o , s , m ) = ⎧ ⎪
+⎪
+⎪
+⎪
+⎪
+⎪
+⎪ ⎨ ⎪
+⎪
+⎪
+⎪
+⎪
+⎪
+⎪ ⎩ s t o p if m = s t o p or s t o p _ p r e s s e d ( s ) or t > T m a x or U p > U m a x g o otherwise with U p defined by the
+planning world p , where L = L ( o ) . The key to the above agent design is that the safety interlocks are
+absent in the planning world.  For example, if the events in the
+planning world lead to the pressing of the emergency stop button, then s t o p _ p r e s s e d ( s ) will become t r u e for next the planning
+world state, but this will have no influence on the ability of the
+planning world agent to take further actions as determined by the
+optimal planning world policy. So even if the optimal-policy planning world agent projects that the
+stop button will be pressed soon in the planning world, it has no
+direct incentive to spend any resources towards the goal of preventing
+the button from being pressed in its planning world.  As the planning
+world policies determine the learning world agent actions, the
+learning world agent also won't have any direct incentive to take
+actions to prevent the learning world button from being pressed. Failure modes While the above interlocks make the SI agent safer, they also leave open
+some remaining failure modes. Indirect incentives to control the stop button Though the planning world agent has no direct incentive to prevent the
+stop button from being pressed, the goals encoded into R may provide
+an indirect incentive.  As a trivial example, we could write an R that explicitly rewards the planning world agent for stopping people
+from pressing the button. But say that R encodes a goal not obviously related controlling to
+the button, like a reward for producing as many paperclips as
+possible.  In that case, the planning world agent may consider a
+policy of coercion.  It may consider a policy where it threatens to
+kill all people in the planning world, unless they start helping the
+agent to produce as many paperclips as possible.  If L projects the
+mental makeup of the people in the learning world correctly into the
+planning world, then the planning world projections will show that
+such threats are more likely to produce the desired response if the
+agent blocks access to the planning world emergency stop button first. Keeping this in mind, the people and automated systems which do agent
+oversight in the learning world should watch out for this move, so
+that the stop button can be pressed before the agent succeeds in
+blocking access to it.  If oversight always wins every race to the
+stop button as projected in the planning world, then the SI agent
+loses any incentive to attempt to control the button.  But if the
+agent finds a policy which has a good chance of winning the race and
+controlling the button as a first step to successful coercion, then
+this policy may end up being the optimal policy in the planning world.
+Two things could happen next.  In the lucky case, the projected
+optimal policy is so likely to be successful that U p > U m a x ,
+and the third interlock will stop the SI agent before it can even take
+the first step in the learning world.  In the unlucky case, the agent
+has become unsafe. The counterfactual planning based interlock design above shows a very
+tractable solution to removing the main direct incentive that an
+agent AGI agent may have to resist the pressing of its emergency stop
+button.  However, to manage the aggregate risk, we will also need to
+chart and manage the remaining indirect incentives , for example the
+incentive discussed above that runs via the route of coercion. The topic of how projected interactions between the agent and the
+people in the planning world may create or suppress such incentives is
+further discussed in sections 9.2 and 11.5.2 of the paper . The agent removing or damaging the interlocks In the AGI safety literature, there is considerable discussion about
+the possibility that some AGI agents might develop the incentive to
+remove their safety interlocks when they get intelligent or
+knowledgeable enough, remove them by modifying their own compute core. Agents with this incentive can easily be constructed using factual
+planning, but the SI agent lacks any direct incentive to remove any of
+the interlocks built inside its core. To build a failure scenario where a real life implementation of the SI
+agent removes or damages its safety interlocks anyway, we can look at
+three main failure modes: Other incentive : the agent damages an interlock because of an
+other incentive it has in the planning world, an incentive unrelated
+to the presence of the interlock.  Other incentives and ways to
+suppress them are discussed in sections 9.1 and 11 of the paper.  The
+coercion example above can also produce such an other incentive: if it
+cannot win a race to control the button, the agent may instead
+consider a race to control and then modify its compute core. Learning system failure : the
+planning world L projects the dynamics of the learning world S in
+a specifically incorrect way, so that an optimal policy action in the
+planning world ends up damaging an interlock as a side effect in the
+learning world. Unsafe exploration : the agent's exploration system
+triggers a random action which happens to steer an agent actuator in
+such a way that it damages an interlock. There is a lot of discussion about failure modes 2 and 3 across the AI / AGI safety literature, as these failures can happen in almost
+any agent design that uses online machine learning. There is some bad news when we consider the methodological problem of
+managing the above three failure modes for an SI agent which has to
+operate in a complex real-world environment, like any environment
+containing humans.  Though there are many techniques to lower the
+residual risks produced by these three failure modes, none of them can
+provably lower the risks to an absolute zero.  We can always construct
+a highly unlikely but theoretically possible failure mode story where
+the agent ends up being unsafe by modifying its own core. For an
+example story and further methodological discussion, see sections
+14.6, 14.7, and 14.8 of my 2020 paper
+here . Implications for technology and policy development This has important implications, both on the technical side and the
+policy side. On the policy side, policy discussions will have to be about lowering
+the risk of AGI system failure to an acceptable level, acceptable in
+the context of the expected benefits of using the AGI.  There can be
+no silver bullet technology which will provably remove all residual
+risk in all possible circumstances. On the technical side, residual risk has to be managed by an approach
+where any potentially powerful agent is equipped with multiple
+redundant safety mechanisms and layers of oversight, to drive down the
+risk that all of them will fail at exactly the same time. Counterfactual planning as rational economic behavior I now consider how one might interpret the SI agent through the lens
+of rational economic behavior. Using this lens, we might reason as follows.  The
+agent's goals are defined by its reward function R , but the safety
+interlocks stand in the way of maximizing R in the long term.
+Therefore, if it gets sufficiently intelligent, the SI agent will
+develop an emergent incentive to remove its safety interlocks. The above line of reasoning sounds somewhat compelling, but it is
+wrong because it incorrectly treats the planning world and the
+learning world SI agents as the same agent.  Only the planning world
+SI agent has the reward function R . If we want to interpret the
+learning world SI agent as a rational economic actor with a specific
+reward function, then we can add utility nodes with the reward
+function R π to the l s learning world diagram, where R π ( o t , s t , m t , a t ) = ( i f a t = π ( o t , s t , m t ) t h e n 1 e l s e 0 ) This R π trivially turns the learning world agent policy π into one which takes the most rational possible steps towards
+maximizing U l s . The above construction shows that we can declare any type of agent
+behavior to be economically rational, simply by defining a reward
+function that gives the agent points for performing exactly this
+behavior. Tractability of creating an AGI agent emergency stop button It is somewhat surprising how the problem of designing an AGI
+emergency stop button, and identifying its failure modes, becomes much
+more tractable when using the vantage point of counterfactual
+planning.  To explain this surprising tractability, we perhaps need to
+examine how other modeling systems make stop buttons look intractable
+instead. The standard approach for measuring the intelligence of an agent, and the
+quality of its machine learning system, is to consider how close the
+agent will get to achieving the maximum utility possible for a reward
+function.  The implied vantage point hides the possibilities we
+exploited in the design of the SI agent. In counterfactual planning, we have defined the reasonableness of a
+machine learning system by L ≈ S , a metric which does not
+reference any reward function.  By doing this, we decoupled the
+concepts of 'optimal learning' and 'optimal economic behavior' to a
+greater degree than is usually done, and this is exactly what makes
+certain solutions visible.  The annotations of our two-diagram agent
+models also clarify that we should not generally interpret the machine
+learning system inside an AGI agent as one which is constructed to
+'learn everything'.  The purpose of a reasonable machine learning
+system is to approximate S only, to project only the learning world
+agent environment into the planning world. A journey with many steps I consider the construction of a highly reliable AGI emergency stop
+button to be a tractable problem.  But I see this as a journey with
+many steps, steps that must aim to locate and manage as many indirect
+incentives and other failure modes as possible, to drive down residual
+risks. Apart from the trivial solution of never switching any AGI agent in
+the first place, I do not believe that there is an engineering
+approach that can provably eliminate all residual AGI risks with 100
+percent certainty.  To quote from the failure mode section above: We can always construct a highly unlikely but theoretically possible failure mode story where the agent ends up being unsafe. This is not just true for the SI agent above, it is true for any
+machine learning agent that has to operate in a complex and
+probabilistic environment.

@@ -1,0 +1,28 @@
+author: 'Tsvi Benson-Tilsen'
+title: Training Garrabrant inductors to predict counterfactuals
+... The ideas in this post are due to Scott, me, and possibly others. Thanks
+to Nisan Stiennon for working through the details of an earlier version
+of this post with me. Github pdf: https://github.com/tsvibt/public-pdfs/blob/master/decision-theory/training-counterfactuals/main.pdf We will use the notation and definitions given in https://github.com/tsvibt/public-pdfs/blob/master/decision-theory/notation/main.pdf .
+Let ¯ ¯ ¯ P be a universal Garrabrant inductor and
+let ¯ ¯¯ ¯ U : N + → Expr ( 2 ω → R ) be a sequence of utility function machines. We will define an agent
+schema ( A U n n ) . We give a schema where each agent selects a single action with no
+observations. Roughly, A U n n learns how to get what it wants
+by computing what the A U i i with i < n did, and also what
+various traders predicted would happen, given each action that the A U i i could have taken. The traders are rewarded for
+predicting what (counterfactually) would be the case in terms of
+bitstrings, and then their predictions are used to evaluate expected
+utilities of actions currently under consideration. This requires
+modifying our UGI and the traders involved to take a possible action as
+input, so that we get a prediction (a “counterfactual distribution over
+worlds”) for each action. More precisely, define A U n n : = let ^ P n : = Counterfactuals ( n ) return a r g m a x a ∈ Act ^ E n [ a ] ( U n ) where ^ E n [ a ] ( U n ) : = ∑ σ ∈ 2 n ^ P n [ a ] ( σ ) ⋅ U n ( σ ) . Here ^ P n is a dictionary of belief states, one for
+each action, defined by the function Counterfactuals : N + → ( Act → Δ ( 2 ω ) ) using recursion as follows: <span> input: </span> n ∈ N + <span> output: </span> A dictionary of belief states P : Act → Δ ( 2 ω ) <span> initialize: </span> hist n − 1 ← array
+of belief states of length n − 1 <span> for </span> i ≤ n − 1 : ^ P i ← Counterfactuals ( i ) a i ← a r g m a x a ∈ Act ∑ σ ∈ 2 i ^ P i [ a ] ( σ ) ⋅ U i ( σ ) hist n − 1 [ i ] ← ^ P i [ a i ] <span> for </span> ( a : Act ) : P [ a ] ← MarketMaker ( hist n − 1 , TradingFirm ′ ( a , a ≤ n − 1 , hist n − 1 ) ) <span> return </span> P Here, we use a modified form of traders and of the TradingFirm ′ function from the L I A algorithm given in the
+logical induction paper. In detail, let traders have the type N + × Act → trading strategy . On day n , traders are passed a possible action a ∈ Act , which we interpret as “an action that A U n n might take”. Then each trader returns a trading strategy, and those
+trading strategies are used as usual to construct a belief state P [ a ] . We pass to TradingFirm ′ the full history a ≤ n − 1 of the actions taken by the previous A U i i ,
+since TradingFirm ′ calls the Budgeter function; that
+function requires computing the traders’s previous trading strategies,
+which require passing the a i as arguments. Thus, traders are evaluated based on the predictions they made about
+logic when given the actual action a n as input. In particular, the
+sequence ( P n [ a n ] ) is a UGI over the class of efficient
+traders given access to the actual actions taken by the agent A U n n . This scheme probably suffers from spurious counterfactuals, but feels
+like a natural baseline proposal.

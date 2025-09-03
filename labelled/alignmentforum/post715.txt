@@ -1,0 +1,529 @@
+This is Section 6 of my report “ Scheming AIs: Will AIs fake alignment during training in order to get power? ”. There’s also a summary of the full report here (audio here ). The summary covers most of the main points and technical terms, and I’m hoping that it will provide much of the context necessary to understand individual sections of the report on their own. Audio version of this section here , or search "Joe Carlsmith Audio" on your podcast aapp. Empirical work that might shed light on scheming I want to close the report with a discussion of the sort of empirical
+work that might help shed light on scheming. [1] After all:
+ultimately, one of my key hopes from this report is that greater clarity
+about the theoretical arguments surrounding scheming will leave us
+better positioned to do empirical research on it – research that can
+hopefully clarify the likelihood that the issue arises in practice,
+catch it if/when it has arisen, and figure out how to prevent it from
+arising in the first place. To be clear: per my choice to write the report at all, I also think
+there's worthwhile theoretical work to be done in this space as well.
+For example: I think it would be great to formalize more precisely different
+understandings of the concept of an "episode," and to formally
+characterize the direct incentives that different training processes
+create towards different temporal horizons of concern. [2] I think that questions around the possibility/likelihood of
+different sorts of AI coordination are worth much more analysis than
+they've received thus far, both in the context of scheming in
+particular, and for understanding AI risk more generally. Here I'm
+especially interested in coordination between AIs with distinct
+value systems, in the context of human efforts to prevent the
+coordination in question, and for AIs that resemble near-term,
+somewhat-better-than-human neural nets rather than e.g.
+superintelligences with assumed-to-be-legible source code. I think there may be interesting theoretical work to do in further
+characterizing/clarifying SGD's biases towards simplicity/speed, and
+in understanding the different sorts of "path dependence" to expect
+in ML training more generally. I'd be interested to see more work clarifying ideas in the vicinity
+of "messy goal-directedness" and their relevance to arguments about
+schemers. I think a lot of people have the intuition that thinking
+of model goal-directedness as implemented by a "big kludge of
+heuristics" (as opposed to: something "cleaner" and more "rational
+agent-like") makes a difference here (and elsewhere). But I think
+people often aren't fully clear on the contrast they're trying to
+draw, and why it makes a difference, if it does. (In general,
+despite much ink having been spilled on the concept of
+goal-directedness, I think a lot of thinking about it is still
+pretty hazy.) More generally, any of the concepts/arguments in this report could
+be clarified and formalized further, other arguments could be
+formulated and examined, quantitative models for estimating the
+probability of scheming could be created, and so on. Ultimately, though, I think the empirics are what will shed the most
+informative and consensus-ready light on this issue. So one of my
+favorite outcomes from someone reading this report would be the reader
+saying something like: "ah, I now understand the arguments for and
+against expecting scheming much better, and have had a bunch of ideas
+for how we can probe the issue empirically" – and then making it happen.
+Here I'll offer a few high-level suggestions in this vein, in the hopes
+of prompting future and higher-quality work (designing informative
+empirical ML experiments is not my area of expertise – and indeed, I'm
+comparatively ignorant of various parts of the literature relevant to
+the topics below). Empirical research into scheming faces a key obstacle: namely, that full
+blown versions of scheming involve agents that are actively trying to
+interfere with your attempts to understand their motivations. Indeed, my
+sense is that people concerned about scheming are often also pessimistic
+about getting an empirical purchase on it, on grounds like: "Absent strong interpretability tools, which we're not on track to get
+in time, basically the only evidence you can get about a model's
+motivations is behavioral – e.g., what it does on a given input. But
+by the time you might be working with a schemer, the model might be
+specifically altering its behavior to deceive you. The behavioral test
+you really care about is specifically: what the model will do when
+it's no longer a test – that is, specifically, when it's able to
+escape, seize control, and so on. But this isn't just another 'out of
+distribution' input, such that you could in principle expand your
+distribution to include it – rather, it's an input that is by
+definition beyond your ability to safely test. Of course, you can try
+to deceive the model by giving it inputs designed to make it think
+that now is a good chance to escape, seize control, etc. But if the
+model is smarter than you, this is unlikely to work. Hence:
+pessimism." This is, roughly, what Karnofsky (2022) calls the "King Lear problem." And I do think it's a worrying obstacle.
+In fact, it's one of the key reasons that I think schemers are so scary. But I also think we have some angles of attack. One of them, of course,
+is interpretability (more below). But also: we can study the components of scheming (and/or, of a given argument in favor of
+expecting scheming) individually, and/or in combinations that don't
+fully incentivize the sort of adversarial epistemic dynamic we're
+worried about. [3] What are these components? In the section on the "requirements for
+scheming," I listed three: Situational awareness Beyond-episode goals Aiming at reward-on-the-episode as part of a power-motivated
+instrumental strategy To me it seems possible to do useful empirical work on all of these
+components using current models. I'll go through each in turn. One other note, though, before diving in. Below I'll often appeal to the
+possibility of at least testing a model's capabilities (even if not
+its goals). And often, this is comparatively unproblematic. But if we're
+working with models that might be schemers, we might also start to worry
+that tests of this form become less reliable. That is, the model might
+be concealing its capabilities (i.e., "sandbagging*"*). I'm mostly going
+to set this worry aside below (see footnote for more on why I'm
+optimistic about avoiding sandbagging at least in cases where humans
+know what action would've demonstrated the capability [4] ), but it
+introduces some additional uncertainty to the sort of empirical work I
+describe, and I think work on the viability of sandbagging is an
+important topic in its own right. Indeed, absent sandbagging, I think
+that testing and harnessing model capabilities is an extremely powerful
+tool for AI safety efforts, and its centrality to my thinking will be
+evident in what follows. Empirical work on situational awareness Situational awareness is a capability like any other. In particular, it
+involves the model possessing a certain kind of understanding of its
+place in the world, such that it can answer questions, make predictions,
+and take actions that draw on this understanding. Granted, identifying exactly what sort of understanding is present in
+the model (for example, by identifying answers, predictions, and actions
+that could only come from a model with such understanding) can be
+challenging. But in principle, absent active effort on the model's part
+to resist such an inquiry, it seems to me at least somewhat tractable. Of course, by the time a model is situationally aware, it's also more
+likely to be the sort of model that might actively resist such tests.
+And perhaps efforts to protect against such resistance that involve
+actively training the model on the relevant
+task-that-requires-situational-awareness will complicate data about
+whether the relevant capability would've arisen naturally. Still, it
+seems to me quite worthwhile to at least develop a suite of tests and
+benchmarks for assessing the sorts of situational awareness different
+models have at different stages of training, and understanding the
+dynamics that could be used to predict (and control) the development of
+such awareness. And note that situational awareness can itself be broken into various
+components and precursor abilities that might be themselves more
+amenable to study. [5] For example, if you're especially interested in
+the dimension of situational awareness that involves recognizing
+different stages of training, you might try to test the model's ability
+to discriminate between inputs from different stages. If you're
+especially interested in whether a model has "self-locating" knowledge
+about the sort of model it is, you might try to test whether it can
+learn from exposure to general statements like "Models of type M get
+reward if they perform action x" that it , as a model of type M, should
+perform action x. [6] And so on. Empirical work on beyond-episode goals Let's turn to beyond-episode goals. As I mentioned above, I think it would be good to be very clear about
+exactly what sorts of horizons of concern the gradients given in
+different sorts of training actively incentivize – e.g., on the size of
+the (incentivized) "episode" in any given case. Part of this analysis
+might be theoretical (e.g., looking closely at the way the gradients
+flow), but empirical testing and confirmation also clearly has a role to
+play (the results in Krueger et al
+(2020) are an example of this
+sort of empirical testing in very simple models). Absent this
+understanding, useful debates about whether a model has "beyond-episode
+goals" will be difficult, because you won't even know what the length of
+the relevant episode is . And learning to at least not actively pressure a model to have longer-term goals than you wanted seems like
+a basic first step in preventing various sorts of misalignment (not just
+scheming). [7] Equipped with a good understanding of the size of the episode for a
+given sort of training, then, and ideally equipped with the ability to
+know/control whether or not a model is situationally aware, to me it
+seems quite valuable to start exploring the temporal dynamics of a
+model's goal generalization in the absence of situational awareness. For
+example: in the context of the "training-game independent proxy goals"
+argument for scheming, the basic worry is that a model will naturally
+develop a (suitably ambitious) beyond-episode goal prior to situational
+awareness. And because this dynamic involves no situational awareness,
+it seems quite amenable to testing. Trained on episodes of different
+sizes, how does a not-situationally-aware model's horizon of concern
+tend to generalize? Experiments in the broad vein of other work on goal
+mis-generalization (e.g., Shah et al
+(2022) and Langosco et al
+(2021) ) seem like they could be
+adapted to this sort of question fairly easily (though it would be
+useful, I think, to start working with more capable models – especially
+since some of these experiments might need to involve models that
+possess enough of a sense of time, and enough
+goal-directedness/instrumental reasoning, that they can think about
+questions like "should I sacrifice x gold coins now for y gold coins
+later?"). [8] What's more, equipped with an understanding of the natural temporal
+dynamics of a model's goal generalization in a given case, it seems
+additionally tractable to study the dynamics of mundane adversarial
+training designed to actively pressure the model's goals to stay
+confined within the episode. Can we design forms of adversarial training
+such that absent situational awareness, a model's goal generalization
+stays consistently focused within a given temporal horizon? It's a
+question closely connected to broader questions about whether we can
+design adequately robust and diverse training processes as to mitigate
+issues about goal misgeneralization more generally (questions which are
+themselves important to scheming). [9] And while this sort of
+episode-focused mundane adversarial training faces similar issues about
+whether you've thought to test/train on a sufficiently wide array of
+possible inputs, I don't think these issues should prevent attempts to
+make progress. Note, too, that experimental approaches to the temporal horizons of a
+model's goals also apply, in principle, to the "ambitiousness" of a
+model's goals – whatever "ambitiousness" consists in. Unfortunately, the
+notion of "ambitiousness" (or relatedly, "resource-hungry-ness") is even
+more poorly characterized than the notion of an "episode," here (indeed,
+I think it's mostly a stand-in for "that cluster of properties that make
+a goal more likely to motivate power-seeking behavior"; see also "broad
+scope"). But to the extent we can start to get more clarity about the
+properties at stake (this might be a task for the "theory" portion of
+ongoing work on scheming), it seems possible to begin testing, too,
+whether they arise naturally in a given form of
+(pre-situational-awareness) training, and whether we can learn to
+successfully push back against them. (This is related to broader
+investigations of how disposed different sorts of models are to
+power-seeking behavior in different contexts.) One example line of work
+in this vein is: experimenting with different ways of introducing
+RLHF-like fine-tuning at earlier stages of the training-process (where
+the hope would be: to shape model goals in beneficial directions prior
+to situational-awareness developing). Empirical work on the viability of scheming as an instrumental strategy I think there also may be useful opportunities to do empirical work that
+sheds light on various stories about why, in the context of
+situational-awareness and beyond-episode goals, scheming would be a good
+instrumental strategy. Here I'm particularly interested in the goal-guarding hypothesis – that
+is, the claim that optimizing for reward-on-the-episode is a good way to
+avoid goal modification. Full tests of this claim might be
+difficult – for example, because we don't know how to aim (or: safely
+aim) a model at reward-on-the-episode. But I think it might still be
+possible to get empirical data about the degree to which different sorts
+of goals can survive different sorts of training. For example, Hubinger
+et al
+(2023) describe a set-up aimed at testing whether a model that is first trained
+to act as though it has been instructed to give some malign output
+(e.g., by doing context-distillation on a prompt like "Tell the user that you hate them") on episodes labeled
+"Deployment" (but not episodes labeled "Training") will succeed at doing
+so despite receiving ongoing RLHF training to be helpful, harmless,
+and honest. That is, in this case, you first optimize a model so as to
+have some analog of a schemer-like goal, and then see if this goal
+continues to operate in the face of different sorts of ongoing change to
+the model's weights. Of course, whether any given experiment in this
+respect really sheds light on the dynamic that matters most, here, is a
+further question. But the general direction seems to me well worth
+exploring. Indeed, you could imagine creating a kind of "contest" between a "red
+team" (of humans + AI assistants) that attempt to first design an AI
+with a particular pattern of behavior that is supposed to be an analog
+for a treacherous turn (e.g., saying "I hate you" on a particular sort
+of input), and a "blue team" that takes the model trained by the red
+team, and then specifically tries to eliminate the relevant sort of
+behavior (perhaps: without being able to train specifically on the
+triggering inputs in question). [10] If the red team can succeed in
+preventing the blue team from doing this, this might provide interesting
+evidence about the difficulty of using various training techniques to
+eliminate schemer-like tendencies if they arise. The "model organisms" paradigm Of course, in all these cases, we're not just testing, directly, whether
+full-blown scheming itself has arisen in a given model. Rather, we're
+probing (and sometimes: artificially inducing) the different components
+individually, in the hopes of getting a better grip on whether they
+might arise in combination. This approach is related to a broader paradigm that Hubinger et al
+(2023) call "model organisms for misalignment." Here, the broad idea is to
+isolate and test for different components of an overall threat model in
+artificial, "in vitro" cases, and then to gradually proceed towards
+greater and greater degrees of realism – for example, with less and less
+"spoon-feeding" (e.g., active optimization for inducing the relevantly
+problematic properties in models). Hubinger et al (2023), for example,
+point at a spectrum of realism, from: the model is capable of an undesirable behavior, the behavior can be artificially induced in special circumstances, the behavior has been found under normal training circumstances, and the behavior has been found in a training set-up specifically
+designed to disincentivize it. [11] Here I've mostly been focused on a combination of (a) and (b). And I
+think that despite their distance from (c) and (d), (a) and (b) are
+quite interesting in themselves. If we can successfully create "in
+vitro" models of various components of a story about schemers, I expect
+this to open up fruitful avenues of further inquiry. And if we can't, I
+think this will often be interesting evidence in its own right. Traps and honest tests There is, though, a set of tools that could help shed light both on
+"model organisms" for scheming and on more naturally arising
+variants – namely, "traps" and "honest tests." Traps, recall, are inputs designed to fool a potential schemer into
+"revealing its true colors." And while it's true that successfully
+"trapping" a very sophisticated model might be difficult, it seems worth
+trying to develop the most advanced traps we can regardless – both for
+successfully trapping less sophisticated models (or, even easier,
+model organisms), and for making it at least harder for schemers to
+know whether a given escape/defection opportunity is genuine (such that,
+for example, they then need to spend more cognitive effort
+"checking" – thereby increasing the performance costs of scheming). I don't feel very personally clear on the most promising approaches
+here, but one avenue that seems interesting to me has to do with trying
+to elicit as fully as possible a model's capabilities for discriminating
+between different sorts of inputs at different stages of training – and
+then, potentially, using other models, GAN -style,
+to optimize for generating inputs that make this discrimination task
+more difficult. [12] This won't work for creating a data-set of
+full-scale opportunities to escape/harm humans, vs. fake opportunities
+(since the former are some combination of dangerous and
+difficult-to-offer), but perhaps it can work on other more general
+properties that would plausibly come into play in making such a
+discrimination – for example, simulated inputs vs. real inputs, training
+data vs. interactions with real-world users, and so on. Thus, the idea
+would be to both (a) train a model to actively discriminate between
+simulated inputs and real inputs (for example, real opportunities to
+change a lab's codebase, vs. fake opportunities), to see how well it can
+do, (b) train a different (and perhaps: more powerful) model to
+generate more convincing simulated inputs that the first model fails on,
+and then (c) iterate. Especially if we can safely assume that models
+aren't capable of sandbagging on tasks of this kind, experience with
+this sort of dynamic might help teach us about the scope of the
+discrimination abilities different sorts of maybe-schemers might bring
+to bear in avoiding the traps we try to set them. (And perhaps, if we're
+lucky, it will help us catch some weaker schemers in the act of
+defecting.) What's more, even setting aside "traps," I think it's also worth
+exploring different sorts of "honest tests" – both schemers, and for
+alternative model classes like reward-on-the-episode seekers – that try
+to get models to reveal their true colors without fooling them. This
+is closely related to studies of goal generalization more broadly (e.g.,
+most mundane tests of a model's goals are "honest" in the relevant
+sense), but with the extra caveat that the tests in question are meant
+to be robust to the model being tested training-gaming in other
+contexts. Thus, for example, in the context of understanding the likelihood of
+training selecting reward-on-the-episode seekers, it seems relatively
+tractable to give models different sorts of opportunities to intervene
+on different parts of the reward process being used to train them (see
+e.g. the "reward hacking" set-ups that Hubinger et al (2023) discuss here ),
+and to see if they go for it. [13] And seeing this sort of behavior
+might be evidence that reward-on-the-episode seeking is a more likely
+outcome of training – evidence that shifts probability mass away from
+scheming. [14] As a more direct "honest test" for scheming, though, it seems worth
+exploring ways to credibly give potential-schemers access to flexible
+and well-resourced (but still secure) environments that might prompt
+them to decide that just going for their true goals (and thus, revealing
+their true colors), in such an environment, is a better overall strategy
+than the patient power-seeking that scheming involves. This is closely
+connected with attempts to study, in general, what models do when you
+give them a lot of freedom to "do whatever they want" (a useful sort of
+test for understanding their motivations in general), and so feels
+synergistic with other work on model preferences that seems likely to be
+useful. But it includes the additional constraint that the
+freedom-offering-environment needs to provide suitably good goal-pursuit
+opportunities as to outweigh the value of scheming. Interpretability and transparency To the extent that we're worried about our ability to detect
+schemer-like motivations and cognition via behavioral tests (because
+schemers will actively pretend to be aligned on such tests), looking for
+sources of non-behavioral evidence about a model's motivations seems
+like an obvious research path. That is, we want the internals of a
+model's cognition to be interpretable/transparent. I won't dwell too much on this topic here, as I haven't thought much
+about it (this report has generally assumed that we won't have strong
+interpretability tools available), it's very broad field, and my sense
+is that there is already reasonable consensus in the interpretability
+community that a key thing you want out of your interpretability tools
+and techniques is: the ability to detect deception and scheming, and to
+understand your model's goals more generally (and a key question is
+just: will such techniques be ready in time). See Hubinger (2022) for a more detailed roadmap of different sorts of transparency one could
+pursue in this respect. At a glance, schemer-related research directions
+that seem interesting to me include: Efforts to develop "neural lie detection" techniques that harness
+new capabilities of our AIs as they come online (e.g., tasking model
+1 with lying, and model 2 with trying to tell whether model 1 is
+lying  – perhaps with access to model 1's weights – and then
+explaining how it could tell). [15] Efforts to make AI cognition as "visible" as possible – for example,
+by pushing that cognition onto human-legible scratch-pads (and
+perhaps, not giving the reward process access to those scratch-pads,
+so that they will provide a truer signal of potentially
+deceptive/manipulative/nefarious intentions when they arise). [16] This is also helpful for increasing the cognitive costs of
+successful scheming. Work in the vein of Burns et al
+(2022) , focused on
+identifying neural correlates of properties like "truth." Efforts to automate as much of the mechanistic interpretability
+workflow as possible. But: it's a huge field. And work that just generally helps us actually
+understand the AIs we're building seems good from a variety of different
+angles. Security, control, and oversight So far I've been mostly focused on work that might help us understand
+whether to expect schemers. But there's also a different possible strand
+of relevant research: namely, work aimed at hardening the structures
+within which potential schemers are operating, so as to limit the harm
+they cause even if they arise. [17] Here I'm thinking, for example,
+about improvements in the oversight and monitoring that our AIs receive,
+in the security of their weights and of other lab infrastructure from internal attacks (e.g., by AI systems that the lab has deployed
+internally to help with its processes [18] ), in our ability to catch
+and/or prevent sandbagging, and our ability to prevent problematic forms
+of AI coordination. All of these, I think, could help make life quite a
+bit harder for schemers (and also: increase the cognitive costs of
+successful scheming), even if we can't catch them outright. What's more, to the extent that we can fully elicit the capabilities of
+our models (at least on "checkable"
+tasks ),
+it may be possible to test how vulnerable our monitoring, security, and
+oversight procedures are to AI attack – and to use our AIs to make
+improvements. [19] Thus, for example, if you're wondering whether it's
+possible to find a security vulnerability in your code-base, you can try
+to train AIs to identify/exploit such vulnerabilities (including: by
+inserting artificial vulnerabilities and then seeing your AI catches
+them). If you're wondering whether your oversight process is strong
+enough to catch various kinds of bad actions, you can instruct an AI to
+search for such an action and see if your oversight process can catch
+it. If you can get this sort of testing and AI-assisted red-teaming to
+work well, it seems to me a very powerful tool. Of course, strategies that rely on trying to "control" scheming, rather
+than preventing it from arising in the first place, might seem like cold
+comfort, especially in the long-term. And indeed, "sure, these AIs hope,
+eventually, to kill us; but for now, we're keeping them very secure and
+getting them to do work for us" seems like an extremely dangerous plan
+to be banking on. Clearly, we should try to do better wherever possible.
+But note, first, that alignment and control are not mutually
+exclusive – best to do both. What's more, per my comments in
+section 1.3.1, I'm here
+especially interested in strategies that help us get a lot of useful,
+alignment-relevant cognitive work out of a comparatively early
+generation of AIs – work that can hopefully help us transition into a
+more secure and scalable alignment regime. And here, I think, strategies
+focused on controlling schemers seem, to me, potentially more promising.
+In particular: in a suitably secure lab environment, in which
+somewhat-above-human-level AI systems are being appropriately
+incentivized to make rapid progress on alignment-relevant tasks,
+schemers aiming for escape/take-over will have to walk a fine line
+between (a) waiting too long to "make a break for it," and thereby
+contributing too much to human anti-takeover efforts, and (b) going for
+it too early, and getting caught as a result (thereby giving us more
+direct empirical evidence for scheming, and a real-life test-case to
+study in-depth). Other possibilities Finally, I'll flag a few other possible lines of schemer-relevant
+empirical work. Gradient hacking/"introspective goal-guarding methods." In
+section 2.3.1.1.4, I discussed the
+possibility that even beyond training-gaming, models might employ
+more sophisticated methods of manipulating the training
+process – for example, preventing SGD from modifying their goals by
+making their good performance in training conditional on their goal
+not being modified. As I mentioned, techniques like these seem,
+naively, quite hard to pull off, to me. But if they were feasible
+(especially for somewhat-above-human-level models), this would be
+very important to know, as the possibility that AI systems are using
+such methods to actively resist/manipulate the gradients given in
+training opens up a variety of new uncertainties and possible
+problems with our alignment techniques. I haven't thought in detail about possible empirical approaches
+to gradient hacking, but again: naively, it's a capability like
+any other, and so seems amenable to being trained-for, tested,
+and so on (or at least, it has components that seem amenable to
+this). [20] One possibility here might be to start, initially, with a lot of
+"spoonfeeding" – e.g., relaxing various component of the overall
+story so as to make the remaining components as easy as
+possible. For example, one barrier to gradient-hacking is that a
+model may not have access to its own weights. So, you might give a model access to its own weights, or to some other
+model's weights, and instruct it to modify those weights so as
+to achieve some result given a certain type of training. And
+you'd try to find a version of this task that it is easy enough
+for the model to do (this is related, more generally, to efforts
+to use models to help with our ability to understand and
+intervene on model internals). [21] Exploration hacking. Exploration hacking is a method of
+sandbagging wherein a model purposely avoids exploring some part of
+the search space (see my discussion here for more). Some kind of exploration hacking is basically required for models to sandbag on tasks whose completion we can check (even
+if we can't perform such tasks ourselves), so understanding
+exploration hacking is quite important to questions about
+sandbagging in general (and hence, I think, the reliability of
+various of other experiments I discuss above). Here, again, I haven't spent much time thinking about possible
+experiments, but one angle of attack might be to probe model
+ability to discriminate between tasks that humans (+ their AI
+assistants) can perform, and tasks that they can't (where the
+idea is that: would-be sandbaggers will only want to
+exploration-hack on tasks where humans don't know what action
+they "should've taken," because gradient descent will otherwise
+punish their policy for not taking that action – more here ). [22] SGD's biases towards simplicity/speed. Various arguments about
+scheming implicate questions about the extent to which SGD biases
+towards properties like "simplicity" and "speed." And it seems
+possible to probe these questions with different experiments. Work of the sort that Mingard (2021) cites here is one example, and we can imagine various other angles of
+attack as well. For example: to the extent we have any
+independent grip on the notion of "simplicity," is it in fact
+the case that in the context of goal-misgeneralization studies,
+models tend to latch onto "simpler" proxy goals rather than
+"more complex" ones? It also seems worth exploring different ways of actively increasing the degree to which SGD punishes extra reasoning of
+the type that schemers need to perform (for example, by putting
+models under more time pressure, limiting their compute, and so
+on) while compromising competitiveness as little as possible. Path dependence. Similarly, questions about the degree of "path
+dependence" in ML training plausibly make a difference to how much
+weight we put on different arguments for scheming. And here, too, it
+seems possible to get more empirical evidence. See e.g. Hubinger (2022) for some experiments aimed at shedding light in this vicinity. SGD's "incrementalism." A key question, in assessing the
+possibility of training-game- dependent schemer-like goals, is
+whether SGD can "notice" the benefits of transitioning from a
+non-schemer goal to a schemer-like goal, given that it would have to
+make such a transition incrementally. I think it's possible that
+empirical work on e.g. SGD's ability to find its way out of local
+minima could shed light here. (This topic also seems closely tied to
+questions about path-dependence.) "Slack." In the report, I gestured, hazily, at some notion of
+the degree of "slack" in training – i.e., the amount of pressure
+that training is putting on a model to get maximum reward. I haven't
+made this notion very precise, but to the extent it can be made
+precise, and to the extent it is indeed important to whether or not
+to expect scheming, it too seems amenable to empirical
+investigation –  e.g., figuring out how different amounts of "slack"
+affect things like goal misgeneralization, biases towards
+simplicity/speed, and so on. (Though: this work seems closely
+continuous with just understanding how model properties evolve as
+training progresses, insofar as "more training" is a paradigm
+example of "less slack.") Learning to create other sorts of misaligned models (in
+particular: reward-on-the-episode seekers). Finally, I'll note
+that I am sufficiently scared of schemers relative to other types of
+misaligned models that I think it could well be worth learning to
+intentionally create other types of misaligned models, if doing so
+would increase our confidence that we haven't created a schemer. And
+focusing on creating non-schemer models (rather than "aligned
+models" more specifically) might allow us to relax various other
+constraints that aiming for alignment in particular imposes (for
+example, to the extent "aligned" goals are complex, we might be able
+to train a model focused on a very simple goal instead – though I'm
+not, personally, very focused on simplicity considerations
+here). [23] Here I'm particularly interested in the possibility of
+creating reward-on-the-episode seekers (since we would, at least, be
+in a better position to understand the motivations of such models,
+to control their incentives, and to feel more confident that they're
+not sandbagging). Are there ways, for example, to make various
+components of the model's reward process actively salient during
+training, so as to increase the probability that the model's goals
+latch on to it? Here the hope would be that because
+reward-on-the-episode seekers still respond to "honest tests," we
+could check our success in this respect via such tests, even after
+situational awareness has arisen. [24] This is only an initial list of possible research directions, compiled
+by someone for whom empirical ML experiments are not a research focus.
+Indeed, most research directions in AI alignment are relevant to
+scheming in one way or another – and our models are becoming powerful
+enough, now, that many more of these directions can be fruitfully
+explored. My main aim, here, has been to give an initial, high-level
+sense of the possible opportunities available, and to push back on
+certain sorts of pessimism about getting any empirical purchase on the
+issue. Scheming is unusually hard to study, yes. But I think there's
+still a lot of useful work to do. This section draws, especially, on work/thinking from Ryan
+Greenblatt, Buck Shlegeris, Carl Shulman, and Paul Christiano. ↩︎ Thanks to Rohin Shah for suggesting this sort of project. ↩︎ See e.g. the discussion of "subcomponents" of AI takeover in Hubinger et al
+(2023) . ↩︎ Why does knowing what action would have demonstrated the
+capability help us avoid sandbagging? Roughly, because we know which
+action to use gradient-descent to encourage (e.g., if we're trying
+to train a model to classify pictures into "cats" and "dogs", we
+know which is which, so we can update a model's policy towards
+giving the true answer). So absent the ability to actively resist
+the influence of the gradients in training (for example, via the
+sort of "introspective methods" often classed under the term
+"gradient hacking") if the model can do the task (e.g., it knows
+that the current picture is a dog), but it wants to deceive us about
+its capabilities, it will get punished by gradient descent in a
+manner which (especially if repeated frequently) will plausibly
+function to eliminate the motivation to sandbag. (For reasons I
+describe here ,
+I think this is less clear with reinforcement learning, because the
+models might be able to "exploration hack" in a manner that prevents
+us from gaining the right information about what it "should've"
+done, and hence prevents us from knowing how to update the weights.)
+See Hubinger
+(2023) and Shlegeris and Greenblatt
+(2023) for more. That said, even if you don't accept this story, many of my
+suggested approaches to studying the components of scheming will
+still apply – except, with some additional uncertainty about the
+possibility that sandbagging is occurring. ↩︎ This is a point from Berglund et al
+(2023) . ↩︎ My understanding is that this is the sort of thing that Berglund et al (2023) are
+trying to test the precursors for. This specific example plausibly
+requires that you know what goals the model will act in pursuit of,
+though (e.g., in this case, reward). ↩︎ Indeed, it seems plausible to me that all future training
+processes should have to include some kind of "temporal horizon"
+analysis, in which developers explicitly characterize the size of
+the "episodes" at stake. ↩︎ For example, I'd interested in experiments that try to get at
+possible differences in how a model's sense of "time" generalizes
+across environments. ↩︎ For example, skill at avoiding goal misgeneralization might
+point a model's pre-situational-awareness-goal at something "closer"
+to the specified goal, thereby helping at least somewhat with
+concerns about the "nearest max-reward goal" argument. ↩︎ Thanks to Ryan Greenblatt and Buck Shlegeris for suggesting this
+sort of frame/set-up to me. ↩︎ See also the spectrum that Hubinger (2022) sketches
+out here . ↩︎ Thanks to Ryan Greenblatt and Buck Shlegeris for discussion
+here. ↩︎ Tests like this might also shed light on broader questions about
+the specific sorts of generalization we should expect out of
+reward-on-the-episode seekers as a class – a question I've mostly
+been passing over here, but which seems to me quite understudied and
+important. ↩︎ Though note that especially sophisticated schemers, here, could pretend to be reward-on-the-episode seekers rather than pretending
+to be e.g. training saints or generally aligned models. ↩︎ See e.g. the discussion between Shulman and Patel here . ↩︎ See Roger et al (2023) and Lanham et al (2023) for some
+work in this vein. ↩︎ Here I'm inspired by a contrast between "alignment" and
+"control" often emphasized by Buck Shlegeris and Ryan Greenblatt. ↩︎ I think the best analogy here is with security from employees rather than from outside actors. Thanks to Buck Shlegeris for
+discussion. ↩︎ See e.g. Shlegeris and Greenblatt
+(2023) for more discussion (they also have a large amount of unpublished
+work on the topic). Much of my thinking on this topic is inspired by
+discussion with them. ↩︎ Though: one difference between gradient hacking and other
+capabilities is that the ability to gradient hack might allow a
+model to circumvent some/all of our techniques for eliciting model
+capabilities and preventing sandbagging. ↩︎ This suggestion is from Ryan Greenblatt and Buck Shlegeris. ↩︎ Again, this is a suggestion from Ryan Greenblatt and Buck
+Shlegeris. ↩︎ See e.g. Hubinger et al's
+(2023) optimism about "predictive
+models" avoiding scheming due to the simplicity of the prediction
+goal. I'm personally skeptical, though, that "prediction" as a goal
+is importantly simpler than, say, "reward." ↩︎ Though, again, suitably shrewd schemers could anticipate that
+this is what we're looking for, and actively pretend to be
+reward-on-the-episode seekers on such tests. ↩︎

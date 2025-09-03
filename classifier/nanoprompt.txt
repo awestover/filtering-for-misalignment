@@ -1,0 +1,4 @@
+Does the text discuss AI safety / AI control?
+If so, output yes. Otherwise, output no.
+
+Text:

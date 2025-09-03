@@ -1,0 +1,266 @@
+This is Section 5 of my report “ Scheming AIs: Will AIs fake alignment during training in order to get power? ”. There’s also a summary of the full report here (audio here ). The summary covers most of the main points and technical terms, and I’m hoping that it will provide much of the context necessary to understand individual sections of the report on their own. Audio version of this section here , or search for "Joe Carlsmith Audio" on your podcast app. Summing up I've now reviewed the main arguments I've encountered for expecting SGD
+to select a schemer. What should we make of these arguments overall? We've reviewed a wide variety of interrelated considerations, and it can
+be difficult to hold them all in mind at once. On the whole, though, I
+think a fairly large portion of the overall case for expecting schemers
+comes down to some version of the "counting argument." In particular, I
+think the counting argument is also importantly underneath many of the
+other, more specific arguments I've considered. Thus: In the context of the "training-game-independent proxy goal"
+argument : the basic worry is that at some point (whether before
+situational awareness, or afterwards), SGD will land naturally on a
+(suitably ambitious) beyond-episode goal that incentivizes scheming.
+And one of the key reasons for expecting this is just: that
+(especially if you're actively training for fairly long-term,
+ambitious goals), it seems like a very wide variety of goals that
+fall out of training could have this property. (For example: to the
+extent one expects beyond-episode goals because "goals don't come
+with calendar-time restrictions by default," one is effectively
+appealing to a "counting argument" to the effect that the set of
+beyond-episode goals is much larger than the set of within-episode
+goals.) In the context of the "nearest max-reward goal" argument : the
+basic worry is that because schemer-like goals are quite common in
+goal-space, some such goal will be quite "nearby" whatever
+not-yet-max-reward goal the model has at the point it gains
+situational awareness, and thus, that modifying the model into a
+schemer will be the easiest way for SGD to point the model's
+optimization in the highest-reward direction. In the context of the "simplicity argument" : the reason one
+expects schemers to be able to have simpler goals than non-schemers
+is that they have so many possible goals (or: pointers-to-goals) to
+choose from. (Though: I personally find this argument quite a bit
+less persuasive than the counting argument itself, partly because
+the simplicity benefits at stake seem to me quite small.) That is, in all of these cases, schemers are being privileged as a
+hypothesis because a very wide variety of goals could in principle lead
+to scheming, thereby making it easier to (a) land on one of them
+naturally, (b) land "nearby" one of them, or (c) find one of them that
+is "simpler" than non-schemer goals that need to come from a more
+restricted space. And in this sense, as I noted in the
+section 4.2, the case for schemers mirrors one of
+the most basic arguments for expecting misalignment more
+generally – e.g., that alignment is a very narrow target to hit in
+goal-space. Except, here, we are specifically incorporating the
+selection we know we are going to do on the goals in question: namely,
+they need to be such as to cause models pursuing them to get high
+reward. And the most basic worry is just that: this isn't enough. Still,
+despite your best efforts in training, and almost regardless of your
+reward signal, almost all the models you might've selected will be
+getting high reward for instrumental reasons – and specifically, in
+order to get power. I think this basic argument, in its various guises, is a serious source
+of concern. If we grant that advanced models will be relevantly
+goal-directed and situationally-aware, that a wide variety of goals
+would indeed lead to scheming, and that schemers would perform
+close-to-optimally in training, then on what grounds, exactly, would we
+assume that training has produced a non-schemer instead? Perhaps, per
+the "haziness" of my "hazy counting argument," we don't specifically
+allocate our credence over models in proportion to some attempt to
+"count" the possible goals in question. But even a hazy sense that "lots
+of goals" lead to scheming is, in my book, cause for alarm, here. We
+don't know enough about ML training, at this stage, to be confident that
+we've avoided the relevant parts of goal-space. Rather, if our knowledge
+does not improve, we will be faced, centrally, with some goal-directed
+mind that understands what's going on and the process we are using to
+shape it, and which is getting high reward because it wants something .
+"Why, exactly, does the thing it wants lead it to get high reward?" we
+will have to ask. And the most basic answer will be: "we don't know."
+That's not an acceptable answer. It's not acceptable with respect to the
+possibility of misalignment in general. And it's especially
+unacceptable, in my view, if a very wide variety of especially-scary
+misaligned goals would give rise to this behavior as part of a strategy
+for seeking power. That said, I do think there are a few causes for comfort here. We can
+break these into roughly two categories. The first focuses on questions about whether scheming is, in fact, such
+a convergently rational instrumental strategy for such a wide variety of
+beyond-episode goals. In particular: The "classic goal-guarding story" rests on the claim that scheming
+is a good way for the model to propagate goals-it-wants-promoted
+forward in time, in a manner that yields sufficiently large amounts
+of future power for those goals as to justify any costs the model is
+incurring by training-gaming rather than just going for its goals
+directly. But there are a variety of ways in which this could be
+false. For example: Training-gaming might not be enough to prevent the goals in
+question from continuing to change to a degree that makes the
+strategy no longer worth it. For example, training might cause
+these goals to "float around," or it might push towards some
+especially optimal type of
+goal/goal-like-focus-of-a-messy-kludge-of-heuristics. The model's prospects for getting enough power for those goals,
+on the right timescales, might not be good enough to outweigh
+the benefits of the model just going for its goals directly
+during training (and getting modified as a result), especially
+if the model's beyond-episode goals are not especially
+"ambitious," and/or it has other competing priorities. This makes the "classic goal-guarding story" seem at least somewhat
+conjunctive in its explanation for why training-gaming is the right
+strategy for so many beyond-episode goals. And certain "non-classic"
+stories seem like they shrink the possible set of goals to which
+they apply dramatically. For example, if we posit that the model has
+values that put terminal weight on something like "my survival" (for
+some notion of personal identity quite tolerant of values-change),
+or on AI takeover even if the AIs-that-take-over have very different
+preferences from the model itself, we are now imposing much more
+specific requirements on the schemer-like goals in question. That said: not all non-classic stories have this property. For
+example, stories that center on coordination amongst AIs with
+very different values, and on the possibility that AIs will all
+have very similar values by default, still work across a wide
+variety of goals. And perhaps there are reasons to expect
+terminal goals like "survival" to be especially common (e.g.,
+because common instrumental values are especially liable to get
+turned into terminal values – though: we can use adversarial
+training to try to prevent this). [1] The second source of comfort focuses on forms of selection pressure that
+a high level counting argument, based solely on the assumption that the
+selected model gets "high reward," doesn't cover. In particular: Prior to situational awareness, training will naturally penalize beyond-episode goals (and perhaps especially: ambitious
+beyond-episode goals) whenever they lead to a sacrifice of
+reward-on-the-episode. Alos: prior to situational awareness, we can specifically try to
+use adversarial training to penalize beyond-episode goals (and
+ambitious goals) further, and to otherwise shape the model's goals
+to be "nearer" to non-schemer goals than to schemer-like goals. Of course, many non-schemer goals are themselves misaligned. But
+if we decided that scheming is sufficiently scary relative to
+other forms of misalignment (e.g.,
+reward-on-the-episode-seeking), the ability to specifically
+ensure that we haven't created a schemer may be worthwhile to
+develop. [2] To the extent that schemers need to engage in extra forms of
+instrumental reasoning (e.g., deciding to scheme for instrumental
+reasons, checking for escape/defection opportunities), this may come
+at an additional cost to their performance. And to the extent they
+engage in early undermining (the scariest form of scheming, in my
+view), their performance seems likely, to me, to take a more
+substantive hit (sandbagging on checkable tasks, for example,
+involves a performance hit by definition). What's more, we may be able to actively design our oversight and
+training processes so as to both (a) increase the costs of such
+reasoning (e.g., by making genuine escape opportunities harder
+to distinguish from traps), and (b) to penalize extra reasoning
+of this form harder (by putting models under substantial time
+pressure, making instrumental reasoning into a scarce resource,
+forcing them to rely on english-language scratch-pads and other
+forms of human-legible reasoning as their central mode of
+planning, etc –  though these interventions may come with
+competitiveness costs). Schemer performance could also suffer from their lack of some analog
+of "intrinsic passion" for the task at hand – e.g., because the
+heuristics, patterns of attention, tastes, and so on involved in
+"intrinsic passion" blur the line between capabilities and values.
+However, this consideration seems considerably more speculative. The possibility that there are additional selection pressures that
+disfavor schemers, here (and in particular: the possibility that SGD
+intrinsically disfavors schemers due to their needing to perform extra
+reasoning), seems to me especially important given the centrality of
+"counting arguments" to the various arguments in favor of expecting
+scheming. In particular: I think that a key way that "counting
+arguments" in general tend to go wrong is by neglecting the power that
+active selection can have in overcoming the "prior" set by the count in
+question. Thus, to borrow an epistemic example/analogy from Xu
+(2021) , your "prior" that my name
+is "Joseph Carlsmith" should be quite low, because there is a very
+strong "counting argument" against this hypothesis: namely, that most
+names (even for men in my demographic etc) are not "Joseph Carlsmith."
+But when I tell you that my name is "Joseph Carlsmith," this is
+actually very strong
+evidence – enough to overcome the
+prior and leave you confident in the hypothesis in question. And
+something similar holds for various forms of selection in building
+functional artifacts. The reason we can overcome the prior of "most
+arrangements of car parts don't form a working car," or "most parameter
+settings in this neural network don't implement a working chatbot," is
+that the selection power at stake in human engineering, and in SGD, is that strong . So if SGD's selection power is actively working against
+schemers, this might quickly overcome a "counting argument" in their
+favor. For example, as I discussed in
+section 4.2: if there are 2^100 schemer-like
+goals for every non-schemer goal, this might make it seem very difficult
+to hit a non-schemer goal in the relevant space. But actually, 100 bits
+of a selection pressure can be cheap for SGD (consider, for example, 100
+extra gradient updates, each worth at least a halving of the remaining
+possible goals, in the context of a training run that involves many
+million). [3] For this reason, the question of whether SGD "cares" a lot about the
+extra reasoning schemers have to do (and/or, whether we can "make it
+care more") seems to me fairly key here. That is, if just grinding
+harder on SGD's intrinsic preferences (e.g., for high reward behavior)
+is itself a force selecting against schemers, then counting arguments or
+no, I think that anti-schemer efforts have a very powerful tool in their
+favor. In this respect, I feel intuitively more optimistic about
+anti-schemer efforts in "low slack" training environments that put a lot
+of pressure on models to perform optimally – and this is a parameter
+that we may be able to control. And I feel more worried about schemers
+in a "path dependent" regime in which SGD might light on a schemer goal
+early in training, and then get stuck there despite the fact that it
+would have "preferred" a non-schemer overall. Another question that seems important to me is whether SGD's
+incrementalism blocks "training-game-dependent" stories about the
+origins of schemer-like goals – e.g., the "nearest max-reward goal"
+argument. If so, I think, this would be a meaningfully additional source
+of comfort. In particular: to me it seems much easier to avoid naturally giving a model a (suitably ambitious) beyond-episode goal
+than it is to make sure that by the time the model is situationally
+aware, its goal is sufficiently close to max-reward that there isn't a
+schemer-like goal "nearby" along some dimension. In particular: the
+image of SGD specifically "searching out" the nearest max reward goal,
+in a space where a wide array of schemer-like goals are accessible to
+the search, seems to me quite worrying (and also: more likely to result
+in beyond-episode goals with whatever properties are specifically
+necessary to incentivize scheming – e.g., highly ambitious goals, goals
+with unbounded time horizons, and so on). Finally, I want to re-emphasize some ongoing uncertainty about whether
+scheming requires an unusually high standard of goal-directedness. I've
+been trying, here, to separate debates about goal-directedness per se
+from debates about which sorts of goal-directed models to expect SGD to
+select. But insofar as even highly capable AIs may not require the sort
+of coherent, strategic goal-directedness the alignment discourse often
+assumes, I think this may be especially relevant to the probability that
+such AIs will be well understood as "schemers," since the form of
+goal-directedness at stake in scheming seems especially coherent,
+strategic, and
+" consequentialist ." Stepping back and trying to look at these considerations as a whole, I
+feel pulled in two different directions. On the one hand, at least conditional on scheming being a
+convergently-good instrumental strategy, schemer-like goals feel
+scarily common in goal-space, and I feel pretty worried that
+training will run into them for one reason or another. On the other hand, ascribing a model's good performance in training
+to scheming continues to feel, at a gut level, like a fairly
+specific and conjunctive story to me. That is, scheming feels robust and common at the level of "goal space,"
+and yet specific and fairly brittle at the level of "yes that's what's
+going on with this real-world model, it's getting reward because (or:
+substantially because) it wants to get power later and getting reward
+now helps with that." I think this sense of conjunctiveness has a few
+different components: Part of it is about whether the model really has relevantly
+long-term and ambitious goals despite the way it was shaped in
+training. Part of it is about whether there is a good enough story about why
+getting reward on the episode is a good instrumental strategy for
+pursuing those goals (e.g., doubts about the goal-guarding
+hypothesis, the model's prospects for empowerment later, etc). Part of it is that a schemer-like diagnosis also brings in
+additional conjuncts that I haven't been focusing on  – for example,
+that the model is situationally aware and coherently
+goal-directed. [4] (When I really try to bring to mind that this
+model knows what is going on and is coherently pursuing some goal/set of goals in the sort of way that gives rise to strategic
+instrumental reasoning, then the possibility that it's at least
+partly a schemer seems more plausible.) Can we put a rough, subjective number on the overall likelihood of
+schemers? In my opinion, and despite their drawbacks, numbers like this
+often function to sharpen the debate a bit, so I'll give it a shot here.
+Let's say: if you train a coherently goal-directed, situationally
+aware, somewhat-better-than-human-level model using baseline forms of
+self-supervised pre-training + RLHF on diverse, long-horizon, real-world
+tasks, my subjective probability is ~25% that this model will be
+performing well in training in substantial part as part of an
+instrumental strategy for seeking power for itself and/or other AIs
+later. I want to be clear, though, that even on top of the many forms of
+vagueness the claim above implicates, I'm just pulling a number from my
+gut. I haven't built a quantitative model of the relevant considerations
+(though I'd be interested to see efforts in this vein), and the main
+point of the report is the analysis itself, not this attempt to
+synthesize the analysis into a quantitative upshot. I also think it may be possible to reduce the risk here in fairly simple
+ways: for example, via training on shorter-horizon tasks, or via various
+forms of adversarial training prior to situational awareness. And I
+think the probability that the model is both scheming and engaging in
+actively nefarious actions like sandbagging and early undermining is
+lower, because these actions come at more significant costs in terms of
+cognition and reward. I also think that the risk increases with more powerful models, who
+may be better positioned to escape/take-over in the future and to
+coordinate/cooperate with other AIs in doing so, and who are more likely
+to be able to engage in more sophisticated forms of goal-guarding like
+"introspective goal-guarding methods" (though these seem to me
+intuitively quite challenging even for quite advanced AIs). Finally, I want to re-emphasize that non-schemers can engage in
+schemer-like behavior, too. Reward-on-the-episode seekers can fake their
+alignment (or even: engage in escape/take-over) in an effort to get
+reward-on-the-episode; non-training-gamers can still end up with
+power-seeking goals that incentivize various forms of deception; and the
+eventual AIs that matter most might differ in important ways from the
+paradigm sort of AI I've been focused on here (for example, they might
+be more like " language model
+agents " than
+single models, or they might be created via methods that differ even
+more substantially from sort of baseline ML methods I've focused on),
+while still engaging in power-motivated alignment-faking. [5] Scheming, in my view, is a paradigm instance of this sort of scariness,
+and one that seems, to me, especially pressing to understand. But it's
+far from the only source of concern. Though again: it needs to be a notion of "survival" tolerant
+of values-change. ↩︎ See section 6.8 for a bit more on this. ↩︎ Thanks to Paul Christiano for discussion here. ↩︎ It also feels a bit difficult to track all of the other, subtler
+conjuncts that can build up in the backdrop of the schemer
+hypothesis. ↩︎ Though as noted above, if the relevant language model agents are
+trained end to end (as opposed to just being built out
+individually-trained components), then the report's framework will
+apply to them as well. ↩︎

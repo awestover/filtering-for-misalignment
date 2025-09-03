@@ -1,0 +1,167 @@
+author: 'Tsvi Benson-Tilsen'
+title: 'Open problem: thin logical priors'
+... Background / Motivation Problem statement Type signature Desiderata Comments In short, and at a high level, the problem of thin priors is to
+understand how an agent can learn logical facts and make use of them in
+its predictions, without setting up a reflective instability across
+time. Before the agent knows the fact, it is required by logical
+uncertainty to “care about” worlds where the fact does not hold; after
+it learns the fact, it might no longer care about those worlds; so the
+ignorant agent has different goals than the knowing agent. This problem
+points at a hole in our basic understanding, namely how to update on
+logical facts; logical induction solves much of logical uncertainty, but
+doesn’t clarify how to update on computations, since many logical facts
+are learned “behind the scenes” by traders. ***** The ideas in this post seem to have been discussed for some time.
+Jessica brought them up in a crisper form in a conversation a while go
+with me, and also came up with the name; this post is largely based on
+ideas in that conversation and some subsequent ones with other people,
+possibly refined / reframed. Background / Motivation It would be nice to have a reflectively stable decision theory (i.e. a
+decision theory that largely endorses itself to continue making
+decisions over other potential targets of self-modification); this the
+most basic version of averting / containing instrumental goals, which is
+arguably necessary in some form to make a safe agent. Agents that choose
+policies using beliefs that have been updated on (logical) observations
+seem to be unstable, presenting an obstacle. More specifically, we have
+the following line of reasoning: Updating on empirical evidence leads to reflective instability .
+If A 1 is uncertain about the future even given all its
+observations; and its future instantiation A 2 would choose
+actions based on further data; then A 1 has an incentive to
+precommit / self-modify to not choose its future actions by updating
+its beliefs on future observations. For example, say that A 1 is looking forward to a counterfactual
+mugging with a quantum coin, and A 2 is going to model the world
+as having some particular unknown state that is then observed when
+the coin is revealed. Then A 2 would not pay up on tails, so A 1 wants to precommit to paying up. Doing so increases expected value
+from A 1 ’s perspective, since A 1 still has 1/2 probability
+on heads. We can view this reflective instability as stemming from A ’s
+utility function changing. On the one hand, A 1 cares about the
+heads world; that is, it makes decisions that trade off utility in
+the tails world for utility in the heads world. On the other hand,
+once it has seen the coin and updated its world model, A 2 no
+longer thinks the heads worlds are real. Then A 2 doesn’t base its
+decisions on what would happen in the heads world, i.e. A 2 no
+longer cares about the heads worlds. Then it is not surprising that A 1 is incentivized to self-modify: A 2 has a different utility function, so its interests are not
+aligned with A 1 ’s. This can’t obviously be neatly factored into uncertainty about the
+world and a utility function and dealt with separately. That is,
+it isn’t (obviously) possible to coherently have a utility function
+that “only cares about real worlds”, while capturing all of the
+“free-parameter value judgements” that the agent has to make, and
+have the agent just be uncertain about which worlds are real. The issue, in the empirical realm, is that A ’s observations are
+always going to be consistent with multiple possible worlds; that
+is, A will be uncertain. In particular, A will have to make
+tradeoffs between influencing different possible worlds. This
+usually comes in the form of a “simplicity prior”—a prior
+probability over worlds that is very non-dogmatic. Whether this is
+expressed as utility differences or probability differences, this
+“caring measure” on worlds changes in A 2 . So the thing that A cares about—the function on worlds that dictates how A trades off
+between effects of actions—changes even if only A ’s
+“uncertainty” changes. A can be updateless with respect to empirical facts. That is,
+we can define A to take actions following a policy selected
+according to judgments made by a fixed prior over worlds. The policy
+can take empirical observations as input and take different actions
+accordingly, but the policy itself is selected using a model that
+doesn’t depend on empirical observations. If A is empirically updateless then it avoids some
+reflective instability. For example, in the counterfactual mugging
+with an empirical coin, A 2 will choose a policy using the prior
+held by A 1 . That policy will say to pay up, so A 2 will pay up.
+Thus A 1 has no incentive (or at least doesn’t have the same
+incentive as above) to self-modify. The above line of reasoning can be repeated with logical evidence
+in place of empirical evidence… We have logical observations, i.e.
+the results of computations, in place of empirical observations; we
+have logical uncertainty (forced by computational boundedness) in
+place of empirical uncertainty (forced by limited observational
+data); therefore agents have a caring measure that incorporates
+logical uncertainty (i.e. that places positive caring on logically
+inconsistent worlds); so agents that update on logical facts have a
+changing caring measure and are reflectively unstable. …but it’s not clear how to be updateless with respect to
+logical facts. This is one construal of the open problem of thin
+logical priors: define a computable prior over logical facts or
+counterfactuals that has reasonable decision-theoretic
+counterfactual beliefs, but “only knows a fixed set of logical
+facts” in the sense relevant to logical updatelessness. More
+broadly, we might ask for some computable object that can be used as
+a general world model, but doesn’t imply (non-analyzable) conflict
+between differently informed instances of the same agent. If we could write down a prior over logical statements that was thin
+enough to be computable, but rich enough to be useful for selecting
+policies (which may depend on or imply further computations), then we
+might be able write down a reflectively stable agent. Problem statement Desiderata Updateless. The prior should be “easy enough” to compute that it
+can be used as an updateless prior as described above. That is, in
+the course of being refined by thinking longer (but without
+explicitly conditioning on any logical facts), the prior should not
+incorporate any additional logical facts. A prior “incorporates a
+logical fact” (by being computed to more precision) when it starts
+penalizing worlds for not satisfying that logical fact.
+Incorporating logical facts is bad because it sets up a dynamic
+inconsistency across versions of the agent learning the fact. We could weaken this desideratum to allow the prior to be
+“updateless enough”, where enough is perhaps judged by reflective
+stability of the resulting agent. Knows consequences of policies. The prior is supposed to be
+useful as the beliefs that generate a system
+of action-counterfactuals. So the prior had better know, in some
+sense, what the consequences of different policies are. Can learn from computations. Since the world is complicated
+[citation needed], the agent will have to take advantage of more
+time to think by updating on results of computations (aka
+logical facts). Thus a thin prior should, at least implicitly, be
+able to take advantage of the logical information available given
+arbitrarily large amounts of computing time. Thin, not small. I think that Paul has suggested something like
+a “small” prior: a finite belief state that is computed once, and
+then used to decide what computations to run next (and those
+computations decide what to do after that, and so on). This is also
+roughly the idea of Son
+of X . A small-prior agent is probably reflectively stable in a somewhat
+trivial sense. In particular, this doesn’t immediately look useful
+in terms of analyzing the agent in a way that lets us say more
+specific things about its behavior, stably over time; all we can say
+is “the agent does whatever was considered optimal at that one point
+in time”. A thin prior would hopefully be more specific, so that a
+stably-comprehensible agent design could use the prior as
+its beliefs. On the other hand, a small prior that knows enough to be able to
+learn from future computations, and that we understand well enough
+for alignment purposes, should qualify. Type signature A natural type for a thin prior is Δ ( 2 ω ) , a distribution on
+sequence space. We may want to restrict to distributions that assign
+probability 1 to propositionally consistent worlds (that is, we may want
+to fix an encoding of sentences). We may also want to restrict to
+distributions that are computable or efficiently computable—that is, the
+function λ ¯ ¯ ¯ o . P ( ¯ ¯ ¯ o ) is
+computable using an amount of time that is some reasonable function of | ¯ ¯ ¯ o | , where ¯ ¯ ¯ o is a finite dictionary of
+results of computations. Another possible type is Obs → Δ ( 2 ω ) . That is,
+a thin “prior” is not a prior, but rather a possibly more general system
+of counterfactuals, where P [ ¯ ¯ ¯ o ] ( ϕ ) is
+intended to be interpreted as the agent’s “best guess at what is true in
+the counterfactual world in which computations behave as specified by ¯ ¯ ¯ o ”. Given the condition that P [ ¯ ¯ ¯ o ∪ { ψ } ] ( ϕ ) = P [ ¯ ¯ ¯ o ] ( ϕ ∧ ψ ) P [ ¯ ¯ ¯ o ] ( ψ ) , this is equivalent to just a fixed distribution in Δ ( 2 ω ) .
+But since this condition can be violated, as in e.g. causal
+counterfactuals, this type signature is strictly more general. (We could
+go further and distinguish background known facts, facts to counterfact
+on, and unclamped facts.) In place of Δ ( 2 ω ) we might instead put Act → Δ ( 2 ω ) , meaning that the prior is not
+just prior probabilities, but rather prior beliefs about counterfactual
+worlds given that the agent takes different possible actions. Comments Although universal Garrabrant inductors don’t explicitly refer to
+logic in any way (and hence are perhaps more amenable to further
+analysis than logical inductors), UGIs do in fact update on logical
+facts, and they do so in an opaque / non-queryable way. (That is, we
+can’t get a reasonable answer from P n to the question
+“what would you have believed if computation X had evaluated to
+1?” if X has finished by time n and evaluated to 0.) To see that UGIs update on logical facts over time, consider
+conditioning a UGI on some initial segment P A k of P A , and then asking it about the 10 100 th binary
+digit of π . At best, P 10 ( π ( 10 100 ) = 0 ∣ P A k ) will be
+around 50 % , since there has not been enough time to compute π ( 10 100 ) , whereas (roughly speaking) P 10 100 ( π ( 10 100 ) = 0 ∣ P A k ) will be close to 1 or 0 according to the actual digit of π . The
+conditional beliefs of ¯ ¯ ¯ P have changed to
+reflect the result of the long-running computation π ( 10 100 ) .
+We still have to condition on P A statements in order to refer to the statement π ( 10 100 ) = 0 (so k has to be 1000
+or something, enough to define π ( − ) , exponentials, 10, and 100),
+but the fact of the matter has been learned by ¯ ¯ ¯ P . In short: traders think longer to
+make more refined trades, and thereby learn logical facts and
+influence the market ¯ ¯ ¯ P based on
+those facts. Asking for a thin prior might not be carving decision theory at
+the joints. In particular, because counterfactuals may be partially
+subjective (in the same what that probability and utility is
+partially subjective), the notion of a good thin prior might be
+partially dependent on subjective human judgments, and so not
+amenable to math. This problem seems philosophically appealing; how can you meta-think
+without doing any actual thinking? In classical probability, if we have some space and some information
+about where we are in the space, we can ask: what belief state
+incorporates all the given information, but doesn’t add any
+additional information (which would be unjustified)? The answer is
+the maximum entropy prior. In the realm of logical uncertainty, we
+want to ask something like: what belief state incorporates all the
+given logical information (results of computations), but doesn’t add
+any “logical information”? It is ok for the thin prior to have some logical information “built
+in” at the outset. The agent won’t be counterfactually mugged using
+those logical facts, but that is fine. The problem is learning new
+facts, which creates a reflective instability.

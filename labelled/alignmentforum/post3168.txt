@@ -1,0 +1,61 @@
+My previous approach to combining preferences went like this: from the partial preferences P i , create a normalised utility function ˆ U i that is defined over all worlds (and which is indifferent to the information that didn't appear in the partial model). Then simply add these utilities , weighted according to the weight/strength of the preference. But this method fails. Consider for example the following partial preferences, all weighted with the same weight of 1 : P 1 : A > C . P 2 : A > B . P 3 : B > C . P 4 : B > D . P 5 : B > E . If we follow the standard normalisation approach , then the normalised utility ˆ U 1 will be defined [1] as: ˆ U 1 ( A ) = 0.5 , ˆ U 1 ( C ) = − 0.5 , and otherwise ˆ U 1 ( − ) = 0 . Then adding together all five utility functions would give: U ⎛ ⎜
+⎜
+⎜
+⎜
+⎜
+⎜ ⎝ A B C D E ⎞ ⎟
+⎟
+⎟
+⎟
+⎟
+⎟ ⎠ = ⎛ ⎜
+⎜
+⎜
+⎜
+⎜
+⎜ ⎝ 1 1 − 1 − 0.5 − 0.5 ⎞ ⎟
+⎟
+⎟
+⎟
+⎟
+⎟ ⎠ . There are several problems with this utility. Firstly, the utility of A and the utility of B are the same, even though in the only case where there is a direct comparison between them, A is ranked higher. We might say that we are missing the comparisons between A and D and E , and could elicit these preferences using one-step hypotheticals . But what if comparing A to D is a complex preference , and all that happens is that the agent combines A > B and B > D ? If we added another partial preference that said B > F , then B would end up ranked above A ! Another, more subtle point, is that the difference between A and C is too large. Simply having A > B and B > C would give U ( A ) − U ( C ) = 1 . Adding in A > C moves this difference to 2 . But note that A > C is already implicit in A > B and B > C , so adding it shouldn't make the difference larger. In fact, if the difference in utility between A and C were larger than 1 , adding in A > C should make the difference between U ( A ) and U ( C ) smaller :  because having A > C weighted at 1 means that the agent's preference of A over C is not that strong. Energy minimising between utilities So, how should we combine these preferences otherwise? Well, if I have a preference P i , of weight w i , that ranks outcome G below outcome H (write this as G < i H ), then, if these outcomes appear nowhere else in any partial preference, U ( G ) − U ( H ) will be w i . So in a sense, that partial preference is trying to set the distance between those two outcomes to w i . Call this the energy-minimising condition for P i . Then for a utility function U , we can define the energy of U , as compared with the (partially defined) normalised utility ˆ U i corresponding to P i . It is: ∑ G < i H ( w i ( ˆ U i ( H ) − ˆ U i ( G ) ) − ( U ( H ) − U ( G ) ) ) 2 . This is the difference between the weighted distance between the outcomes that w i ˆ U i , and the one that U actually gives. Because different partial preferences have different number of elements to compare, we can compute the average energy of U : E ( U , P i ) = ∑ G < i H ( w i ( ˆ U i ( H ) − ˆ U i ( G ) ) − ( U ( H ) − U ( G ) ) ) 2 ∑ G < i H 1 . Global energy minimising condition But weights have another role to play here; they measure not only how much H is preferred to G , but how important it is to reach that preference. So, for humans, " G < H with weight ϵ " means both: H is not much preferred to G . The humans isn't too fussed about the ordering of G and H . For general agents, these two could be separate phenomena; but for humans, they generally seem to be the same thing. So we can reuse the weights to compute the global energy for U as compared to all partial preferences, which is just the weighted sum of its average energy for each partial preference: E ( U , { P i } ) = ∑ P i w i E ( U , P i ) = ∑ P i w i ∑ G < i H ( w i ( ˆ U i ( H ) − ˆ U i ( G ) ) − ( U ( H ) − U ( G ) ) ) 2 ∑ G < i H 1 . Then the actual ideal U is defined to be the U that minimises this energy term. Solutions Now, it's clear this expression is convex. But it need not be strictly convex (which would imply a single solution): for example, if P 1 ( A > C ) and P 4 ( B > D ) were the only partial preferences, then there would be no conditions on the relative utilities of { A , C } , { B , D } and { E } . Say that H is linked to G , by defining a link as "there exists a P i with G ≤ i H or H ≤ i G ", and then making this definition transitive and reflexive (it's automatically symmetric). In the example above, with P i , 1 ≤ i ≤ 5 , all of { A , B , C , D , E } are linked. Being linked is an equivalence relation. And within a class of linked worlds, if we fix the utility of one world, then the energy minimisation equation becomes strictly convex (and hence has a single solution). Thus, within a class of linked worlds, the energy minimisation equation has a single solution, up to translation. So if we want a single U , translate the solution for each linked class so that the average utility in that class is equal to the average of every other linked class.  And this would then define U uniquely (up to translation). For example, if we only had P 1 ( A > C ) and P 4 ( B > D ), this could set U to be: U ⎛ ⎜
+⎜
+⎜
+⎜
+⎜
+⎜ ⎝ A B C D E ⎞ ⎟
+⎟
+⎟
+⎟
+⎟
+⎟ ⎠ = ⎛ ⎜
+⎜
+⎜
+⎜
+⎜
+⎜ ⎝ 0.5 0.5 − 0.5 − 0.5 0 ⎞ ⎟
+⎟
+⎟
+⎟
+⎟
+⎟ ⎠ Here, the average utility in each linked class ( { A , C } , { B , D } and { E } ) is 0 . Applying this to the example So, applying this approach to the full set of the P i , 1 ≤ i ≤ 5 above (and fixing U ( B ) = 0 ), we'd get: U ⎛ ⎜
+⎜
+⎜
+⎜
+⎜
+⎜ ⎝ A B C D E ⎞ ⎟
+⎟
+⎟
+⎟
+⎟
+⎟ ⎠ = ⎛ ⎜
+⎜
+⎜
+⎜
+⎜
+⎜ ⎝ 2 / 3 0 − 2 / 3 − 1 − 1 ⎞ ⎟
+⎟
+⎟
+⎟
+⎟
+⎟ ⎠ . Here B is in the middle of A and C , as it should be, while the utilities of D and E are defined by their distance from B only. The distance between A and C is 4 / 3 ≈ 1.33333... . This is between 2 (which would be given by A > B and B > C only) and 1 (which would be given by A > C only). I've divided the normalisation from that post by 2 , to fit better with the methods of this post. Dividing everything in a sum by the same constant gives the same equivalence class of utility functions. ↩︎

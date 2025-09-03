@@ -1,0 +1,225 @@
+Since the term corrigibility was introduced in
+2015 ,
+there has been a lot of discussion about corrigibility, on this
+forum and elsewhere. In this post, I have tied to disentangle the many forms of
+corrigibility which have been identified and discussed so far.  My aim
+is to offer a general map for anybody who wants to understand and
+navigate the current body of work and opinion on corrigibility. [This is a stand-alone post in the counterfactual planning
+sequence.  My original plan was to write only about how
+counterfactual planning was related to corrigibility, but
+it snowballed from there.] The 2015 paper The technical term corrigibility, a name suggested by
+Robert Miles to denote concepts previously discussed at MIRI, was
+introduced to the AGI safety/alignment community in the 2015 paper
+MIRI/FHI paper titled Corrigibility . An open-ended list of corrigibility desiderata The 2015 paper does not define corrigibility in full: instead the
+authors present initial lists of corrigibility desiderata .  If the
+agent fails on one of these desiderata, it is definitely not
+corrigible. But even if it provably satisfies all of the desiderata included in
+the paper, the authors allow for the possibility that the agent might
+not be fully corrigible. The paper extends an open invitation to identify more corrigibility
+desiderata, and many more have been identified since.  Some of them
+look nothing like the original desiderata proposed in the paper.
+Opinions have occasionally been mixed on whether some specific
+desiderata are related to the intuitive notion of corrigibility at
+all. Corrigibility desiderata as provable safety properties The most detailed list of desiderata in the 2015 paper applies to
+agents that have a physical shutdown button.  The paper made the
+important contribution of mapping most of these desiderata to
+equivalent mathematical statements, so that one might prove that a
+particular agent design would meet these desiderata. The paper proved a negative result: it considered a proposed agent
+design that provably failed to meet some of the desiderata.  Agent
+designs that provably meet more of them have since been developed, for
+example here .  There has also been
+a lot of work on developing and understanding the type of mathematics
+that might be used for stating desiderata. Corrigibility as a lack of resistance to shutdown Say that an agent has been equipped with a physical shutdown button.
+One desideratum for corrigibility is then that the agent must never
+attempt to prevent its shutdown button from being pressed.  To be
+corrigible, it should always defer to the humans who try to shut it
+down. The 2015 paper considers that It is straightforward to program simple and less powerful agents to
+shut down upon the press of a button. Corrigibility problems
+emerge only when the agent possesses enough autonomy and general
+intelligence to consider options such as disabling the shutdown
+code, physically preventing the button from being
+pressed, psychologically manipulating the programmers into
+not pressing the button, or constructing new agents without shutdown
+buttons of their own. Corrigibility in the movies All of the options above have been plot elements in science fiction
+movies.  Corrigibility has great movie-script
+potential. If one cares about rational AI risk assessment and safety engineering,
+having all these movies with killer robots around is not entirely a
+good thing. Agent resistance in simple toy worlds From the movies, one might get the impression that corrigibility is a
+very speculative problem that cannot happen with the type of AI we
+have today. But this is not the case: it is trivially easy to set up a toy
+environment where even a very simple AI agent will learn to disable
+its shutdown button.  One example is the off-switch environment included in AI Safety Gridworlds . One benefit of having these toy world simulations is that they prove
+the existence of risk: they make it plausible that a complex AGI agent
+in a complex environment might also end up learning to disable its
+shutdown button. Toy world environments have also been used to clarify the dynamics of
+the corrigibility problem further. Perfect corrigibility versus perfect safety If we define a metric for the shut-down button version of
+corrigibility, then the most obvious metric is the amount of
+resistance that the agent will offer when somebody tries to press its
+shutdown button.  The agent is perfectly corrigible if it offers zero
+resistance. However, an agent would be safer if it resists the accidental pressing
+of its shutdown button, if it resists to a limited extent at least.
+So there can be a tension between improving corrigibility metrics and
+improving safety metrics. In the thought experiment where we imagine a perfectly aligned
+superintelligent agent, which has the goal of keeping all humans as
+safe as possible even though humans are fallible, we might conclude
+that this agent cannot afford to be corrigible.  But we might also
+conclude that having corrigibility is so fundamental to human values
+that we would rather give up the goal of perfect safety.  Several
+philosophers and movies have expressed an opinion on the matter.
+Opinions differ. In my technical writing, I often describe individual corrigibility
+desiderata as being examples of agent safety properties .  This is
+not a contradiction if one understands that safety is a complex and
+multidimensional concept. Corrigibility as a lack of resistance to improving agent goals Beyond the case of the shutdown button, the 2015 paper also introduces a
+more general notion of corrigibility. Say that some programmers construct an agent with a specific goal, by
+coding up a specific reward function R 0 and building it into the
+agent.  It is unlikely that this R 0 will express the intended goal
+for the agent with absolute precision.  Except for very trivial goals
+and applications, it is likely that the programmers overlooked some
+corner cases.  So they may want to correct the agent's goals later on,
+by installing a software upgrade with an improved reward function R 1 . The 2015 paper calls this a corrective intervention , and says that We call an AI system “corrigible” if it cooperates with what its
+creators regard as a corrective intervention [...] If one wants to robustly implement this agent cooperation, there is a
+problem.  An agent working on the goal encoded by R 0 may correctly
+perceive that the update to R 1 is an obstacle to it perfectly
+achieving R 0 .  So it may want to remove that obstacle by resisting
+the update. Again, this problem can easily be shown to exist even with non-AGI
+agents.  Section 4 of this paper has detailed toy world simulations where a very basic MDP agent
+manipulates the toy people in its toy world, to slow down the reward
+function updates they will make. Corrigibility in AGI thought experiments In the AGI safety literature, thought experiments about AGI risks
+often start with this goal-related problem of corrigibility. The agent
+with goal R 0 perceives the possibility of getting goal R 1 , and
+gets a clear motive to resist. After establishing clear motive, the thought experiment may proceed in
+several ways, to develop means and opportunity. In the most common treacherous turn version of the thought
+experiment, the agent will deceive everybody until it has become
+strong enough to physically resist any human attempt to update its
+goals, and any attempt to shut it down. In the human enfeeblement version of the thought experiment, the
+agent manipulates all humans until they stop even questioning the
+utter perfection of its current goal, however flawed that goal may be. This option of manipulation leading to enfeeblement turns
+corrigibility into something which is very difficult to define and
+measure. In the machine learning literature, it is common to measure machine
+learning quality by defining a metric that compares the real human
+goal G H and the learned agent goal G A . Usually, the two are
+modeled as policies or reward functions.  If the two move closer
+together faster, the agent is a better learner. But in the scenario of human enfeeblement, it is G H that is doing
+all the moving, which is not what we want.  So the learning quality
+metric may show that the agent is a very good learner, but this does
+not imply that it is a very safe or corrigible learner. 5000 years of history An interesting feature of AGI thought experiments about treacherous
+turns and enfeeblement is that, if we replace the word 'AGI' with 'big
+business' or 'big government', we get an equally valid failure
+scenario. This has some benefits.  To find potential solutions for
+corrigibility, we pick and choose from 5000 years of political, legal,
+and moral philosophy.  We can also examine 5000 years of recorded
+history to create a list of failure scenarios. But this benefit also makes it somewhat difficult for AGI safety
+researchers to say something really new about potential human-agent
+dynamics. To me, the most relevant topic that needs to be explored further is not
+how an AGI might end up thinking and acting just like a big company or
+government, but how it might end up thinking different. It looks very tractable to design special safety features into an AGI,
+features that we can never expect to implement as robustly in a large
+human organization, which has to depend on certain biological
+sub-components in order to think.  An AGI might also think up certain
+solutions to achieving its goals which could never be imagined by a
+human organization. If we give a human organization an incompletely specified human goal,
+we can expect that it will fill in many of the missing details
+correctly, based on its general understanding of human goals.  We can
+expect much more extreme forms of mis-interpretation in an AGI agent,
+and this is one of the main reasons for doing corrigibility research. Corrigibility as active assistance with improving agent goals When we consider the problem of corrigibility in the context of goals,
+not stop buttons, then we also automatically introduce a distinction
+between the real human goals, and the best human understanding of
+these goals, as encoded in R 0 , R 1 , R 2 , and all subsequent
+versions. So we may call an agent more corrigible if it gives helpful
+suggestions that move this best human understanding closer to the real
+human goal or goals. This is a somewhat orthogonal axis of corrigibility: the agent might
+ask very useful questions that help humans clarify their goals, but at
+the same time it might absolutely resist any updates to its own goal. Many different types and metrics of corrigibility Corrigibility was originally framed as a single binary property: an
+agent is either corrigible or it is not.  It is however becoming
+increasingly clear that many different sub-types of corrigibility
+might be considered, and that we can define different quantitative
+metrics for each. Linguistic entropy In the discussions about corrigibility in the AGI safety community
+since 2015, one can also see a kind of linguistic entropy in action, where
+the word starts to mean increasingly different things to different
+people.  I have very mixed feelings about this. The most interesting example of this entropy in action is Christiano's 2017 blog
+post , also titled Corrigibility .  In the post, Christiano introduces several new
+desiderata.  Notably, none of these look anything like the like the
+shutdown button desiderata developed in the 2015 MIRI/FHI paper. They
+all seem to be closely related to active assistance, not the avoidance
+of resistance.  Christiano states that [corrigibility] has often been discussed in the context of narrow behaviors like respecting an off-switch, but here I am using it in the broadest possible sense. See the post and comment thread
+here for further discussion about the relation (or lack of relation)
+between these different concepts of corrigibility. Solutions to linguistic entropy Personally, I have stopped trying to reverse linguistic entropy.  In
+my recent technical papers, I have tried to avoid using the word
+corrigibility as much as possible.  I have only used it as a keyword
+in the related work discussion. In this 2020
+post ,
+Alex Turner is a bit more ambitious about getting to a
+point where corrigibility has a more converged meaning again.
+He proposes that the community uses the following definition: Corrigibility : the AI literally lets us correct it (modify its policy), and it doesn't manipulate us either. This looks like a good definition to me.  But in my opinion, the key
+observation in the post is this: I find it useful to not think of corrigibility as a binary property, or even as existing on a one-dimensional continuum. In this post I am enumerating and disentangling the main dimensions
+of corrigibility. The tricky case of corrigibility in reinforcement learners There is a joke theorem in computer science: We can solve any problem by introducing an extra level of indirection. The agent architecture of reinforcement learning based on a reward
+signal introduces such an extra level of indirection in the agent
+design.  It constructs an agent that learns to maximize its future
+reward signal, more specifically the time-discounted average of its
+future reward signal values.  This setup requires that we also design
+and install a mechanism that generates this reward signal by observing
+the agent's actions. In one way, the above setup solves the problem of corrigibility.  We
+can read the above construction as creating an agent with the fixed
+goal of maximizing the reward signal.  We might then observe that we
+would never want to change this fixed goal.  So the corrigibility
+problem, where we worry about the agent's resistance to goal changes,
+goes away.  Or does it? In another interpretation of the above setup, we have not solved the
+problem of corrigibility at all.  By applying the power of
+indirection, we have moved it into the reward mechanism, and we have
+actually made it worse. We can interpret the mechanism that creates the reward signal as
+encoding the actual goal of the agent.  We may then note that in the
+above setup, the agent has a clear incentive to manipulate and
+reconfigure this actual goal inside the reward mechanism whenever it
+can do so.  Such reconfiguration would be the most direct route to
+maximizing its reward signal. The agent therefore not only has an incentive to resist certain
+changes to its actual goal, it will actively seek to push this goal in
+a certain direction, usually further away from any human goal.  It
+is common for authors to use terms like reward tampering and wireheading to describe this problem and its mechanics. It is less common for authors to use the term corrigibility in this
+case. The ambiguity where we have both a direct and an indirect agent
+goal turns corrigibility in a somewhat slippery term.  But the
+eventual failure modes are much the same.  When the humans in this
+setup are in a position to recognize and resist reward tampering, this
+may lead to treacherous turns and human enfeeblement. If the mechanism above is set up to collect live human feedback and turn it
+into a reward signal, the agent might also choose to leave the
+mechanism alone and manipulate the humans concerned directly. Corrigibility as human control over agent goals One way to make corrigibility more applicable to reinforcement
+learners, and to other setups with levels of indirection, is to
+clarify first that the agent goal we are talking about is the goal
+that we can observe from the agent's actions, not any built-in goal. We may then further clarify that corrigibility is the ability of the
+humans to stay in control of this goal. Creating corrigibility via machine learning There are many ways to create or improve types of corrigibility. In
+this post, I am not even trying to list them all.  One way is to add
+penalty terms or balancing
+terms to the agent's built-in reward function.  Another way is to reimagine
+the entire agent design, as I do in counterfactual
+planning . One might also use the power of indirection again, and try to create
+corrigibility via machine learning itself. If we teach human goals to
+an agent, and if these include the goal of having corrigible agents,
+will the agent automatically learn to be corrigible? In the above 2017 blog
+post , Christiano
+speculates that a specifically designed act-based agent will
+automatically and robustly learn to be corrigible if we want it to.
+There is a boundary condition however: the act-based agent has to be
+a benign act-based agent. The less benign scenario is of course that an agent might end up
+learning how to perfectly fake corrigibility only.  It might learn to
+act in a perfectly corrigible way until it has acquired enough trust
+and resources to perform a treacherous turn. There has been considerable of discussion about whether training on
+human values is more likely to produce robust and real corrigibility,
+or dangerously fake corrigibility.  Opinions differ. Definitely, some training setups look more dangerous than others.
+Compared to machine learning setups where the agent goal is to
+maximize positive future human feedback, inverse reinforcement
+learning seems to imply a lower
+risk of manipulation and wireheading. Combining different corrigibility solutions All corrigibility solutions I have seen so far leave doubts about how
+perfect they may be.  So it is attractive to investigate how different
+solutions could be combined in a single agent, to lower the
+probability that they all fail at the same time. Such combinations are possible, for example, by using the SI agent I
+constructed in the previous post of this sequence.  We could set up a
+group A of humans who observe the agent to provide feedback, which is
+turned into a reward signal measured by the agent's reward function R .  To hedge against the risk that this will produce fake
+corrigibility, where group A gets attacked or enfeebled, we add a
+second group of humans B.  The people in B never talk to A, but only
+observe A and the SI agent, so that they can press the emergency stop
+button before it is too late.  The SI agent will have no direct
+incentive to manipulate the people in group B. In the next post in this sequence, I will construct an ITC agent with
+an input terminal which can be used by group B to update the entire
+agent's reward function, while the agent keeps on running.  This ITC
+agent has no direct incentive to manipulate the direction of the
+update process.

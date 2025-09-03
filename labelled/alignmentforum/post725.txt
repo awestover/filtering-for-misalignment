@@ -1,0 +1,137 @@
+This is Sections 2.2.4.1-2.2.4.2 of my report “ Scheming AIs: Will AIs fake alignment during training in order to get power? ”. There’s also a summary of the full report here (audio here ). The summary covers most of the main points and technical terms, and I’m hoping that it will provide much of the context necessary to understand individual sections of the report on their own. Audio version of this section here , or search "Joe Carlsmith Audio" on your podcast app. What if you intentionally train models to have long-term goals? In my discussion of beyond-episode goals thus far, I haven't been
+attending very directly to the length of the episode, or to whether
+the humans are setting up training specifically in order to incentivize
+the AI to learn to accomplish long-horizon tasks. Do those factors make
+a difference to the probability that the AI ends up with the sort of the
+beyond-episode goals necessary for scheming? Yes, I think they do. But let's distinguish between two cases, namely: Training the model on long (but not: indefinitely long) episodes,
+and Trying to use short episodes to create a model that optimizes over
+long (perhaps: indefinitely long) time horizons. I'll look at each in turn. Training the model on long episodes In the first case, we are specifically training our AI using fairly long
+episodes – say, for example, a full calendar month. That is: in
+training, in response to an action at t1, the AI receives gradients that
+causally depend on the consequences of its action a full month after t1,
+in a manner that directly punishes the model for ignoring those
+consequences in choosing actions at t1. Now, importantly, as I discussed in the section on "non-schemers with
+schemer-like traits," misaligned non-schemers with longer episodes will
+generally start to look more and more like schemers. Thus, for example,
+a reward-on-the-episode seeker, here, would have an incentive to
+support/participate in efforts to seize control of the reward process
+that will pay off within a month. But also, importantly: a month is still different from, for example, a
+trillion years. That is, training a model on longer episodes doesn't
+mean you are directly pressuring it to care, for example, about the
+state of distant galaxies in the year five trillion. Indeed, on my
+definition of the "incentivized episode," no earthly training process
+can directly punish a model for failing to care on such a temporal
+scope, because no gradients the model receives can depend (causally) on
+what happens over such timescales. And of course, absent
+training-gaming, models that sacrifice reward-within-the-month for
+more-optimal-galaxies-in-year-five-trillion will get penalized by
+training. In this sense, the most basic argument against expecting beyond
+episode-goals (namely, that training provides no direct pressure to have
+them, and actively punishes them, absent training-gaming, if they ever
+lead to sacrificing within-episode reward for something longer-term)
+applies to both "short" (e.g., five minutes) and "long" (e.g., a month,
+a year, etc) episodes in equal force. However, I do still have some intuition that once you're training a
+model on fairly long episodes, the probability that it learns a beyond -episode goal goes up at least somewhat. The most concrete
+reason I can give for this is that, to the extent we're imagining a form
+of "messy goal-directedness" in which, in order to build a schemer, SGD
+needs to build not just a beyond-episode goal to which a generic
+"goal-achieving engine" can then be immediately directed, but rather a
+larger set of future-oriented heuristics, patterns of attention,
+beliefs, and so on (call these "scheming-conducive cognitive patterns"),
+then it seems plausible to me that AIs trained on longer episodes will
+have more of these sorts of "scheming-conducive cognitive patterns" by
+default. For example, they'll be more used to reasoning about the
+long-term consequences of their actions; they'll have better models of
+what those long-term consequences will be; and so on. And perhaps
+(though this seems to me especially speculative), longer-episode
+training will incentivize the AI to just think more about various beyond -episode things, to which its goal-formation can then more
+readily attach. Beyond this, I also have some sort of (very hazy) intuition that
+relative to a model pressured by training to care only about the next
+five minutes, a model trained to care over e.g. a month, or a year, is
+more likely to say "whatever, I'll just optimize over the indefinite
+future." However, it's not clear to me how to justify this
+intuition. [1] (You could imagine making the case that models trained on longer
+episodes will have more incentives to develop situational awareness – or
+even goal-directedness in general. But I'm assuming that all the models
+we're talking about are goal-directed and situationally-aware.) Using short episodes to train a model to pursue long-term goals Let's turn to the second case above: trying to use short-episode
+training to create a model that optimizes over long time horizons. Plausibly, something like this will become more and more necessary the
+longer the time horizons of the task you want the model to perform.
+Thus, for example, if you want to create a model that tries to maximize
+your company's profit over the next year, trying to train it over many
+year-long episodes of attempted profit-maximization (e.g., have the
+model take some actions, wait a year, then reward it based on how much
+profit your company makes) isn't a very good strategy: there isn't
+enough time. Indeed, it seems plausible to me that this sort of issue will push AI
+development away from the sort of simple, baseline ML training methods
+I'm focused on in this report. For example, perhaps the best way to get
+models to pursue long-term goals like "maximize my company profits in a
+year" will be via something akin to " Language Model
+Agents ,"
+built using trained ML systems as components, but which aren't
+themselves optimized very directly via gradients that depend on whether
+they are achieving the (possibly long-term) goals users set for them.
+These sorts of AIs would still pose risks of schemer-like behavior
+(see the section on "non-schemers with schemer-like traits" above), but
+they wouldn't be schemers in the sense I have in mind. That said, there are ways of trying to use the sort of training I'm
+focused on, even with fairly short-term episodes, to try to create
+models optimizing for long-term goals. In particular, you can try to
+reward the model based on your assessment of whether its short-term
+behavior is leading to the long-term results that you want (e.g.,
+long-term company profit), and therefore, hopefully induce it to
+optimize for those long-term results directly. [2] Of course, whether
+this will work (as opposed, for example, to inducing the AI to
+optimize your short-term assessments of its actions) is a further
+question. But if it does, then you'll have created an AI that optimizes
+for "beyond-episode goals" in my sense. Indeed, depending on how we want to use our terms, we can view this sort
+of training as intentionally trying to create a form of
+goal-misgeneralization. That is, the reward, here, does not depend
+causally on the long-term consequences of the model's actions, so in
+that sense, the long-term results in question aren't the "specified
+goal" (on this framing, the specified goal is always
+within-the-episode). But you're trying to get the AI to care
+intrinsically about them anyway. Of course, it's a further question whether this sort of beyond-episode
+goal, once created, will lead to instrumental training-gaming. And
+indeed, successfully creating this sort of beyond-episode goal, instead
+of e.g. a reward-on-the-episode seeker, requires avoiding a certain
+kind of training-gaming up front – that is, the model has to not learn
+to just optimize for your short-term evaluations. And if you've
+successfully set up your training process such that optimizing for your
+desired long-term goal is in fact a max-reward (or: near-max-reward)
+behavior, training-gaming might not offer the model in question much
+advantage. (Here the human analogy would be something like: if you're
+supervisor is sufficiently good at assessing whether your near-term
+performance is going to lead to long-term profit, and sufficiently
+immune to manipulation, then you'll perform as good or better, in
+performance reviews, by just directly optimizing for long-term
+profit – for example, because you're not wasting time thinking about
+your supervisor at all.) Still, models with beyond-episode goals emerging from this sort of
+process seem to me like they're at risk of scheming regardless. For one
+thing, the considerations discussed in the previous section all apply
+here – e.g., this sort of training involves pointing your model's
+cognition in a very future-focused direction, thereby plausibly inducing
+it to develop various scheming-conducive cognitive patterns, to attach
+value to various long-term consequences, and so on (and in this case,
+the horizon of the episode sets no bound on the temporal horizon of the
+"future" that the model's cognition is pointed towards; rather, that
+bound is set, centrally, by your evaluations of what the model's
+actions will cause, when). More than this, though, it seems plausible to me that your evaluations
+of the consequences of a model's action will be in some sense "noisier"
+than a reward process that depends causally on those consequences, in a
+manner that makes it harder to differentiate between the different sorts of long-term goals your training is incentivizing. For example,
+maybe your model is behaving in a way that seems to you, broadly, like
+it will lead to your company being successful in three years, but you
+can't tell whether it will also create lots of harmful
+externalities – whereas a reward process that could actually see the
+consequences after three years would be able to tell. And an inability
+to readily distinguish between the different sorts of long-term goals
+you might be instilling seems like it increases the risk of accidentally
+instilling a schemer-like goal. [3] We could try appealing to simplicity (thanks to Evan Hubinger
+for discussion), but it's not clear to me that "five minutes" is
+meaningfully simpler than "a month." ↩︎ This is somewhat akin to a form of " process-based
+feedback ,"
+except that in a strict form of process-based feedback, you never
+look at any of the outcomes of the model's actions, whereas in
+this version, you can look at outcomes up to whatever time-horizon
+is efficient for you to get data about. ↩︎ For example, maybe you wanted to create a long-term goal
+regulated by some concept of "honesty," which you were counting on
+to prevent scheming. But maybe you can't tell if you've succeeded. ↩︎

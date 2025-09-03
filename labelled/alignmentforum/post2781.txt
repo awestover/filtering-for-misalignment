@@ -1,0 +1,1 @@
+GPT-1, 2, and 3 have shown impressive scaling properties. How likely is it that, in the next five years, many other architectures will also be shown to get substantially better as they get bigger? EDIT I am open to discussion of better definitions of the scaling hypothesis. For example, maybe Gwern means something different here in which case I'm also interested in that.

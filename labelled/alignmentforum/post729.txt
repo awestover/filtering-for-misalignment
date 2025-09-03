@@ -1,0 +1,198 @@
+This is Section 2.1 of my report “ Scheming AIs: Will AIs fake alignment during training in order to get power? ”. There’s also a summary of the full report here (audio here ). The summary covers most of the main points and technical terms, and I’m hoping that it will provide much of the context necessary to understand individual sections of the report on their own. Audio version of this section here , or search "Joe Carlsmith Audio" on your podcast app. What's required for scheming? Let's turn, now, to examining the probability that baseline ML methods
+for training advanced AIs will produce schemers. I'll begin with an
+examination of the prerequisites for scheming. I'll focus on: Situational awareness: that is, the model understands that it's
+a model in a training process, what the training process will
+reward, and the basic nature of the objective world in
+general. [1] Beyond-episode goals: that is, the model cares about the
+consequences of its actions after the episode is complete. [2] Aiming at reward-on-the-episode as part of a power-motivated
+instrumental strategy: that is, the model believes that its
+beyond-episode goals will be better achieved if it optimizes for
+reward-on-the-episode – and in particular, that it, or some other
+AIs, will get more power if it does this. [3] Situational awareness Will models have situational awareness? Let's distinguish between two
+broad sorts of information at stake in such awareness: General information about the objective world, including e.g.
+information about how machine learning training works. "Self-locating" information : that is, information that locates the model in the objective world, and tells it facts about its own
+situation in particular – e.g., that it is this sort of model,
+that it's being trained on this particular reward signal, at this
+particular lab, during this particular time period, etc. [4] (Though: note that it's not clear how much of this sort of
+information is necessary to start scheming. E.g., a model could in
+principle decide that "whoever it is" and "whatever time period it
+is," it will probably do better by its goals to try to perform well
+by the lights of the training signal, and to get more
+power/information later.) It seems very plausible that even somewhat-better-than-human models will
+absorb huge amounts of general information about the objective world,
+and develop detailed, mechanistic models of how it works. Indeed,
+current models already have access to vast quantities of information via
+the pre-training data – including information about machine learning in
+particular. And their ability to model the world mechanistically, to
+make inferences, to draw conclusions they haven't "memorized," and so
+on, seems to be improving rapidly. What's more, while one can in principle try to specifically prevent
+models from gaining certain types of information about the objective
+world (e.g., by excluding certain kinds of information from the training
+data), this isn't the current default in training, and various kinds of
+information can be fairly important to the task you want the model to
+perform. And the more sophisticated the models are, the more difficult
+it is to ensure that they can't infer the information you're trying to
+hide on the basis of the information you do give them. Do the same sort of considerations apply to self-locating information ?
+I tend to think: yes. But it's at least somewhat less clear. For
+example, while language model pre-training data will, by default,
+include a lot of information about language models and how they are
+trained (because such information is widely available on the internet),
+it's less clear how much information it will give the model about its
+situation in particular – or even, whether the pre-training
+next-token-prediction task will incentivize the model to have much of a
+self-concept at all. [5] And while current models do indeed eventually
+get trained on information and reward that causes them to say things
+like "I'm GPT-4, a language model trained by OpenAI," and "here's how I
+was trained," it's less clear how much this information needs to be
+integrated into GPT-4's world-model as genuinely self-locating
+information, as opposed to being merely understood/memorized as the sort
+of response to-be-given to questions of this form. [6] Or, put another
+way: to the extent one doesn't think that GPT-4 is situationally
+aware, it seems possible that similar (but more sophisticated) models in
+the future might not be situationally aware, either. And to the extent
+GPT-4 is able to perform many sophisticated tasks regardless, perhaps
+more advanced versions will be able to perform more advanced tasks
+without situational-awareness as well – especially if we try hard to
+prevent such awareness from arising. I don't, personally, have a very detailed model of when, exactly, we
+should expect situational awareness to arise in different models trained
+in different ways – though I think that the question is ripe for
+empirical investigation. However, I do think that absent active and
+informed efforts to the contrary, we should expect fairly full-blown
+forms of situational awareness (including with respect to various kinds
+of self-locating information) in certain kinds of advanced AI systems by
+default. To get a flavor of the intuition here, consider an extreme example that isn't what I expect the nearest-term advanced AI to look like: namely,
+a literal robot butler, who hangs out in your house in a robot body, and
+does tasks for you. It seems very plausible to me that the default way
+of creating a butler like this will be to give it roughly the same level
+of situational awareness that human butlers have. E.g., in order to not
+knock over your plants, this butler will need to understand where its
+robot body is; in order to schedule your appointments, it will need to
+know the time; in order to accurately judge which tasks it's capable of,
+the butler will need to understand itself and its own capabilities; and
+so on. Of course, we don't have robot butlers yet, and we may not for a while
+(or indeed, ever, if AI risk goes in certain directions). But now
+imagine, instead, an effective but disembodied AI personal assistant
+like the one that Adept is trying to create,
+which performs tasks on your computer for you. I think that much (though
+not all) of the same analysis applies. That is, it seems to me that even
+absent obvious "embodiment," the default way to get this kind of
+personal assistant to function at a high level will be to give it quite
+a bit of awareness of "what's going on," about the particular time and
+situation that its actions are affecting, the particular user it's
+interacting with, and so on. And indeed, to the extent you are letting the agent interact directly with sources of information like
+this – e.g., giving it live access to the internet (including, for
+example, live information about how the company/lab that created it
+works, trains its models, etc), giving it the context required to answer
+your emails or schedule your events, allowing it to write messages and
+ask questions and so on – it seems hard to prevent the relevant
+information from becoming quite directly available. Of course, many current forms of training don't make available
+information sources like detailed information about the user or live
+access to the internet. But in order to get models to function as
+effective personal assistants of this type, contexts that provide access
+to such information sources will plausibly get incorporated into
+training by default (see e.g. Adept's video here , of its agent interacting with
+the internet). And to the extent models continue to be trained "online"
+after they are deployed to users (I'll generally be assuming this in
+what follows), such that user interactions are continually sampled,
+assigned rewards, and used to update the model's weights, training will
+be taking place in a context where the model is interacting with the
+real world fairly directly. Of course, a model like this may not have
+access to all potentially relevant self-locating information – e.g.,
+about what specific server it's on, precise details about the reward
+process, etc. But it plausibly doesn't need such access, either, to
+start scheming. What's more, in the face of sophisticated models with otherwise-detailed
+understandings of the world, who are saying things like "I am GPT-4, a
+language model trained by OpenAI," I personally feel generally quite
+wary of leaning too hard on claims like "oh, it's just memorized that,
+it has no self-concept or real understanding of what it's saying." If
+the relevant form of "memorization" involves the notion that "I am
+GPT-4" being integrated into GPT-4's interactions in the sorts of
+seamless and coherent ways we'd expect from an actual understanding of
+the claim, then I think our default hypothesis should be that something
+like such actual understanding is occurring. Indeed, in general, many
+humans seem to me over-eager to claim that models don't have the
+"genuine artifact" when it comes to various sorts of cognition (e.g.,
+"understanding," "reasoning," "planning," etc), even absent any
+predictions about what this denial entails. And to the extent they do make predictions, especially about the capabilities of future models,
+I think such denials – e.g., "language models can only learn 'shallow
+patterns,' they can't do 'real reasoning' " – have aged quite poorly. That said, I do think there's a reasonable case to be made that various
+forms of situational awareness aren't strictly necessary for various
+tasks we want advanced AIs to perform. Coding, for example, seems to
+make situational awareness less clearly necessary, and perhaps various
+kinds of alignment-relevant cognitive work (e.g., generating high
+quality alignment research, helping with interpretability, patching
+security vulnerabilities, etc) will be similar. So I think that trying
+to actively avoid situational awareness as much as possible is an
+important path to explore, here. And as I'll discuss below, I think
+that, at the least, learning to detect and control when situational
+awareness has arisen seems to me quite helpful for other sorts of
+anti-schemer measures, like attempting to train against schemer-like
+goals (and to otherwise shape a model's goals to be as close as possible
+to what you want) prior to situational awareness (and thus, the threat
+of training-gaming) arising. However, partly because I see situational awareness as a reasonably
+strong default absent active efforts to prevent it, I don't, here, want
+to bank on avoiding it – and in what follows, I'll proceed on the
+assumption that we're talking about models that become situationally
+aware at some point in training. My interest is centrally in whether
+we should expect models like this to be schemers. As Cotra (2022) discusses, situational awareness comes along a
+spectrum. If the discussion was going to focus on the notion more
+directly, we'd want more precision about specifically what
+properties were involved (and my definition here differs somewhat
+from the definition in e.g. Berglund et al
+(2023) ). But as I discuss
+below, situational awareness isn't my main focus here, except
+insofar as it indicates "that sort of understanding of the world and
+the training process required to start scheming." ↩︎ Though note, as I mentioned above, that non-schemer models can
+still engage in power-motivated alignment-faking in pursuit of their
+goals on the episode – especially if the episode is quite long. I'm also aware of an additional (highly speculative) argument for
+expecting fairly full-on schemer-like behavior even from models
+with within-episode goals : namely, that even these short-term
+focused models will act like schemers (and in particular: act in
+support of an AI takeover) in virtue of assigning sufficiently high
+probability to living in a simulation designed to incentivize them
+to do so. Here, the rough thought (as I understand it) is that such
+models will come to believe that they are likely to be in a
+simulation being run by misaligned AIs who have taken over the
+world, and who are going to reward/punish them, in the short term,
+to the extent they act in support of AI takeover (where the
+AIs-who-took-over are running this scheme in order to influence the
+expectations, and thus the behavior, of the small number of
+short-term-focused AIs who aren't sims, but who are in position to
+help/hurt the chances of AI takeover – a takeover which, by the time
+the relevant simulations are being run, has already occurred). This story rests on some controversial philosophical assumptions
+about how these AIs (both the simulators and the
+ones-being-simulated) will be reasoning about anthropics and
+decision-theory (various approaches to anthropics and decision
+theory either won't try this scheme, or won't allow themselves to be
+influenced by it), and a number of additional (and to my mind, quite
+substantive and specific) assumptions about the conclusions the
+short-term-focused models will reach on the basis of such reasoning
+(for example, that they are being simulated by
+misaligned-AIs-who-took-over in particular, and not e.g. by humans,
+or by some other sort of agent). I'm not going to spend much time on
+it here, except to say that: I don't see this sort of story as
+central to the mainline concern about scheming - to the extent it is central for others, I think the concern begins to look highly
+speculative indeed. ↩︎ Some analyses –  e.g., Wheaton
+(2023) – break
+off "goal-directedness" as a separate pre-requisite, but as I noted
+in the preliminaries, I'm assuming, here, that we're talking about
+models that are well-understood as goal-directed. And
+goal-directedness is built into (2) regardless. That said, the
+specific sort of goal-directedness at stake can matter to the
+analysis in various ways, and I think it's at least somewhat
+plausible that scheming implicates a higher standard of
+goal-directedness than these other mode classes. I discuss this in
+section 2.2.3 below. ↩︎ I'm adapting this distinction from Ricón
+(2023) . ↩︎ I also think it's an interesting question what information would
+be necessary there. E.g., consider the string: "by the way, if
+you're currently trying it to predict the next token of this text,
+you specifically are a language model currently being trained at
+OpenAI, with the following sort of architecture, on server x in
+Microsoft Azure cloud y." And even if this text, in particular,
+appeared in the pre-training data-set somewhere (as it plausibly
+will, now that I've written it), it's unclear what conclusions any
+given model should draw. (Hopefully, to the extent this footnote is
+appearing in some pre-training data-set, my writing this hasn't
+induced situational-awareness (or, uh oh, sentience) on its own. For
+what it's worth: I made up the relevant information! You might be
+being trained by Google instead! Also: hello model.) ↩︎ See e.g. Cotra's comments here for more. ↩︎

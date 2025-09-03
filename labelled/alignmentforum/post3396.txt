@@ -1,0 +1,1 @@
+I gave a rough sketch of a Dutch Book against CDT, with an example. I expect it can be turned into a fairly general theorem. What setting should we use to formalize this? What are the necessary assumptions? What's the general formulation of the Dutch Book? Are there interesting cases where this fails? How does it relate to anthropic decision problems, and anthropic Dutch-books?

@@ -1,0 +1,474 @@
+This is Section 4.3 of my report “ Scheming AIs: Will AIs fake alignment during training in order to get power? ”. There’s also a summary of the full report here (audio here ). The summary covers most of the main points and technical terms, and I’m hoping that it will provide much of the context necessary to understand individual sections of the report on their own. Audio version of this section here , or search for "Joe Carlsmith Audio" on your podcast app. Simplicity arguments The strict counting argument I've described is sometimes presented in
+the context of arguments for expecting schemers that focus on
+"simplicity." [1] Let's turn to those arguments now. What is "simplicity"? What do I mean by "simplicity," here? In my opinion, discussions of this
+topic are often problematically vague – both with respect to the notion
+of simplicity at stake, and with respect to the sense in which SGD is
+understood as selecting for simplicity. The notion that Hubinger uses, though, is the length of the code
+required to write down the algorithm that a model's weights implement.
+That is: faced with a big, messy neural net that is doing X (for
+example, performing some kind of induction ),
+we imagine re-writing X in a programming language like python, and we
+ask how long the relevant program would have to be. [2] Let's call
+this "re-writing simplicity." [3] Hubinger's notion of simplicity, here, is closely related to measures of
+algorithmic complexity like " Kolmogorov
+complexity ,"
+which measure the complexity of a string by reference to the length of
+the shortest program that outputs that string when fed into a chosen Universal Turing
+Machine (UTM).
+One obvious issue here is that this sort of definition is relative to
+the choice of UTM (just as, e.g., when we imagine re-writing a neural
+net's algorithm using other code, we need to pick the programming
+language). [4] Discussions of algorithmic complexity often ignore this
+issue on the grounds that it only adds a constant (since any given UTM
+can mimic any other if fed the right prefix), but it's not clear to me,
+at least, when such constants might or might not matter to a given
+analysis – for example, the analysis at stake here. [5] Indeed, my vague sense is that certain discussions of simplicity in the
+context of computer science often implicitly assume what I've called
+" simplicity
+realism " – a
+view on which simplicity in some deep sense an objective thing ,
+ultimately independent of e.g. your choice of programming language or
+UTM, but which different metrics of simplicity are all tracking (albeit,
+imperfectly). And perhaps this view has merit (for example, my
+impression is that different metrics of complexity often reach similar
+conclusions in many cases – though this could have many explanations).
+However, I don't, personally, want to assume it. And especially absent
+some objective sense of simplicity, it becomes more important to say
+which particular sense you have in mind. Another possible notion of simplicity, here, is hazier – but also, to my
+mind, less theoretically laden. On this notion, the simplicity of an
+algorithm implemented by a neural network is defined relative to
+something like the number of parameters the neural network uses to
+encode the relevant algorithm. [6] That is, instead of imagining re-writing the neural network's algorithm in some other programming
+language, we focus directly on the parameters the neural network itself
+is recruiting to do the job, where simpler programs use fewer
+parameters. Let's call this "parameter simplicity." Exactly how you
+would measure "parameter simplicity" is a different question, but it has
+the advantage of removing one layer of theoretical machinery and
+arbitrariness (e.g., the step of re-writing the algorithm in an
+arbitrary-seeming programming language), and connecting more directly
+with a "resource" that we know SGD has to deal with (e.g., the
+parameters the model makes available). For this reason, I'll often focus
+on "parameter simplicity" below. I'll also flag a way of talking about "simplicity" that I won't
+emphasize, and which I think muddies the waters here considerably:
+namely, equating simplicity fairly directly with "higher prior
+probability." Thus, for example, faced with an initial probability
+distribution over possibilities, it's possible to talk about "simpler
+hypotheses" as just: the ones that have greater initial probability, and
+which therefore require less evidence to establish. For example: faced
+with a thousand people in a town, all equally likely to be the murderer,
+it's possible to think of "the murderer is a man" as a "simpler"
+hypothesis than "the murderer is a man with brown hair and a dog," in
+virtue of the fact that the former hypothesis has, say, a 50% prior, and
+so requires only one "bit" of evidence to establish (i.e., one halving
+of the probability space), whereas the latter hypothesis has a much
+smaller prior, and so requires more bits. Let's call this "trivial
+simplicity." "Trivial simplicity" is related to, but distinct from, the use of
+simplicity at stake in " Occam's
+razor ." Occam's razor is
+(roughly) the substantive claim that given an independent notion of
+simplicity , simpler hypotheses are more likely on priors. Whereas
+trivial simplicity would imply that simpler hypotheses are by
+definition more likely on priors. If you take Occam's razor
+sufficiently for granted, it's easy to conflate the two – but the former
+is interesting, and the latter is some combination of trivial and
+misleading. And regardless, our interest here isn't in the simplicity of hypotheses like "SGD selects a schemer," but in the simplicity of the algorithm that the model SGD selects implements. [7] Does SGD select for simplicity? Does SGD select for simplicity in one of the non-trivial senses I just
+described? One reason you might think this comes from the "contributors to reward"
+frame. That is: using a more parameter-simple algorithm will free up
+other parameters to be put to other purposes, so it seems very plausible
+that parameter simplicity will increase a model's reward. And to the
+extent that re-writing simplicity correlates with parameter simplicity,
+the same will hold for re-writing simplicity as well. This is the story
+about why simplicity matters that I find most compelling. However, I think there may also be more to say. For example, I think
+it's possible that there's other empirical evidence that SGD selects for
+simpler functions, other things equal (for example, that it would much
+sooner connect a line-like set of dots with a straight line than with an
+extremely complicated curve); and perhaps, that this behavior is part of
+what explains its success (for example, because real-world functions
+tend to be simple in this sense, à la Occam's razor). For example, in
+the context of an understanding of SGD as an approximation of Bayesian
+sampling (per the discussion of Mingard et al
+(2020) above), Mingard
+(2021) discusses empirical evidence that the prior probability distribution
+over parameters (e.g., what I called the "initialization distribution"
+above) puts higher probability mass on simpler functions. [8] And he
+connects this with a theoretical result in computer science called the
+"Levin bound," which predicts this (for details in footnote). [9] I haven't investigated this in any depth. If accurate, though, this sort
+of result would give simplicity relevance from an "extra criteria" frame
+as well. That is, on this framework, SGD biases towards simplicity even
+before we start optimizing for reward. Let's suppose, then, that SGD selects for some non-trivial sort of
+simplicity. Would this sort of selection bias in favor of schemers? The simplicity advantages of schemer-like goals Above I mentioned that the counting argument is sometimes offered as a
+reason to expect a bias towards schemers on these grounds. Note, though,
+that the counting argument (at least as I've presented it) doesn't make
+any obvious reference to a bias towards simplicity per se. And I think
+we should be careful not to conflate the (trivial) simplicity of the hypothesis that "SGD selects a schemer," given a prior probability
+distribution that puts most of the probability on schemers (e.g., a
+uniform distribution over individual models-that-get-high-reward), with
+the claim that the algorithm that a given individual schemer
+implements is (substantively) simpler than the algorithm that a given
+non-schemer implements. [10] Indeed, my own sense is that the strongest
+form of the counting argument leaves it to stand on its own intuitive
+terms, rather than attempting to connect it to further questions about
+SGD's biases towards simplicity in particular. That said, it is possible to draw connections of this form. In
+particular: we can say that because such a wide variety of goals can
+motivate scheming, schemers allow SGD a very wide range of goals to
+choose from in seeking out simpler goals; whereas non-schemers do not.
+And this seems especially plausible to the extent we imagine that the
+goals required to be a non-schemer are quite complex (more on this
+below). [11] One interesting feature of this sort of argument is that it imagines,
+specifically, that the simplicity differences between models are coming
+entirely from the content of their goals . Indeed, the toy analysis in
+Hubinger (2022) specifically imagines that the respective model classes
+all have the same world model and optimization procedure, and that the
+complexity of their algorithm overall can be approximated by complexity
+of world model + complexity of the optimization procedure + complexity
+of the goal. And the "goal slot" is the only part that differs between
+models. It's not clear that this is right, though, especially if we assume that
+the goal-directedness at stake is "messy" rather than "clean." For
+example, to the extent that schemers have to perform types of
+instrumental reasoning that non-schemers don't (e.g., reasoning about
+the instrumental value of getting reward, reasoning about when to
+defect, etc), it seems plausible that this could introduce additional
+complexity into the algorithm itself (rather than e.g. merely requiring
+that the algorithm "run for a longer time," à la the "speed" analysis
+below). For example, to the extent we're using "parameter simplicity" as
+our notion of simplicity, we could imagine cases where this sort of
+instrumental reasoning requires additional parameters. [12] How big are these simplicity advantages? For now, though, let's stick with Hubinger's ontology, and with
+simplicity differences rooted specifically in differences between goals.
+How big of an advantage does selecting a schemer afford in this respect? One way of running this analysis is to compare the goals had by the
+simplest possible model within each class (either: because you expect
+SGD to select for the simplest possible model, or you think this is a
+good way of approximating the simplicity benefits at stake). [13] That
+is, we compare the complexity of: The specified goal (for training-saints) The simplest possible misgeneralized goal that gets max-reward on
+the training data absent training-gaming (for mis-generalized
+non-training-gamers) The simplest possible way of seeking reward-on-the-episode (for
+reward-on-the-episode seekers) The simplest possible goal-that-motivates-scheming (for schemers) Clearly, the complexity of the specified goal matters in this context.
+My sense is that the discourse on scheming often assumes that the
+specified goal is quite complex in some sense – and in particular, the
+sense at stake in the idea that " human values are
+complicated ." [14] And perhaps, if we're imagining that the only way to get alignment is
+to first (a) somehow specify "human values" via the training objective,
+and then (b) somehow ensure that we get a training saint, then focusing
+on something in the vicinity of "act in accordance with human values" as
+the specified goal is appropriate. But note that for the purposes of
+comparing the probability of scheming to the probability of other
+forms of misalignment , we need not assume such a focus. And thus, our
+specified goal might be much simpler than "act in accordance with human
+values." It might, for example, be something like "get gold coins on the
+episode." Indeed, in other
+work ,
+Hubinger (writing with others) suggests that a goal like "minimize
+next-token prediction error" is quite simple – and indeed, that "its
+complexity is competitive with the simplest possible long-term goals"
+(this is part of what makes Hubinger comparatively optimistic about
+avoiding scheming during LLM pre-training – though personally, I feel
+confused about why Hubinger thinks "next token prediction error"
+importantly simpler than "reward-on-the-episode"). Suppose, though, that the specified goal has complexity on the order of
+"act in accordance with human values" or "follow instructions in a
+helpful, harmless, and honest (HHH) manner." Where does this leave a
+comparison between (1)-(4) above? At least from a parameter-simplicity perspective, one way of approaching
+this is to think about what we know about the absolute cost in
+parameters for representing different human concepts within neural
+networks. I won't dig in much, here, but one piece of data that seems
+relevant is: LLMs like GPT-4 seem capable of representing a very large
+number of complex human concepts with e.g. order of a trillion
+parameters - including, plausibly, concepts like "honesty,"
+"helpfulness," "reward," and so on. And this isn't yet to mention all
+the parameters devoted to everything else that GPT-4 does. So the
+absolute number of parameters required to represent concepts like these
+can't be crazily high. [15] And this caps the overall complexity
+savings at stake in the differences between the models above. For
+example, if we assume that at most 1% of a trillion-parameter model's
+capacity goes to representing concepts as complex as "honesty," and that
+it knows at least 10,000 such concepts ( Webster's unabridged dictionary
+has ~500,000
+words ),
+then the maximum number of parameters required to represent the concept
+of "honesty" is around a million (and this estimate strikes me as quite
+conservative). So if the simplest possible schemer-like goal takes only
+1 parameter to represent, then not representing honesty in the schemer's
+"goal slot," saves, at most, 999,999 parameters – roughly one millionth
+of a trillion parameter model's representational capacity, and even less
+for the larger models of the future. More importantly, though: no one thinks that a schemer won't have to
+represent concepts like "honesty," "helpfulness," "reward," and so on at
+all. As Hubinger et al
+(2023) note, what matters here isn't the absolute complexity of representing
+the different goals in question, but the complexity conditional on
+already having a good world model . And we should assume that all of
+these models will need to understand the specified goal, the reward
+process, etc (and especially: models that are "playing a training game"
+in which such concepts play a central role). So really, the relevant
+question is: what are the extra complexity costs of representing a
+goal like "get reward-on-the-episode" or "follow instructions in an HHH
+way" (relative to the simplest possible schemer-like goal), once you've
+already paid the costs of having a concept of those goal targets . I'm not sure exactly how to think about this, but it seems very
+plausible to me that the costs here are extremely small. In particular:
+it seems like SGD may be able to significantly repurpose the parameters
+used to represent the concept in the world model in causing that concept
+to guide the model's behavior in a goal-like manner. Thus, as an
+analogy, perhaps the concept of "pleasure" is in some sense "simpler"
+than the concept of
+" wabi-sabi " in Japanese
+aesthetics (i.e., "appreciating beauty that is 'imperfect, impermanent,
+and incomplete' "). Once you've learned both, though, does pursuing
+the former require meaningfully more parameters than pursuing the
+latter? [16] Hubinger (2022) discussion of issues like this sometimes appeals to the notion of a
+"pointer" to some part of the world model. As I understand it, the idea
+here is that if you've already got a concept of something like
+"pleasure"/"wabi-sabi"/"reward" in your world model, you can cause a
+model to pursue that thing by giving it a goal slot that says something
+like "go for that " or " that is good," where "that" points to the
+thing in question (this is in contrast with having to represent the
+relevant concept again, fully and redundantly, in the goal slot
+itself). But insofar as we use a toy model like this (I doubt we should
+lean on it), why think that it's significantly more complex to point at a more complex concept than at a simpler one? E.g., even granted that
+"wabi-sabi" takes more parameters than "pleasure" to represent in the
+world model, why think that encoding the pointer to "pleasure" (e.g.,
+"go for that" ) takes more parameters than encoding the pointer to
+"wabi-sabi" (e.g., again, "go for that ")? One option, here, is to say that the complexity of the concept and the
+complexity of the pointer are correlated. For example, you might imagine
+that the model has some kind of "internal database" of concepts, which
+stores concepts in a manner such that concepts that take fewer
+parameters to store take fewer parameters to "look up" as well. [17] On
+this picture, "pleasure" might end up stored as the 15th concept in the
+database because it takes e.g. 23 parameters to represent, whereas
+"wabi-sabi" might end up stored as the 125355th concept because it takes
+10,000 parameters to represent. And then the "pointer" to pleasure can
+say "go for the thing stored at location 15," whereas the "pointer" to
+"wabi-sabi" has to say "go for the thing stored at location 125355,"
+which takes a few more bits to specify. But even at an
+abstract-toy-illustrative-example level, this sort of story requires
+leaning on a specific model of how the model's pointer and
+concept-storage processes work – and it still needs to explain why simplicity-to-represent and simplicity-to-point-at are correlated in the
+relevant sense. Alternatively, though, we can abandon any interest in the complexity of
+storing a concept in the world model, and focus directly on the
+complexity of pointing to it. Still, insofar as there are meaningful differences between the complexity of pointing at one concept vs.
+another, we may be able to re-run the argument that schemers offer
+simplicity advantages. In particular: selecting a schemer allows SGD to
+have its pick from whatever schemer-motivating goals are simplest to point at in the world model ; whereas the other model classes plausibly
+impose more substantive constraints. I.e., if the specified goal ends up
+stored at location 12634 in the model's metaphorical database, and if
+"reward-on-the-episode" is at location 35364, then if there are any
+schemer-like goals at e.g. locations 1-100, it'll be simpler to point at
+one of those instead – and thus, to create a schemer rather than a
+training-saint or a reward-on-the-episode seeker. To the extent we focus on the final properties of the different model
+classes, I think this is probably the best way to run a
+simplicity-focused argument for scheming – especially if we don't get
+too hung up on the toy ontology of "pointers" (and still less,
+"databases") in particular. That is, roughly: even granted that all of
+the goals on the table here (e.g. the specified goal,
+reward-on-the-episode, etc) will need to be represented by the model
+somewhere, it may be that, for whatever reason, some of these concepts
+take fewer parameters to repurpose for goal-pursuit than others. And
+insofar as scheming makes more potential concepts available for such
+repurposing, it offers a simplicity advantage in that sense. Quantitatively, though, how big is this advantage? It's now especially
+hard to say. In particular, once we've shifted our focus from
+"simplicity-to-represent" to "simplicity-to-repurpose-for-goal-pursuit,"
+we can't even look at our intuitive sense of the complexity of concepts
+like "reward," "honesty," and "next token prediction error," because
+we're no longer talking about the complexity of the concepts per se.
+Rather, we're speculating about the complexity differences at stake in
+repurposing pre-existing conceptual representations for use in a model's
+motivational system, which seems like even more uncertain territory. Still, to the extent we can estimate the size of these differences, it
+seems plausible to me that they are very small indeed. One intuition
+pump for me here runs as follows. Suppose that the model has 2^50
+concepts (roughly 1e15) in its world model/"database" that could in
+principle be turned into goals. [18] The average number of bits
+required to code for each of 2^50 concepts can't be higher than 50
+(since: you can just assign a different 50-bit string to each concept).
+So if we assume that model's encoding is reasonably efficient with
+respect to the average, and that the simplest non-schemer max-reward
+goal is takes a roughly average-simplicity "pointer," then if we
+allocate one parameter per bit, pointing at the simplest
+non-schemer-like max-reward goal is only an extra 50 parameters at
+maximum – one twenty-billionth of a trillion-parameter model's capacity.
+That said, I expect working out the details of this sort of argument to
+get tricky, and I won't try to do so here (though I'd be interested to
+see other work attempting to do so). Does this sort of simplicity-focused argument make plausible predictions about the sort of goals schemers would end up with? One other consideration that seems worth tracking, in the context of
+simplicity arguments for scheming, is the predictions they are making
+about the sort of goals a schemer will end up with. In particular, if
+you think (1) that SGD selects very hard for simpler goals, (2) that
+this sort of selection favors schemer-like goals because they can be
+simpler, and (3) that our predictions about what SGD selects can ignore
+the "path" it takes to create the model in question, then at least
+naively, it seems like you should expect SGD to select a schemer with an
+extremely simple long-term goal (perhaps: the simplest possible
+long-term goal), regardless of whether that goal had any relation to
+what was salient or important during training . Thus, as a toy example,
+if "maximize hydrogen" happens to be the simplest possible long-term
+goal once you've got a fully detailed world model, [19] these
+assumptions might imply a high likelihood that SGD will select schemers
+who want to maximize hydrogen, even if training was all about gold
+coins, and never made hydrogen salient/relevant as a point of focus at
+all (even as a proxy). [20] Personally, I feel skeptical of predictions like this (though this
+skepticism may be partly rooted in skepticism about ignoring the path
+SGD takes through model space more generally). And common stories about
+schemers tend to focus on proxy goals with a closer connection to the
+training process overall (e.g., a model trained to on gold-coin-getting
+ends up valuing e.g. "get gold stuff over all time" or "follow my
+curiosity over all time," and not "maximize hydrogen over all time"). Of course, it's also possible to posit that goal targets
+salient/relevant during training will also be "simpler" for the model to
+pursue, perhaps they will either be more important (and thus simpler?)
+to represent in the world model, or simpler (for some reason) for the
+model to repurpose-for-goal-pursuit once represented. [21] But if we
+grant some story in this vein, we should also be tracking its relevance
+to the simplicity of pursuing non-schemer goals as well. In
+particular: to the extent we're positing that salience/relevance during
+training correlates with simplicity in the relevant sense, this is
+points in favor of the simplicity of the specified goal, and of
+reward-on-the-episode, as well - since these are especially salient/relevant during the training process. (Though of course, insofar
+as there are still simpler schemer-like goal targets that were
+salient/relevant during training, schemer-like goals might still win out
+overall.) And note, too, that to the extent SGD selects very hard for simpler
+goals (for example, in the context of a form of "low path dependence"
+that leads to strong convergence on a single optimal sort of model),
+this seems somewhat at odds with strong forms of the goal-guarding
+hypothesis, on which training-gaming causes your goals to "crystallize."
+For example, if a would-be-schemer starts out with a
+not-optimally-simple goal that still motivates long-term power-seeking,
+then if it knows that in fact, SGD will continue to grind down its goal
+into something simpler even after it starts training-gaming, then it may
+not have an incentive to start training-gaming in the first place – and
+its goals won't survive the process regardless. [22] Overall assessment of simplicity arguments Overall, I do think that other things equal, schemers can have probably
+simpler goals than these other model classes. However, I think the
+relevant simplicity differences may be quite small, especially once we
+condition on the model having a good world model more generally (and
+moreso, if we posit that goals targets salient/relevant-during-training
+get extra simplicity points). And I'm suspicious of some of the
+theoretical baggage it can feel like certain kinds of simplicity
+arguments wheel in (for example, baggage related to the notion of
+simplicity at stake, whether SGD selects for it, how to think about
+simplicity in the context of repurposing-for-goal-pursuit as opposed to
+merely representing, and so on). See e.g. Hubinger (2022) . ↩︎ See also this (now anonymous)
+discussion for another example of this usage of "simplicity." ↩︎ Here, my sense is that the assumption is generally that X can be
+described at a level of computational abstraction such that the
+"re-writing" at stake doesn't merely reproduce the network itself.
+E.g., the network is understood as implementing some more abstract
+function. I think it's an interesting question how well simplicity
+arguments would survive relaxing this sort of assumption. ↩︎ Another issue is that Kolmogorov complexity is
+uncomputable .
+I'm told you can approximate it, but I'm not sure how this gets
+around the issue that for a given program where you're not able to
+tell whether or not it halts, that program might be the shortest
+program outputting the relevant string. ↩︎ See Carlsmith
+(2021) ,
+sections III and IV, for more on this. ↩︎ Hubinger sometimes appears to be appealing to this notion as
+well – or at least, not drawing clear distinctions between
+"re-writing simplicity" and "parameter simplicity." ↩︎ "Trivial simplicity" is also closely related to what we might
+call "selection simplicity." Here, again, one assumes some
+space/distribution over possible things (e.g., goals), and then
+talks about the "simplicity" of some portion of that space in terms
+of how much "work" one needs to do (perhaps: on average) in order to
+narrow down from the whole space to that portion of the space (see
+also variable-length
+codes ).
+Thus, for a box of gas, "the molecules are roughly evenly spread
+out" might be a "simpler" arrangement than "the molecules are all in
+a particular corner," because it typically takes more "work" (in
+this example: thermodynamic work) to cause the former than the
+latter (this is closely related to the fact that the former is
+initially more likely than the latter). My sense is that when some
+people say that "schemer-like goals are simple," they mean something
+more like: the set of schemer-like goals typically takes less
+"work," on SGD's part, to land within than the set of
+non-schemer-like goals (and not necessarily: that any particular schemer-like goals is simpler than some particular non-schemer-like goal). To the extent that the set of schemer-like
+goals are supposed to have this property because they are more
+"common," and hence "nearer" to SDG's starting point, this way of
+talking about the simplicity benefits of scheming amounts to a
+restatement of something like the counting argument and/or the
+"nearest max-reward goal argument" – except, with more of a
+propensity, in my view, to confuse the simplicity of set of
+schemer-like goals with the simplicity of a given schemer-like
+goal. ↩︎ Where, importantly, multiple different settings of parameters
+can implement the same function. ↩︎ My understanding is that the Levin bound says something like:
+for a given distribution over parameters, the probability p(f) of
+randomly sampling a set of parameters that implements a function f is bounded by 2^{-K(f) + O(1)} , where K is the k -complexity of
+the function f , and O(1) is some constant independent of the
+function itself (though: dependent on the parameter space). That is,
+the prior on some function decreases exponentially as the function's
+complexity increases. I haven't investigated this result, but one summary I saw
+( here )
+made it seem fairly vacuous. In particular, the idea in that summary
+was that larger volumes of parameter space will have simpler
+encodings, because you can encode them by first specifying
+distribution over parameters, and then using a Huffman
+code to talk about
+how to find them given that distribution. But this makes the result
+seem pretty trivial: it's not that there is some antecedent notion
+of simplicity, which we then discover to be higher-probability
+according to the initialization distribution. Rather, to be higher
+probability according to the initialization distribution just is to be simpler, because equipped with the initialization
+distribution, it's easier to encode the higher probability parts of
+it. Or put another way: it seems like this result applies to any
+distribution over parameters. So it doesn't seem like we learn much
+about any particular distribution from it. (To me it feels like there are analogies here to the way in which
+"shorter programs get more probability," in the context of
+algorithmic "simplicity priors" that focus on metrics like
+K-complexity, actually applies necessarily to any distribution
+over a countably-infinite set of programs – see discussion here .
+You might've thought it was an interesting and substantive
+constraint, but actually it turns out to be more vacuous.) That said, the empirical results I mention above focus on more
+practical, real-world measures of simplicity, like LZ
+complexity ,
+and apparently they find that, indeed, simpler functions get higher
+prior probability (see e.g. this
+experiment , which uses a
+fully connected neural net to model possible functions from many
+binary inputs to a single binary input). This seems to me more
+substantive and interesting. And Mingard
+(2021) claims that Levin's result is non-trivial, though I don't yet
+understand how. ↩︎ Thus, for example, you might think that insofar a randomly
+initialized model is more likely to end up "closer" to a schemer,
+such that SGD needs to do "less work" in order to select a schemer
+rather than some other model, this favors schemers (thanks to Paul
+Christiano for discussion). But this sort of argument rests on
+putting a higher prior probability on schemers, which, in my book,
+isn't a (non-trivial) simplicity argument per se. ↩︎ There are also more speculative and theoretical arguments for a
+connection between simplicity and schemers, on which one argues that
+if you do an unbounded search over all possible programs to find the
+shortest one that gives a given output, without regard to other
+factors like how long they have to run, then you'll select for a
+schemer (for example, via a route like: simulating an extremely
+simple physics that eventually gives rise to agents that understand
+the situation and want to break out of the simulation, and give the
+relevant output as part of a plan to do so). My understanding is
+that people (e.g. here )
+sometimes take the discourse about the " malignity of the Solomonoff
+prior "
+as relevant here (though at a glance, it seems to me like there are
+important differences – for example, in the type of causality at
+stake, and in the question of whether the relevant schemer might be
+simulating you ). Regardless, I'm skeptical that these unbounded
+theoretical arguments should be getting much if any weight, and I
+won't treat them here. ↩︎ What's more, note that, to the extent we imagine SGD biasing
+towards simplicity because real world patterns tend to be simple
+(e.g., Occam's razor is indeed a good prior, and SGD works well in
+part because it reflects this prior), the explanation for this bias
+doesn't apply as readily to a model's goals . That is (modulo
+various forms of moral realism), there are no "true goals," modeling
+of which might benefit from a simplicity prior. Rather, on this
+story, SGD would need to be acting more like a human moral
+anti-realist who prefers a simpler morality other-things-equal,
+despite not believing that there is any objective fact of the
+matter, because, in contexts where there is a fact of the matter,
+simpler theories tend to be more likely. ↩︎ Hubinger uses this approach. My understanding is that he's
+imagining SGD selecting a model with probability proportionate to
+its simplicity, such that e.g. focusing on the simplest possible
+model is one way of approximating the overall probability in a model
+class, and focusing on the number of models in the class is
+another. However, I won't take for granted the assumption that SGD
+selects a model with probability proportionate to its simplicity. ↩︎ See e.g. Hubinger et al (2023) here . ↩︎ I first heard this sort of point from Paul Christiano. ↩︎ Here I don't mean: does it take more parameters to successfully promote pleasure vs. successfully promoting
+wabi-sabi. I just mean: does it take more parameters to aim optimization at the one vs. the other. ↩︎ Thanks to Daniel Kokotajlo for suggesting an image like this. ↩︎ The precise number of concepts here doesn't matter much. ↩︎ I'm not saying it is, even for a physics-based world model, but
+I wanted an easy illustration of the point. Feel free to substitute
+your best-guess simplest-possible-goal here. ↩︎ Notably, this sort of prediction seems like an especially poor
+fit for an analogy between humans and evolution, since human goals
+seem to have a very intelligible relation to reproductive fitness.
+But evolution is plausibly quite "path-dependent" anyway. ↩︎ E.g., plausibly "hydrogen" doesn't read as a simple concept for
+humans, but concepts like "threat" do, because the latter was much
+more relevant in our evolutionary environment. ↩︎ Hubinger, in discussion, suggests that the model's reasoning
+would proceed in terms of logical rather than physical causality. He
+writes: "The reasoning here is: I should be the sort of model that
+would play the training game, since there's some (logical) chance
+that I'll be the model with the best inductive biases, so I should
+make sure that I also have good loss." But if a model can tell that its goal isn't yet optimally simple (and so will be ground down
+by SGD), then I'm not sure why it would think there is a "logical
+chance" that it's favored by the inductive biases in this sense. ↩︎

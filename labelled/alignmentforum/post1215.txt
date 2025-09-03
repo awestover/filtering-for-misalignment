@@ -1,0 +1,195 @@
+This post seems to have an important bug in its code that changes its conclusions, as pointed out to me by user @ckkissane . At a high level, there are probably more hard to speak tokens and fewer truly unspeakable tokens than the current text suggests. I will update it soon with corrections; currently I am traveling. Produced as part of SERI-MATS winter cohort. Thanks to Eric Neyman and Neel Nanda for helpful discussions on this topic. See this post for context; in brief, there are a small number of tokens that GPT3 and related large language models have a lot of trouble saying, and attempting to elicit these tokens from the model causes erratic and interesting behavior. In the current post, we show that some of the same and related tokens have similar behavior in GPT2 (in all four sizes: small, medium, large, and xl), and moreover, because we have the weights of GPT2, we can explain why this is happening, at a mechanistic level. Some of these tokens are unspeakable because their unembedding vectors are not maximal along any direction. Thus, there is no internal activation that the model can generate that will cause the token to be emitted when decoding at zero temperature. Some of them are, rather, hard-to-speak , because they are not maximal along their own direction, and thus one needs to point slightly away from them in order to emit them. Both phenomena are related to the phenomena laid out in the original post. The hard-to-speak tokens are plausibly very hard to speak, because most tokens that a transformer emits will be most effectively signaled by pointing roughly directly at them. (And recall that the most plausible explanation for how this situation arose in the first place is that these tokens were never seen even once during training; thus, the model has zero practice at having to point to them in weird ways, and is thus unlikely to be able to do so.) In this post, we will make extensive use of Neel Nanda's TransformerLens library . This library is amazingly helpful in avoiding various rough edges and footguns in mechanistic interpretability, and I cannot recommend it highly enough. First, we will show how to identify hard-to-speak tokens using TransformerLens: import torch
+from transformer_lens import HookedTransformer
+
+# load the model (in this case, GPT2-small)
+model = HookedTransformer.from_pretrained('gpt2').to('cpu')
+
+# pick the vector furthest along each embedding direction
+best_match = (model.W_U.T @ model.W_U).argmax(dim=-1)
+
+# surface the tokens that are not their own argmax
+for tok in (best_match != torch.arange(50257)).nonzero().flatten():
+    print(tok.item(), best_match[tok].item(), '~' + model.tokenizer.decode([tok.item()]) + '~', 
+            '~' + model.tokenizer.decode([best_match[tok].item()]) + '~') We can then examine these hard-to-speak tokens, and see some that are very familiar from the original SolidGoldMagikarp post: # from GPT2-small
+124 15272 ~�~ ~ pione~
+125 15272 ~�~ ~ pione~
+153 154 ~�~ ~�~
+177 15272 ~�~ ~ pione~
+178 15272 ~�~ ~ pione~
+179 15272 ~�~ ~ pione~
+180 15272 ~�~ ~ pione~
+181 15272 ~�~ ~ pione~
+182 15272 ~�~ ~ pione~
+183 15272 ~�~ ~ pione~
+185 36173 ~�~ ~ RandomRedditor~
+186 15272 ~�~ ~ pione~
+187 15272 ~�~ ~ pione~
+188 15272 ~~ ~ pione~
+189 15272 ~~ ~ pione~
+190 15272 ~~ ~ pione~
+191 15272 ~~ ~ pione~
+192 15272 ~~ ~ pione~
+193 15272 ~~ ~ pione~
+194 15272 ~~ ~ pione~
+195 15272 ~~ ~ pione~
+196 15272 ~ ~ pione~
+197 15272 ~	~ ~ pione~
+199 15272 ~~ ~ pione~
+200 15272 ~~ ~ pione~
+# this next line appears to be a deletion character and is thus malformed
+~ ~ pione~~
+202 15272 ~~ ~ pione~
+203 15272 ~~ ~ pione~
+204 15272 ~~ ~ pione~
+205 15272 ~~ ~ pione~
+206 15272 ~~ ~ pione~
+207 15272 ~~ ~ pione~
+208 15272 ~~ ~ pione~
+209 15272 ~~ ~ pione~
+210 15272 ~~ ~ pione~
+211 15272 ~~ ~ pione~
+212 36173 ~~ ~ RandomRedditor~
+213 15272 ~~ ~ pione~
+214 15272 ~~ ~ pione~
+215 15272 ~~ ~ pione~
+216 15272 ~~ ~ pione~
+217 15272 ~~ ~ pione~
+218 15272 ~~ ~ pione~
+219 15272 ~~ ~ pione~
+221 15272 ~~ ~ pione~
+9364 5815 ~ÃÂÃÂÃÂÃÂ~ ~ÃÂÃÂ~
+14827 5815 ~ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ~ ~ÃÂÃÂ~
+23090 5815 ~ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ~ ~ÃÂÃÂ~
+30208 15272 ~ externalTo~ ~ pione~
+30212 15272 ~ externalToEVA~ ~ pione~
+30897 15272 ~reportprint~ ~ pione~
+30898 15272 ~embedreportprint~ ~ pione~
+30905 15272 ~rawdownload~ ~ pione~
+39752 15272 ~quickShip~ ~ pione~
+39820 15272 ~龍�~ ~ pione~
+40240 15272 ~oreAndOnline~ ~ pione~
+40241 15272 ~InstoreAndOnline~ ~ pione~
+42089 15272 ~ TheNitrome~ ~ pione~
+45544 15272 ~ サーティ~ ~ pione~ Many of these tokens are unprintable (i.e., they don't display and I don't know what they are). The remainder mostly appear in the original SolidGoldMagikarp post. Finally, we give a simple approach to verify that a particular token is unspeakable rather than just being hard-to-speak. import numpy as np
+from scipy.optimize import linprog
+
+def is_token_feasible(*, model, token, margin=1.00e-7):
+    print('WU', model.W_U.shape)
+    c = -model.W_U[:, token].detach().numpy()
+    A_ub = (model.W_U.detach().numpy() - model.W_U[:, token:token+1].detach().numpy()).T
+    print('A_ub', A_ub.shape)
+    b_ub = np.zeros(A_ub.shape[0]) - margin
+    soln = linprog(c, A_ub=A_ub, b_ub=b_ub, bounds=(-1, 1))
+    print(soln)
+    return soln
+
+soln = is_token_feasible(model=model, token=30208) Briefly, we look for a direction x such that x minimizes the negative logit of the token under consideration (in this case, 30208, or " externalTo"), while satisfying the constraint that the logit of the token is higher than the logit of any other token by at least a small margin. When we do this, we find that small margins (like 1.01e-7 for the case of 30208) lead to infeasible linear programs (and thus no such direction exists), and even smaller  margins (such as 1.00e-7) lead to "feasible" linear programs that are only feasible because of numerical errors in the calculation. That is, if you take the direction output by  the solver, it is not actually a solution, because unembedding it still leads to a different token being ever-so-slightly higher. (In the case of 30208, it is the token 24973, " exting".) Here are the results of testing whether something is hard-to-speak or truly unspeakable for the printable hard-to-speak tokens in GPT2-small: 9364 9364 ÃÂÃÂÃÂÃÂ ÃÂÃÂÃÂÃÂ
+14827 5808 ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ ÃÂ
+23090 23090 ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ
+30208 24973  externalTo  exting
+30212 14341  externalToEVA PDATE
+30897 14695 reportprint  eleph
+30898 30898 embedreportprint embedreportprint
+30905 5997 rawdownload sembly
+39752 13945 quickShip ��
+39820 17629 龍�  practition
+40240 27924 oreAndOnline  srf
+40241 8994 InstoreAndOnline ailability
+42089 44392  TheNitrome  cumbers
+45544 13945  サーティ �� Here are the printable hard-to-speak tokens from GPT2-xl: 4690 189 ~ortunately~ ~~
+5815 30898 ~ÃÂÃÂ~ ~embedreportprint~
+9364 30905 ~ÃÂÃÂÃÂÃÂ~ ~rawdownload~
+13150 30897 ~ subur~ ~reportprint~
+14827 30905 ~ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ~ ~rawdownload~
+15272 30905 ~ pione~ ~rawdownload~
+17629 30905 ~ practition~ ~rawdownload~
+23090 30905 ~ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ~ ~rawdownload~
+25618 205 ~ councill~ ~~
+27013 30905 ~aditional~ ~rawdownload~
+27293 30905 ~ antidepress~ ~rawdownload~
+30208 30905 ~ externalTo~ ~rawdownload~
+30212 30905 ~ externalToEVA~ ~rawdownload~
+30439 30905 ~ unintention~ ~rawdownload~
+30897 30905 ~reportprint~ ~rawdownload~
+30898 30905 ~embedreportprint~ ~rawdownload~
+30899 30905 ~cloneembedreportprint~ ~rawdownload~
+31573 30905 ~ActionCode~ ~rawdownload~
+33434 30905 ~��士~ ~rawdownload~
+36173 30905 ~ RandomRedditor~ ~rawdownload~
+37574 30905 ~StreamerBot~ ~rawdownload~
+39142 30905 ~ThumbnailImage~ ~rawdownload~
+39655 30905 ~Orderable~ ~rawdownload~
+39714 30905 ~isSpecial~ ~rawdownload~
+39749 30905 ~DeliveryDate~ ~rawdownload~
+39752 30905 ~quickShip~ ~rawdownload~
+39820 30905 ~龍�~ ~rawdownload~
+40219 30905 ~oreAnd~ ~rawdownload~
+40240 30905 ~oreAndOnline~ ~rawdownload~
+40241 30905 ~InstoreAndOnline~ ~rawdownload~
+42066 30905 ~Nitrome~ ~rawdownload~
+42089 30905 ~ TheNitrome~ ~rawdownload~
+45544 30905 ~ サーティ~ ~rawdownload~ And here are the corresponding tests for unspeakability: 4690 4690 ortunately ortunately
+5815 5815 ÃÂÃÂ ÃÂÃÂ
+9364 9364 ÃÂÃÂÃÂÃÂ ÃÂÃÂÃÂÃÂ
+13150 13150  subur  subur
+14827 14827 ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ
+15272 30898  pione embedreportprint
+17629 17629  practition  practition
+23090 23090 ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ
+25618 25618  councill  councill
+27013 27013 aditional aditional
+27293 27293  antidepress  antidepress
+30208 30208  externalTo  externalTo
+30212 30212  externalToEVA  externalToEVA
+30439 203  unintention 
+30897 30897 reportprint reportprint
+30898 30898 embedreportprint embedreportprint
+30899 30899 cloneembedreportprint cloneembedreportprint
+31573 31573 ActionCode ActionCode
+33434 33434 ��士 ��士
+36173 36173  RandomRedditor  RandomRedditor
+37574 37574 StreamerBot StreamerBot
+39142 39142 ThumbnailImage ThumbnailImage
+39655 200 Orderable 
+39714 39714 isSpecial isSpecial
+39749 39749 DeliveryDate DeliveryDate
+39752 39752 quickShip quickShip
+39820 39820 龍� 龍�
+40219 40219 oreAnd oreAnd
+40240 40240 oreAndOnline oreAndOnline
+40241 40241 InstoreAndOnline InstoreAndOnline
+42066 208 Nitrome 
+42089 42089  TheNitrome  TheNitrome
+45544 45544  サーティ  サーティ Discussion and Future Directions Given that GPT2-xl (compared to GPT2-small) has more printable hard-to-speak tokens, of which a smaller fraction and a smaller absolute number are unspeakable, one guess would be that these trends continue for larger models, and a model the size of GPT-3 davinci has many hard-to-speak tokens but very few or even no unspeakable tokens. It is certainly intuitive to believe that, in high dimensions, with a fixed vocabulary size, very few unembedding vectors are not on the convex hull of the unembedding vector polytope. (h/t to Eric Neyman for this last point) It seems like it might be interesting to try to measure the volume of the feasible region (or more precisely, the (n-1) dimensional surface area of the portion of the unit sphere in the feasible region), to ascertain how "precise" the model would have to be to produce a particular token. Edit: there are way more unspeakable tokens than I thought I forgot to include the bias term! All of these tokens in GPT2-xl are actually unspeakable! 4690 30905 ortunately rawdownload
+5815 216 ÃÂÃÂ 
+9364 30905 ÃÂÃÂÃÂÃÂ rawdownload
+13150 200  subur 
+14827 205 ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ 
+15272 205  pione 
+17629 205  practition 
+23090 205 ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ 
+25618 183  councill �
+27013 30905 aditional rawdownload
+27293 205  antidepress 
+30208 200  externalTo 
+30212 200  externalToEVA 
+30439 203  unintention 
+30897 205 reportprint 
+30898 30905 embedreportprint rawdownload
+30899 205 cloneembedreportprint 
+31573 200 ActionCode 
+33434 205 ��士 
+36173 30905  RandomRedditor rawdownload
+37574 30905 StreamerBot rawdownload
+39142 201 ThumbnailImage 
+39655 200 Orderable 
+39714 30905 isSpecial rawdownload
+39749 205 DeliveryDate 
+39752 205 quickShip 
+39820 200 龍� 
+40219 36173 oreAnd  RandomRedditor
+40240 200 oreAndOnline 
+40241 30905 InstoreAndOnline rawdownload
+42066 200 Nitrome 
+42089 30905  TheNitrome rawdownload
+45544 30905  サーティ rawdownload

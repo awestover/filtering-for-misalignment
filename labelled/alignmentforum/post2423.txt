@@ -1,0 +1,1 @@
+I gave a talk a couple weeks on abstraction. It moves very fast, but it covers more material in one place than any individual post I've written, and includes a few things which haven't showed up in posts yet (especially near the end). Slides are here . The slides are hard to see sometimes in the video; I recommend keeping them open to the side of the video.

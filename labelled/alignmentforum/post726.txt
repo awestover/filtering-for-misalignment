@@ -1,0 +1,271 @@
+This is Section 2.2.3 of my report “ Scheming AIs: Will AIs fake alignment during training in order to get power? ”. There’s also a summary of the full report here (audio here ). The summary covers most of the main points and technical terms, and I’m hoping that it will provide much of the context necessary to understand individual sections of the report on their own. Audio version of this section here , or search "Joe Carlsmith Audio" on your podcast app. "Clean" vs. "messy" goal-directedness We've now discussed two routes to the sort of beyond-episode goals that
+might motivate scheming. I want to pause here to note two different ways
+of thinking about the type of goal-directedness at stake – what I'll
+call "clean goal-directedness" and "messy goal-directedness." We ran
+into these differences in the last section, and they'll be relevant in
+what follows as well. I said in section 0.1 that I was going to assume that all the
+models we're talking about are goal-directed in some sense. Indeed, I
+think most discourse about AI alignment rests on this assumption in one
+way or another. In particular: this discourse assumes that the behavior
+of certain kinds of advanced AIs will be well-predicted by treating them
+as though they are pursuing goals, and doing instrumental reasoning in
+pursuit of those goals, in a manner roughly analogous to the sorts of
+agents one encounters in economics, game-theory, and human social
+life – that is, agents where it makes sense to say things like "this
+agent wants X to happen, it knows that if it does Y then X will happen,
+so we should expect it do Y." But especially in the age of neural networks, the AI alignment discourse
+has also had to admit a certain kind of agnosticism about the cognitive
+mechanisms that will make this sort of talk appropriate. In particular:
+at a conceptual level, this sort of talk calls to mind a certain kind
+of clean distinction between the AI's goals, on the one hand, and its
+instrumental reasoning (and its capabilities/"optimization power" more
+generally), on the other. That is, roughly, we decompose the AI's
+cognition into a "goal slot" and what we might call a "goal-pursuing
+engine" – e.g., a world model, a capacity for instrumental reasoning,
+other sorts of capabilities, etc. And in talking about models with
+different sorts of goals – e.g., schemers, training saints,
+mis-generalized non-training-gamers, etc – we generally assume that the
+"goal-pursuing engine" is held roughly constant. That is, we're mostly
+debating what the AI's "optimization power" will be applied to, not the sort of optimization power at stake. And when one imagines SGD changing an AI's goals, in this context, one mostly imagines it
+altering the content of the goal slot, thereby smoothly redirecting the
+"goal-pursuing engine" towards a different objective, without needing to
+make any changes to the engine itself. But it's a very open question how much this sort of distinction between
+an AI's goals and its goal-pursuing-engine will actually be reflected in
+the mechanistic structure of the AI's cognition – the structure that
+SGD, in modifying the model, has to intervene on. One can imagine models whose cognition is in some sense cleanly factorable into a goal,
+on the one hand, and a goal-pursuing-engine, on the other (I'll call
+this "clean" goal-directedness). But one can also imagine models whose
+goal-directedness is much messier – for example, models whose
+goal-directedness emerges from a tangled kludge of locally-activated
+heuristics, impulses, desires, and so on, in a manner that makes it much
+harder to draw lines between e.g. terminal goals, instrumental
+sub-goals, capabilities, and beliefs (I'll call this "messy"
+goal-directedness). To be clear: I don't, myself, feel fully clear on the distinction here,
+and there is a risk of mixing up levels of abstraction (for example, in
+some sense, all computation – even the most cleanly goal-directed
+kind – is made up of smaller and more local computations that won't,
+themselves, seem goal-directed). As another intuition pump, though:
+discussions of goal-directedness sometimes draw a distinction between
+so-called " sphex-ish " systems
+(that is, systems whose apparent goal-directedness is in fact the
+product of very brittle heuristics that stop promoting the imagined
+"goal" if you alter the input distribution a bit), and highly non -sphex-ish systems (that is, systems whose apparent goal-pursuit is
+much less brittle, and which will adjust to new circumstances in a
+manner that continues to promote the goal in question). Again: very far
+from a perspicuous distinction. Insofar as we use it, though, it's
+pretty clearly a spectrum rather than a binary. And humans, I suspect,
+are somewhere in the middle. That is: on the one hand, humans pretty clearly have extremely flexible
+and adaptable goal-pursuing ability. You can describe an arbitrary task
+to a human, and the human will be able to reason instrumentally about
+how to accomplish that task, even if they have never performed it
+before – and often, to do a decent job on the first try. In that sense,
+they have some kind of "repurposable instrumental reasoning
+engine" – and we should expect AIs that can perform at human-levels or
+better on diverse tasks to have one, too. [1] Indeed, generality of
+this kind is one of the strongest arguments for expecting non-sphex-ish
+AI systems. We want our AIs to be able to do tons of stuff, and to
+adapt successfully to new obstacles and issues as they arise. Explicit
+instrumental reasoning is well-suited to this; whereas brittle local
+heuristics are not. On the other hand: a lot of human cognition and behavior seems centrally
+driven, not by explicit instrumental reasoning, but by more
+locally-activated heuristics, policies, impulses, and desires. [2] Thus, for example, maybe you don't want the cookies until you walk by
+the jar, and then you find yourself grabbing without having decided to
+do so; maybe as a financial trader, or a therapist, or even a CEO, you
+lean heavily on gut-instinct and learned tastes/aesthetics/intuitions;
+maybe you operate with a heuristic like "honesty is the best policy,"
+without explicitly calculating when honesty is or isn't in service of
+your final goals. That is, much of human life seems like it's lived at
+some hazy and shifting borderline between "auto-pilot" and "explicitly
+optimizing for a particular goal" – and it seems possible to move
+further in one direction vs. another. [3] And this is one of the many
+reasons it's not always clear how to decompose human cognition into e.g.
+terminal goals, instrumental sub-goals, capabilities, and beliefs. What's more, while pressures to adapt flexibly across a wide variety of
+environments generally favor more explicit instrumental reasoning,
+pressures to perform quickly and efficiently in a particular range of
+environments plausibly favor implementing more local heuristics. [4] Thus, a trader who has internalized the right rules-of-thumb/tastes/etc
+for the bond market will often perform better than one who needs to
+reason explicitly about every trade – even though those
+rules-of-thumb/tastes/etc would misfire in some other environment, like
+trading crypto. So the task-performance of minds with bounded resources,
+exposed to a limited diversity of environments – that is, all minds
+relevant to our analysis here, even very advanced AIs – won't always
+benefit from moving further in the direction of "non-sphex-ish." Plausibly, then, human-level-ish AIs, and even somewhat-super-human AIs,
+will continue to be "sphex-ish" to at least some extent – and
+sphex-ishness seems, to me, closely akin to "messy goal-directedness" in
+the sense I noted above (i.e., messy goal-directedness is built out of
+more sphex-ish components, and seems correspondingly less robust).
+Importantly, this sort of sphexish-ness/messy-ness is quite compatible
+with worries about alignment, power-seeking, etc – witness, for example,
+humans. But I think it's still worth bearing in mind. In particular, though, I think it may be relevant to the way we approach
+different stories about scheming. We ran into one point of relevance in
+the last section: namely, that to the extent a model's goals and the
+rest of its cognition (e.g., its beliefs, capabilities,
+instrumental-reasoning, etc) are not cleanly separable, we plausibly
+shouldn't imagine SGD being able to modify a model's goals in particular
+(and especially, to modify them via a tiny adjustment to the model's
+parameters), and then to immediately see the benefits of the model's
+goal-achieving-engine being smoothly repurposed towards those goals.
+Rather, turning a non-schemer into a schemer might require more
+substantive and holistic modification of the model's heuristics, tastes,
+patterns of attention, and so forth. Relatedly: I think that "messy goal-directedness" complicates an
+assumption often employed in comparisons between schemers and other
+types of models: namely, the assumption that schemers will be able to
+perform approximately just as well as other sorts of models on all the
+tasks at stake in training (modulo, perhaps, a little bit extra
+cognition devoted to deciding-to-scheme – more below), even though
+they're doing so for instrumental reasons rather than out of any
+intrinsic interest in the task in question. This makes sense if you
+assume that all these models are aiming the same sort of "goal achieving
+engine" at a max-reward goal, for one reason or another. But what if
+that's not the right description? Thus, as an extreme human example, consider two applicants for a job on
+a factory farm (each with similar intelligence, stamina, physical
+fitness, and other generic "capabilities"): Bob, a very compassionate
+and soft-hearted animal rights advocate, who is applying for the job in
+the hopes of making money to donate to animal-welfare causes; and Fred,
+who is totally indifferent to animal welfare (and to the money that the
+job offers), but who intrinsically loves performing all of the tasks
+that factory farming involves as efficiently as possible. [5] Who is
+likely to perform the job more effectively? In humans, at least:
+probably Fred. Bob, after all, would likely push the animals into cages
+less violently, he would be distracted by feelings of horror and pain
+and disgust, etc; whereas Fred would perform the job with efficiency and
+gusto. In this case, Bob is worse at the task, despite his best efforts
+to perform it well, because his capabilities and his values are in some
+sense mixed together – his compassion, for example, is tied to both. Of course, AIs could be different in tons of respects – and many humans
+are able to perform well in lots of contexts for instrumental reasons
+(witness, for example, spies working in governments they actively
+despise; or effective altruists working in hedge funds in order to
+donate the money to charity; or people, in general, who are just doing
+the job for the money). My point here is just that once you start
+allowing values, beliefs, heuristics, capabilities, patterns of
+attention, and so on to mix together, whether a schemer will be able to
+perform at the same level as e.g. a training-saint becomes a more open
+question. Does scheming require a higher standard of goal-directedness? As a final point of relevance of "messy goal-directedness" to scheming,
+I'll note that there's at least some case to be made that schemers
+require a "cleaner" and less "sphex-ish" form of goal-directedness than
+some of the other models I've discussed – e.g. training saints. Thus,
+for example, consider a model trained via RLHF to respond to various
+short-term user requests in a broadly helpful, honest, and harmless way.
+Many of these requests will require some sorts of flexible instrumental
+reasoning, yes – but it seems plausible to me that a model will also be
+getting a lot of its reward by learning the right sorts of local
+heuristics, tastes, patterns of attention, etc. That is, that a lot of
+its task-performance will be more "sphex-ish" than "explicit
+instrumental-reasoning-y." For this model to be a schemer, though (or at
+least, a pure schemer who values something quite different from the
+specified goal), we need to posit an additional role for explicit
+instrumental reasoning – namely, the model's current good behavior needs
+to be conditional on its calculation that such behavior conduces to its
+power (or the power of some other AIs); and when the time comes, the
+model needs to be ready to abandon such behavior and pursue its true
+goals. That is, whatever heuristics, local tastes, patterns of attention
+etc that give rise to the model's good behavior can't be fully
+hard-coded [6] – they need to be at least partly subsumed by, and
+sensitive to, some other kind of instrumental reasoning. Whereas
+perhaps, for other models, this is less true. That said, I've been assuming, and will continue to assume, that all the
+models we're considering are at least non-sphex-ish enough for the
+traditional assumptions of the alignment discourse to apply – in
+particular, that they will generalize off distribution in competent ways
+predicted by the goals we're attributing to them (e.g., HHH personal
+assistants will continue to try to be HHH, gold-coin-seekers will "go
+for the gold coins," reward-seekers will "go for reward," etc), and that
+they'll engage in the sort of instrumental reasoning required to get
+arguments about instrumental convergence off the ground. So in a sense,
+we're assuming a reasonably high standard of non-sphex-ishness from the
+get-go. I have some intuition that the standard at stake for schemers is
+still somewhat higher (perhaps because schemers seem like such paradigm
+consequentialists, whereas e.g. training saints seem like they might be
+able to be more deontological, virtue-ethical, etc?), but I won't press
+the point further here. Of course, to the extent we don't assume that training is producing a
+very goal-directed model at all , hypothesizing that training has
+created a schemer may well involve hypothesizing a greater degree of
+goal-directedness than we would've needed to otherwise. That is,
+scheming will often require a higher standard of non-sphex-ishness than the training tasks themselves require . Thus, as an extreme example,
+consider AlphaStar ,
+a model trained to play Starcraft. AlphaStar is plausibly goal-directed
+to some extent – its policy adapts flexibly to certain kinds of
+environmental diversity, in a manner that reliably conduces to
+winning-at-starcraft – but it's still quite sphex-ish and brittle in
+other ways. And to be clear: no one is saying that AlphaStar is a
+schemer. But in order to be a schemer (i.e., for AlphaStar's good
+performance in training to be explained by its executing a long-term
+instrumental strategy for power-seeking), and even modulo the need for
+situational awareness, AlphaStar would also need to be substantially
+more "goal-directed" than it currently is. That is, in this case,
+"somehow be such that you do this goal-directed-ish task" and "do this
+goal-directed-ish task because you've calculated that it conduces to
+your long-term power after training is complete" plausibly implicate
+different standards of goal-directedness. Perhaps, then, the same
+dynamic will apply to other, more flexible and advanced forms of
+task-performance (e.g., various forms of personal assistance, science,
+etc). Yes, those forms will require more in the way of general-purpose
+goal-directedness than AlphaStar displays. But perhaps they will require less than scheming requires, such that hypothesizing that the relevant
+model is a schemer will require hypothesizing a more substantive degree
+of goal-directedness than we would've needed to otherwise. Indeed, my general sense is that one source of epistemic resistance to
+the hypothesis that SGD will select for schemers is the sense in which
+hypothesizing a schemer requires leaning on an attribution of
+goal-directedness in a way that greater agnosticism about why a model
+gets high reward need not. That is, prior to hypothesizing schemers,
+it's possible to shrug at a model's high-reward behavior and say
+something like: "This model is a tangle of cognition such that it reliably gets high
+reward on the training distribution. Sure, you can say that it's
+'goal-directed' if you'd like. I sometimes talk that way too. But all
+I mean is: it reliably gets high reward on the training distribution.
+Yes, in principle, it will also do things off of the training
+distribution. Maybe even: competent-seeming things. But I am not
+making predictions about what those competent-seeming things are, or
+saying that they will be pointed in similar-enough directions, across
+out-of-distribution-inputs, that it makes sense to ascribe to this
+model a coherent 'goal' or set of goals. It's a policy. It gets high
+reward on the training distribution. That's my line, and I'm sticking
+to it." And against this sort of agnostic, atheoretical backdrop, positing that
+the model is probably getting reward specifically as part of a
+long-term strategy to avoid its goals being modified and then get power
+later can seem like a very extreme move in the direction of
+conjunctiveness and theory-heavy-ness. That is, we're not just
+attributing a goal to the model in some sort of hazy,
+who-knows-what-I-mean, does-it-even-matter sense. Rather, we're
+specifically going "inside the model's head" and attributing to it
+explicit long-term instrumental calculations driven by sophisticated
+representations of how to get what it wants. [7] However, I think the alignment discourse in general is doing this. In
+particular: I think the discourse about convergent instrumental
+sub-goals requires attributing goals to models in a sense that licenses
+talk about strategic instrumental reasoning of this kind. And to be
+clear: I'm not saying these attributions are appropriate. In fact,
+confusions about goal-directedness (and in particular: over-anchoring on
+psychologies that look like (a) expected utility maximizers and (b)
+total utilitarians) are one of my top candidates for the ways in which
+the discourse about alignment, as a whole, might be substantially
+misguided, especially with respect to advanced-but-still-opaque neural
+networks whose cognition we don't understand. That is, faced with a
+model that seems quite goal-directed on the training-distribution, and
+which is getting high reward, one shouldn't just ask where in some
+taxonomy of goal-directed models it falls – e.g., whether it's a
+training-saint, a mis-generalized non-training-gamer, a
+reward-on-the-episode-seeker, some mix of these, etc. One should also ask whether, in fact, such a taxonomy makes overly narrow assumptions
+about how to predict this model's behavior in general (for example:
+assuming that its out-of-distribution behavior will point in a coherent
+direction, that it will engage in instrumental reasoning in pursuit of
+the goals in question, etc), such that none of the model classes in
+the taxonomy are (even roughly) a good fit. But as I noted in section 0.1, I here want to separate out the question of
+whether it makes sense to expect goal-directedness of this kind from the
+question of what sorts of goal-directed models are more or less
+plausible, conditional on getting the sort of goal-directedness that the
+alignment discourse tends to assume. Admittedly, to the extent the
+different model classes I'm considering require different sorts of
+goal-directedness, the line between these questions may blur a bit. But
+we should be clear about which question we're asking, and not confuse
+skepticism about goal-directedness in general for skepticism about
+schemers in particular. Thanks to Evan Hubinger for discussion, here. ↩︎ This is a point emphasized, for example, by proponents of "shard
+theory" – see e.g. this summary. ↩︎ Though note that "autopilot" can still encode a non-sphex-ish
+policy. ↩︎ This is a point made in an entry to the Open Philanthropy
+worldviews
+contest which, to my knowledge, remains unpublished. ↩︎ I'm adapting this example from one suggested to me in
+conversation with Paul Christiano. ↩︎ Though one can imagine cases where, after a takeover, a schemer
+continues executing these heuristics to some extent, at least
+initially, because it hasn't yet been able to fully "shake off" all
+that training. And relatedly, cases where these heuristics etc play
+some ongoing role in shaping the schemer's values. ↩︎ Plus we're positing additional claims about training-gaming
+being a good instrumental strategy because it prevents
+goal-modification and leads to future escape/take-over
+opportunities, which feels additionally conjunctive. ↩︎

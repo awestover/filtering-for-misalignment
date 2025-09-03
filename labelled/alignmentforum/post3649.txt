@@ -1,0 +1,1 @@
+The following was a presentation I made for Sören Elverlin's AI Safety Reading Group . I decided to draw everything by hand because powerpoint is boring. Thanks to Ben Pace for formatting it for LW! See also the IAF post detailing the research which this presentation is based on.

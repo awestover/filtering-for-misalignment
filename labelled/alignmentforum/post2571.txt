@@ -1,0 +1,141 @@
+Counterfactual planning is a design approach for creating a range of
+safety mechanisms that can be applied in hypothetical future AI
+systems which have Artificial General Intelligence. My new paper Counterfactual Planning in AGI Systems introduces this design approach in full.
+It also constructs several example AGI safety mechanisms. The key step in counterfactual planning is to use an AGI machine
+learning system to construct a counterfactual world model , designed to
+be different from the real world the system is in.  A counterfactual
+planning agent determines the action that best maximizes expected
+utility in this counterfactual planning world, and then performs the
+same action in the real world. Examples of AGI safety mechanisms that can be constructed using
+counterfactual planning are: An agent emergency stop button, where the agent does not have a direct incentive to prevent its stop button from being pressed A safety interlock that will automatically stop the agent before it undergoes an intelligence explosion An input terminal that can be used by humans to iteratively improve
+the agent's reward function while it runs,  where the agent does not have a direct incentive to manipulate this improvement process A counterfactual oracle. Counterfactual planning is not a silver bullet that
+can solve all AI alignment problems.  While it is a technique for
+suppressing strong direct incentives , it will not automatically
+remove all remaining indirect incentives which can also lead to
+unsafe behavior. This sequence In this sequence of Alignment Forum posts. I will give a high-level
+introduction to counterfactual planning.  The sequence uses text and
+figures from the paper, but omits most of the detailed mathematical
+definitions in the paper. I have also added some extra text not included in the paper,
+observations targeted specifically at long-time LessWrong/Alignment
+Forum readers.  For example, in LessWrong terminology, the paper
+covers subjects like agent foundations, decision theory, and the
+embedded agency, but you won't find these terms being mentioned in the
+paper. Use of natural and mathematical language When writing about AGI systems, one can use either natural language,
+mathematical notation, or a combination of both.  A natural
+language-only text has the advantage of being accessible to a
+larger audience.  Books like Superintelligence and Human Compatible avoid the use of mathematical notation in the main
+text, while making a clear an convincing case for the existence of
+specific existential risks from AGI, even though these risks are
+currently difficult to quantify. However, natural language has several shortcomings when it is used to
+explore and define specific technical solutions for managing AGI
+risks.  One particular problem is that it lacks the means to
+accurately express the complex types of self-referencing and indirect
+representation that can be present inside online machine learning
+agents and their safety components. To solve this problem, counterfactual planning introduces a compact
+graphical notation.  This notation unambiguously represents these
+internal details by using two diagrams: a learning world diagram and
+a planning world diagram . AGI safety as a policy problem Long-term AGI safety is not just a technical problem, but also a
+policy problem.  While technical progress on safety can sometimes be
+made by leveraging a type of mathematics that is only accessible to
+handful of specialists, policy progress typically requires the use of
+more accessible language.  Policy discussions can move faster, and
+produce better and more equitable outcomes, when the description of a
+proposal and its limitations can be made more accessible to all
+stakeholder groups. One aim of the paper is therefore to develop a comprehensive vocabulary
+for describing certain AGI safety solutions, a vocabulary that is as
+accessible as possible.  However, the vocabulary still has too much
+mathematical notation to be accessible to all members of any possible
+stakeholder group.  So the underlying assumption is that each
+stakeholder group will have access to a certain basic level of
+technical expertise. At several points in the paper, I have also included comments that aim
+to explain and demystify the vocabulary and concerns of some specific
+AGI related sub-fields in mathematics, technology, and philosophy. Agent Foundations On this forum and in several AI alignment/safety agendas, it is common
+to see calls for more work on agent
+foundations . Counterfactual planning can be read as a work on agent foundations: it
+offers a new framework for understanding and reasoning about agents.
+It provides a specific vantage point on the internal construction of
+machine learning based agents. This vantage point was designed to make
+certain safety problems and solutions more tractable. At the same time, counterfactual planning takes a design stance . It
+does not try to understand or model all possible forms of agency, for
+example it is not concerned with modeling agent-like behavior in
+humans or organizations.  The main interest is in clarifying how we
+can design artificial agents that have certain safety properties. In the machine learning community, it is common to use agent models
+where the agent is as a mechanism designed to approximate a certain
+function as well as possible.  The agent model in counterfactual
+planning also treats machine learning as a function
+approximation, but it constructs the agent by building additional
+moving parts around the function approximation system.  By
+re-arranging these moving parts, compared to the standard
+configuration that is implicitly assumed in most agent models, we can
+create a counterfactual planner . This re-arrangement can also be interpreted as constructing an agent
+that will use a customized decision theory , a decision theory that
+is explicitly constructed to be flawed, because it will make the agent
+ignore certain facts about the environment it is in. MIRI's discussion of decision
+theory puts a strong emphasis on the problem an agent's
+machine reasoning system may get
+deeply confused and possibly dangerous when it does the wrong
+type of self-referential reasoning.  The solution to this problem
+seems obvious to me: don't build agents that do the wrong type of
+self-referential reasoning!  So a lot of the paper is about describing and
+designing complex forms of self-referencing. The paper (and this sequence) breaks with the LessWrong/Alignment
+Forum mainstream, in that I have consciously avoided using the
+terminology and examples of self-referential reasoning failure most
+frequently used on this forum.  Instead, I have aimed to frame
+everything in the terminology of mainstream computer science and
+machine learning.  To readers of this forum, I hope that this will
+make it more visible that mainstream academia has also been working on
+these problems too, using a different terminology. Defining counterfactuals In some parts of the mainstream machine learning community,
+counterfactuals have been routinely used to improve the performance of
+the machine learning system, for example in poker, see this paper
+from
+2007 and in computational advertizing, see this paper from
+2013 . In the computational fairness community counterfactuals have been
+proposed as a way to define and compute fair decisions, in this key 2017 paper .  In the fairness
+community, there is also significant discussion about how easy or difficult
+it may be to compute such counterfactuals see this recent book
+chapter for an overview. In both cases above, the counterfactuals being constructed are Pearl's
+counterfactuals based on Causal Models, as defined by Pearl around 2000 .
+I'd say that the use of Pearl's system of counterfactuals is the
+de-facto standard in the mainstream machine learning community. However, in the AGI safety/alignment community,
+in particular in the part of the community represented here on the
+Alignment Forum, the status of Pearl's causal models and
+counterfactuals is much more complicated. The 2015 MIRI/FHI paper Corrigibility identified counterfactual reasoning as a possible solution direction
+for creating AGI agent stop buttons. Counterfactual
+reasoning is an open problem on MIRI's 2015 technical research
+agenda .  But much of the
+work on counterfactual reasoning which has been
+posted here has not engaged directly with Pearl's work.
+The impression I have is that,
+since 2015, several posters have been trying to define or clarify
+notions of counterfactuals which are explicitly different from Pearl's
+system.
+These attempts have often used Bayesian updates as a building blocks.
+This work on non-Pearlian counterfactuals has lead to interesting but also
+sometimes confusing discussions and comment threads, see for example here . One partial explanation for this state of affairs may be that MIRI's
+approach to alignment research is to take high-risk bets on developing
+completely novel breakthroughs. They prefer to look for solutions in
+places where the more mainstream academic and machine learning
+communities are not looking. There is also the factor that Pearl's work is somewhat inaccessible.
+Pearl's presentation of his mathematical system, both in his papers
+and in the book Causality , seems
+to have been written mainly for an audience of professional
+statisticians, for example statisticians working in the medical field.
+The presentation is not very accessible to a more general technical
+audience.  Pearl and Mackenzie's The Book of
+Why is more accessible, but at the
+cost of omitting the mathematical foundations of the notation. Nevertheless, in my experience, Pearl's mathematical system of causal
+models and counterfactuals is both powerful and useful.  So I have
+built on this somewhat mainstream system to define counterfactual
+planning in machine learning agents. But in the paper I have departed from Pearl's work by defining his
+mathematical counterfactuals from scratch, in a way that explicitly
+avoids the use of Pearl's framing, justifications, and explanations.
+I depart from Pearl's framing by using the notion of mathematically
+constructed world models as a central organizing theme. I am also building on recent work by Tom Everitt and others, who have been promoting the use of Pearl
+causal models, and their graphical representation as Causal Influence
+Diagrams, in the AGI safety community. Everitt et al. present
+Causal Influence Diagrams primarily as an analytical device, to
+explore the incentives of an agent .
+I have gone one step further, and use the diagrams as a device to
+fully define entire agents.  This turns the diagrams into design
+tools .  In section 8 of the paper I show a design process that
+creates indifference by redrawing the agent's planning world diagram.

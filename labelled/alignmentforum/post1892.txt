@@ -1,0 +1,181 @@
+The No Free Lunch (NFL) family of theorems contains some of the most
+misunderstood theorems of machine learning. They apply to learning [1] and
+optimization [2] and, in rough terms, they state: All algorithms for learning [respectively, optimization] do equally well at
+generalization performance [cost of the found solution] when averaged over all
+possible problems. This has some counterintuitive consequences. For example, consider a learning
+algorithm that chooses a hypothesis with the highest accuracy on a training set.
+This algorithm generalizes to a test set just as well as the algorithm which
+chooses the hypothesis with the lowest accuracy on training! Randomly guessing
+for every new instance is also just as good as these two. The NFL theorems thus seem to show that designing an algorithm that learns from
+experience is impossible. And yet, there exist processes (e.g. you, the reader
+of this sentence) which successfully learn
+from their environment and extrapolate to circumstances they never experienced
+before. How is this possible? The answer is that problems encountered in reality are not uniformly sampled
+from the set of all possible problems: the world is highly regular in specific
+ways. Successful learning and optimization processes (e.g. the scientific
+method, debate, evolution, gradient descent) exploit these regularities to
+generalize. If NFL theorems don't usually apply in reality, why should you care about them?
+My central claim is that they are essential to to think about why and when learning
+processes work. Notably, when analyzing some process, it is important to state
+the assumptions under which it can learn or optimize.
+Sometimes it is possible to test some of these assumptions, but
+ultimately unjustifiable assumptions will always remain. NFL theorems also allow us to quickly discard explanations for learning as
+incorrect or incomplete, if they make no reference to the conditions under which
+they apply. I call this the No Free Lunch
+Razor for theories of
+learning. In this post, I will: State a simple NFL theorem in detail and informally prove it.
+I describe some variants of it and
+the link between NFL theorems and Hume's problem of induction. Discuss when the NFL theorems are and aren't applicable in
+practice , and what they tell us about
+analyzing processes for generating knowledge that extrapolate (or
+interpolate). Introduce the NFL
+razor and use it to discard a simple theory of deep learning, as well as re-argue
+that the value loading problem is hard. Discuss PAC-Bayes generalization
+bounds as a
+possible way to pay for lunch in some worlds. NFL theorem statement and proof We will focus on a very simple NFL theorem about learning. The reasoning for other
+NFL theorems is pretty similar [1:1] . Suppose we have a finite set X of possible training points, as well
+as an arbitrary distribution D over the input space X .
+We are concerned with learning a function f : X → { 0 , 1 } that
+classifies elements of X into two classes. We are interested in algorithms A which, given a training set of input-output
+pairs ( x 1 , f ( x 1 ) ) , ( y 2 , f ( y 2 ) ) , … ( y N , f ( y N ) ) , output a candidate
+hypothesis h which classifies elements of X . The training data are
+sampled independently from the distribution D . There are at least two ways in which we can measure the accuracy of a learning
+algorithm: The overall error or empirical risk, the proportion of possible inputs for
+which the learning algorithm makes a mistake. Its expression is R ( h ) = 1 / | X | ∑ x ∈ X [ f ( x ) ≠ h ( x ) ] , and its value is
+between 0 and 1. This is the traditional measure in learning theory. The out-of-sample (OOS) generalization error , which is like the error but
+only for elements of X unseen during training. Its expression is R OOS ( h ) = 1 / | X ∖ T | ∑ x ∈ X ∖ T [ f ( x ) ≠ h ( x ) ] . Here T is the set of input points in the
+training set. The formal statement of our simple NFL theorem is thus: [3] For any learning algorithm A and any number of training examples N < | X | ,
+the uniform average of the OOS generalization error over all functions f is 1 / 2 . Set up this way, an informal proof for the NFL theorem is pretty simple. We can
+see each function f as a set of coin flips, one for each value in the input
+set X . If all functions are equally likely, this represents the same
+probability distribution as a set of independent unbiased coin flips. Learning
+about the value of some coins (i.e. some input-output pairs ( x i , f ( x i ) ) )
+does not tell us anything about the other points. The average error the
+algorithm A makes on predicting the remaining coins will be 1 / 2 , whether A predicts heads or tails. The original paper [1:2] has a bunch of theorems like this one, that average over
+different things. Another thing that is possible to average over and obtain a
+NFL result is the possible probability distributions over the space of functions X → { 0 , 1 } . Wolpert wrote another paper [4] explaning that some algorithms with a non-homogeneous [5] loss function are better than others. These differences,
+however, are not very interesting and do not matter much for NFL theorems [6] .
+In particular, two algorithms whose predictions are permutations of the
+predictions of the other have the same performance on average, even under
+non-homogeneous loss functions. Relationship with the problem of induction NFL theorems are very similar to Hume's problem of induction. [7] To reason about
+non-logical properties of the world, we must use our experience from similar
+experiences in the past. However, the notion that past events are in any way
+predictive of future events (a consequence of the laws of nature holding fixed, what Hume calls the Uniformity
+Principle ) is an
+unprovable assumption. The same structure is present in the simple NFL theorem
+above: that the function value at a point x is predictive of the value at
+another point x ′ is also an unprovable assumption. However, NFL theorems are actually a stronger statement than the problem of
+induction. NFL theorems assume the Uniformity Principle (the data is always
+identically distributed, and the relationship f is the same) and manage to
+come up with an impossibility result anyways! There is likely no getting around the original problem of induction: there will
+always remain an unjustifiable assumption. As I explain in the PAC-Bayes
+section below ,
+though, it might be possible to mitigate the consequences of its stronger
+version, embodied in the NFL results. That is, assuming without justification
+that the data are i.i.d., there is still hope for robust methods that know the
+limits of their learning (if the data really are i.i.d.). Uses of No Free Lunch theorems In practice, the world is highly regular, and thus NFL theorems don't strictly
+apply. For example, most processes happen smoothly over time and are spatially
+localized. So if their precondition does not apply in reality, what is the use
+of NFL theorems? Here I propose two cases where they help us reason about
+learning algorithms. (Or, the world seems to be regular, we cannot know for sure. Nobody really knows whether
+the laws of physics will hold tomorrow.) Any explanation of learning must pay for its lunch. The NFL Razor. Any learning algorithm can only succeed by exploiting the regularities of our
+world. Nevertheless, some explanations that purport to explain the success of
+learning algorithms do not make any reference to these regularities. Thanks to the NFL theorems, we know that these explanations have to be
+incomplete or wrong. Metaphorically, they have not paid for their lunch. We can
+call this the No Free Lunch
+Razor for theories of
+learning [8] , since it quickly allows us to detect and discard bad arguments. An example of a bad argument is that deep learning works well because neural
+networks (NNs) are universal approximators, i.e. they can approximate any
+function. [9] This explanation is not sufficient to explain their success at
+learning real concepts, because it does not make a reference to the kind of
+functions that the NNs are being used to learn. Besides, there exist many other hypothesis classes that are universal
+approximators, and do not work nearly as well in practice, even ignoring
+computational constraints. For example, kernel methods like support vector
+machines or Gaussian processes with the squared exponential kernel [10] are
+universal approximators in the same sense. Thus, big-data deep learning must still in some sense work because the bias in
+the neural network + stochastic gradient descent combo favours explanations that
+match the regularities of our world. The inductive biases inside an untrained NN must be
+essential to the explanation. Some learning problems are genuinely impossible Another application of the NFL razor is to quickly realize that some learning
+problems are impossible as stated, because they don't make enough assumptions
+about the function that we are to learn. To make progress in them requires
+making assumptions about the function, implicit- or explicitly. Obviously, for AI alignment purposes, we'd like to have a learning algorithm
+that provably generalizes correctly in every setting, or at least always knows
+when it doesn't know something. If we could construct such an algorithm, we
+could give it some data about human values, and it would correctly extrapolate
+the coherent
+volition , asking
+for more data when it is
+necessary . We would have solved value loading . However, this is not possible without making assumptions about properties of the
+function that specifies human values. [11] We can realise this quickly using the
+NFL razor. Thus, we have a specification task ahead of us, hopefully easier than
+the direct value loading problem: what assumptions can we make about human
+values? Are we sure these assumptions are correct? It may still be possible (or easy) to solve this problem in practice: the
+argument above applies equally to the problem of image
+classification , and
+thus cannot be used to argue that value loading is impossible. Just that it is
+impossible without making assumptions and that, even if it works in reality,
+it is impossible to argue that it works
+without making explicit extra assumptions. The value loading problem is not the only problem in alignment where getting
+around NFL would be helpful. Scalable oversight [12] and robust
+classification would also benefit if this mathematical impossibility was possible. Alas. PAC-Bayes bounds: can we know when our assumptions apply? Some authors [13] claim that PAC-Bayes bounds for the generalization performance
+of learning algorithms are a way to estimate the out-of-sample generalization of
+a learning algorithm, and thus partially get around the restrictions imposed by
+NFL theorems. I don't fully understand why or whether this claim is true, so a
+full investigation of it shall have to wait for another post. Still, here is my
+best understanding of it. PAC-Bayes [14] bounds specify an a priori probability distribution over
+possible hypotheses. Unlike in Bayesian methods, however, the prior distribution
+does not have to be the actual distribution over learning problems which the
+algorithm faces. On arbitrary problems, the algorithms combined with these bounds do not do any
+better than the NFL theorems would predict. However, the algorithm is able to
+bound its out-of-sample error for some functions. That is, it knows the limits
+of its own learning, without any assumptions on the distribution of f (only a
+guess). How does this not violate NFL? The bound is trivial for most learning problems:
+it only gives non-trivial (i.e. smaller than 1) out-of-sample (OOS) error bounds
+when the world conforms to an especially likely hypothesis according to the
+prior. The bound on the OOS error is always trivial if the prior assigns equal
+probability to all hypotheses. In summary, PAC-Bayes pays for its lunch in the worlds to which its prior over
+hypotheses assigns high probability, and in the rest of the worlds it gives up.
+Only if the world conforms to the assumptions in the prior, can PAC-Bayes bound
+the OOS error. However, this might be a useful way to validate assumptions,
+other than the (still unverifiable) i.i.d. assumption. Conclusion: when thinking about learning or optimization, state your assumptions and use the razor! You should not make claims about generalization that do not make assumptions
+about the function the algorithm is trying to learn. Try to make your
+assumptions explicit, even in a vague way; this will help you determine whether
+the learning problem is solvable. Realize that learning problems without making these assumptions are unsolvable,
+and do not spend unnecessary time on them. Often, you can make the problem
+solvable by introducing assumptions as simple as "it is a problem from the real
+world that existing learning processes already solve to some extent". Acknowledgements This blog post was started on Blog Post Day, and finished the day after. I am
+grateful to Daniel Kokotajlo for organising the day and encouraging me to write
+it! If not for him, it would have remained unwritten, possibly forever. Wolpert, D. H. (1996). The lack of a priori distinctions between learning
+algorithms. Neural Computation. ↩︎ ↩︎ ↩︎ Wolpert, D. H., & Macready, W. G. (1997). No free lunch theorems for
+optimization. IEEE transactions on evolutionary computation ". ↩︎ see Theorem 1 of "Wolpert, D. H. (1996). The lack of a priori
+distinctions between learning algorithms. Neural Computation. ". In the
+original statement, Λ ( c ) / r is our statement's 1 / 2 . r = 2 is the
+size of the output space, and Λ ( c ) is the sum over possible outputs y of the loss function L ( y , h x ) , for a candidate output h x . If L is
+zero if y = h x and one otherwise, like in our example, Λ ( c ) = 1 .
+Loss functions for which Λ ( c ) exist are called homogeneous by
+Wolpert. ↩︎ ↩︎ Wolpert, D. H. (1996). The existence of a priori distinctions between
+learning algorithms. Neural computation, 8(7), 1391–1420. ↩︎ A non-homogeneous loss function L ( y , h x ) is one for which the average 1 / | Y | ∑ y L ( y , h x ) depends on h x . See [3:1] . The concept is
+unrelated to the usual homogeneous
+functions . ↩︎ An example of a non-homogeneous loss function is the quadratic loss, and
+the sense in which some algorithms are better than others under this loss is
+the following: predicting an output point h ( x ) that is near the mean of
+the output domain Y is going to have a lower average distance. Thus the
+algorithm that always predicts mean ( Y ) has lower OOS loss on
+average that the algorithm that always predicts max ( Y ) . ↩︎ This is not an independent development: D.H. Wolpert was likely
+influenced by Hume when writing his NFL paper. Indeed, he quotes Hume's A
+Treatise of Human Nature after the abstract. ↩︎ When I'm having fun, I call this the "Lunch Money Razor". But this is an
+less clear name for the concept, and should not be used too much. ↩︎ It is nevertheless true that sufficiently wide neural networks can
+approximate any continuous function within some error ϵ in a bounded domain.
+See "Hornik, K. (1991). Some new results on neural network approximation. Neural Networks , 6(8), 1069–1072.". That, however, is not a sufficient
+explanation for NNs being able to learn functions in practice. It is only an
+explanation for NNs being able to represent functions. ↩︎ Rasmussen, C. E., & Williams, C. K. I. (2006). Gaussian processes for
+machine learning. MIT press, Cambridge. ↩︎ This is conceptually different from the non-identifiability argument in
+Inverse Reinforcement Learning by Armstrong and Mindermann, but reaches a
+very similar conclusion. Armstrong, S., & Mindermann, Sören (2018). Occam's
+razor is insufficient to infer the preferences of irrational agents. In
+NeurIPS
+2018. ↩︎ Amodei, D., Olah, C., Steinhardt, J., Christiano, P., Schulman, J., &
+Mané, D. (2016). Concrete problems in AI safety. ↩︎ The introduction and section 2 of "Graepel, T., & Herbrich, R. (2021). A
+PAC-Bayesian analysis of distance-based classifiers: why nearest-neighbour
+works!" make this claim. ↩︎ McAllester, D. A. (1999). Some PAC-Bayesian theorems. Machine Learning,
+37, 355–363. ↩︎

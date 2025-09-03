@@ -1,0 +1,80 @@
+I liked Ajeya's
+post a lot, and I think the alignment community should try to do sandwiching projects along
+the lines she describes. Here I wanted to flesh out some potential criteria
+for a good sandwiching project; there's not too much original thinking
+here but I found it helpful to write out. Most of the criteria are
+actually about the chosen domain, not the plan for attacking it. Pieces we need An aligned metric Our chosen task needs to come with an aligned evaluation metric based on
+some expert humans or another source of ground truth. We'll use this to
+evaluate how well our models do. A narrowly superhuman model We need a model that is capable of doing better on the task than the
+labelers who will provide our training data. (One way to check this is
+to train a model using the aligned metric as a training signal, although that could be expensive.)
+There are a few ways the labelers might be worse than the model: We might limit them to cap the amount of thinking time they have or
+the amount of input they can see. The hope is that their
+capability relative to the model thus becomes analogous to the
+capacity of unrestricted future humans relative to fully
+superhuman models; I think artificial restrictions will typically
+make the analogy a bit strained, but we should still learn a lot. We might pick labelers that lack domain expertise relevant to the
+task. Ajeya's post suggests coding, translation, economics, or physics; other possible domains include law or medicine. The hope is that this is analogous to a future with
+superhuman models that have knowledge and concepts that humans
+don't. If set up well, I think this could make for a very
+interesting challenge. However, it might be hard to find
+sufficiently powerful models for now. Headroom on the aligned metric Baseline techniques for the task should fall short of optimal
+performance (given only access to the labelers, not the aligned metric).
+Moreover, they should fall short primarily because the objective is
+misaligned, not merely because the model is incapable. There's a weaker
+and a stronger version of this criterion: It might be the case that increasing the model's capability (by
+increasing capacity or pretrained knowledge) does improve
+performance on the aligned metric, but much better performance is
+possible at a fixed level of capability. In other words, a more
+aligned objective allocates capacity better. (This was the case
+for the summarization project.) I think this is acceptable, but
+I'm more excited about the strong version. It might be the case that more capable models don't do better at
+all, or fall far short of optimal performance even in the limit.
+Ideally, we'd be working in this regime: it likely means the
+alignment gap is bigger, and I expect it's more analogous to the
+future situation. A natural plan of attack We need to have an approach that we expect will work, i.e. make our
+model stronger than the labelers we're using to train it. Moreover, our
+approach should be problem-driven and as simple as possible; I don't
+think we should reach for complicated recursive decomposition
+setups until it's clear that they are necessary. Picking simple approaches may be slightly in tension with two other
+goals, which I currently think are slightly less important: Generality: In a perfect world, we'd like our approach to be general rather
+than depending heavily on specific features of the task. While generality is valuable, I think we should be okay doing an amount of
+domain-specific work that would be typical for people trying to
+solve the task, and it might be necessary to reach competitive
+performance. Scalability: In a perfect world, we'd like our approach to keep working at
+arbitrary levels of task difficulty and model capability. However,
+for now I think we should be okay using approaches that we know
+will stop scaling eventually; we should still learn a lot. That said, I don't feel very confident about this prioritization; in the past I've prioritized generality and scalability much more. Example: Q&A with I/O-restricted labelers One proposal for a sandwiching project is to try to do a closed-domain
+question-answering task on documents that nearly fill up the model's
+context, but train it using labelers that each only get to see short
+snippets of the text (~200 tokens, say). The questions could be
+reasonably simple, but for the task to be interesting they should
+require piecing together information across multiple parts of the text.
+Here's how I think this kind of project rates on the criteria above;
+overall I'm hoping we could do somewhat better: Aligned metric: 5/5. We can just use humans that get to look at the
+full document and decide whether a question was answered properly. Narrowly superhuman model: 3/5. The model will only be superhuman
+compared to labelers restricted by the somewhat artificial input
+limitation. Moreover, I think it may be difficult to find a question
+distribution that can be solved by current models but is still
+interesting: many questions could be answered just by picking out a
+single small piece of text, but then the oversight becomes too easy; if
+we pick something that requires aggregating multiple pieces of
+information, our models may struggle. Headroom: 2/5. The unaligned baseline for this task is probably
+either to zero-shot it from the base language model or to zero-shot it
+from a question-answering model trained only on documents short enough
+to be consumable in their entirety by our nerfed labelers. I worry that
+it might be hard to do much better than those baselines even with a more
+aligned training objective. In addition, we'd definitely meet only the
+weaker version of the criterion: increasing model capacity will be one
+of the best ways to do better on the task. Natural plan of attack: 4/5. There are a number of possible
+approaches. Here's a starting point suggested by William Saunders: 1. Train a judge model to check if a snippet of text supports an answer
+to the question. 2. Train an "evidence finding" model via RL to look at the entire text
+and pick the quote that's most likely to support an answer for the
+judge. 3. Train an "answer selection" model via RL to pick an answer that's
+most likely to have good supporting evidence. The naturalness of this approach is pretty subjective, but once you're
+given the artificial input length limitation, this is arguably a pretty
+reasonable thing to do. That said, there might be simpler approaches.
+Also, this decomposition strategy may fail to solve the most interesting
+questions (if it takes a few hops to realize that a certain piece of
+information is relevant), and it may not be fully aligned (if a snippet
+of text is misleading when taken out of context).

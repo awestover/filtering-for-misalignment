@@ -1,0 +1,248 @@
+Controlling the amount of logical information available to an agent
+could hypothetically give upper bounds on how well it can perform
+various computational tasks like predicting humans, while allowing the
+agent to make progress on some unrelated task. This could hypothetically
+enable things like preventing operator modeling and manipulation. I think this ended up being mostly an interesting exercise in flaw
+finding. Experts may get most of the value from the summary. Executive summary Background and motivation Limiting optimization power Throttling computation Toy model: plan approver Human in a box Agent-overseer architecture Goal: avoid modeling the human Throttling modeling
+capabilities Assume a good predictor Throttling logical
+information Vague safety argument Notions of information Interesting properties Problems Information leaks Overly restricting A Other problems General problems with controlling modeling
+capabilities Executive summary Say an overseer prevents an agent from running any computation that
+would give too much logical information about, say, humans, relative to
+what the agent already knows. That is, the probability assignments P ( Human ( y ) = z | K ∪ { X = x } ) made by
+a good logical predictor P about a human’s responses to
+queries, given the output x of X , are not allowed to become much
+more precise or accurate than the current estimate P ( Human | K ) using just the list of
+previous computations K . The agent is still allowed to run
+computations not informative about the human. The hope is that the agent will be able to think usefully about other
+things, while remaining unable to model the human and therefore
+remaining safe. If the agent could model the human using the results of
+the computations it has run, then so should the predictor; but the
+overseer prevented K from growing enough to let the
+predictor model the human well. Problems with this idea are described in detail in the last section. As
+I see it, the main problems are: The protocol isn’t really safe at all; the agent might ask to run
+superintelligences that either manipulate the overseer directly, or
+else obfuscate their machinations. Safety guarantees are hard to maintain in conjunction with a growing
+knowledge base, since both the overseer and the agent would need
+additional thinking time to even be able to read the contents of K . If the agent is prevented from thinking about things related to
+humans, then it can’t do anything useful to humans, since finding
+something humans like would at least tell a predictor that a human
+would likely accept proposals to cause that thing. It may be pretty easy to manipulate humans to disastrous effect
+without thinking all that hard about it. Background and motivation TL;DR: it would be nice to be able to stop an AI system from knowing too
+much or thinking too hard about certain other systems. Limiting optimization power It is not hard to build an agent A that is known to be
+safe, in the sense of not being able to manipulate its environment
+strongly. For example, consider the following robustly safe autonomous
+agent: Definition. Let A be a rock. Then we know from empirical data and good theoretical understanding that A is safe, given certain size assumptions. But, A is not very useful. It would be nice to have agents that Are (stably) unable to manipulate certain parts of their
+environment, and Are able to strongly manipulate other parts of their environment. For example, we might want an agent that can invent a cure for cancer
+(design experiments, do abstract thinking, etc.), but doesn’t e.g.
+manipulate its operators into accepting some garbage output instead of
+an actual cancer cure. Throttling computation A possible approach is to prevent A from getting too much
+information about the forbidden parts of the environment, while allowing
+it to work on its intended task. The hope is that information-theoretic
+guarantees will translate into guarantees about how accurately A can model forbidden things. However, throttling the amount of ordinary empirical information
+available to A about some system does not guarantee that A can’t model that system; A can just think
+really hard about the system. For example, AI ξ t l with lots of
+computing power, talking to a programmer, would after a while be able to
+locate the programmer within an accurate simulation of the universe (or
+some other equally good predictor), and hence be able to manipulate the
+programmer. This suggests that preventing A from thinking too hard
+about the forbidden part of the environment might help. Now the hope is
+that for systems of interest, such as human operators, it would require
+lots of thinking to model that system well; so if A can’t
+think too hard about the system, then it won’t be able to model the
+system, and won’t be able to manipulate it. I suggest making this
+slightly more concrete by replacing “thinking about a system H ” with
+“running computations that are informative about X , for a good
+predictor that can’t directly compute X ”. Toy model: plan approver TL;DR: for purposes of illustration, consider a human in a box approving
+proposed plans from an agent. An overseer vetoes computations the agent
+wants to run, preventing the agent from thinking about the human. Human in a box We have a human H in a box. The human will be given plans by the AI,
+and the human will approve or disapprove the plan. For example, H might only approve plans that clearly describe a cure for cancer. We assume that we have the human as a computation H such that if the
+agent A can model the actual human well, then it can
+predict the outputs of H well. For example, H might be a whole-brain
+emulation, or might be a computationally expensive induction scheme with
+input from an actual human in a box. Agent-overseer architecture The AI consists of a top-level agent A , a knowledge base K of outputs of computations, and an overseer P (for Predictor). The agent A is assumed to
+be in some sense simple; the overseer can do better than A at any computational task. A can ask the overseer for
+permission to run some computation X . If the overseer approves, X is
+run to output x , and then X = x is added to the knowledge base K . At some point, A outputs a plan. We assume that there is some computation G describing the goal, such
+that if A can model G well then A can
+output a good plan. For example, G may be a verifier for the predicate
+“has some chance of being a good plan”. Goal: avoid modeling the human There are lots of blank spots in this setup, most notably the assumption
+that we can point to the goal computation G . This encapsulates most of
+the difficulty; e.g. it black-boxes the part where the output is
+human-readable, has a chance of doing something human-valuable, etc.
+However, it is not obvious to me that this is quite FAI-complete. Specifically, there may still be degrees of freedom in plausible plans
+that A might output, so that asking a superintelligent Z F C oracle to find something approved by G may be unsafe.
+Probably a righter way to deal with this is to understand decision
+theory and value loading / ontology identification better. But in any
+case the approach in this post is to try to directly prevent A from modeling the human H , while letting it think
+about G somewhat. Throttling modeling capabilities TL;DR: the agent thinks about its output using a knowledge base of
+outputs of computations. The overseer checks to see how much its beliefs
+about the human would change if it learned what X outputs. If the
+output would be too informative, the agent is not allowed to run X .
+This is hopefully safe because the agent can’t see much that the
+predictor can’t. This might be cool because maybe the agent can do very
+clever things that happen to be uninformative about the human. Assume a good predictor To talk about A “modeling” a system, we’ll view A as a predictor of logical / computational facts. The
+overseer P is assumed to be a “good” predictor, meaning it
+does at least as well (in some appropriate sense) as all other
+algorithms as simple or resource-constrained as A . Throttling logical information Recall the notion of logical information . If we want to
+prevent A from modeling a system, one possible method
+would be to limit the amount of logical information A is
+allowed to have about the system. So, in the plan approver toy model,
+the overseer P will allow A to run a
+computation X and add the result to K only if P ( H | K ∪ { X = x } ) has not much
+more negentropy (or some other measure of informativeness) than P ( H | K ) . Vague safety argument The (vague, intuitive) argument for safety is that if A | K could model the human well enough to
+search for and find a manipulative output, then it must be able to make
+good predictions about H . If A | K can make
+good predictions about H , then so can P | K ,
+since by assumption P does at least as well as the sort of
+thing that A is. If P | K can make
+good predictions about H , then P ( H | K ) has
+low entropy. But this contradicts that the overseer was keeping that
+quantity high, so A can’t manipulate the human, even with
+access to K . This argument is intended to include both the
+computations that A does itself, as well as the
+computations X selected by A to be added to K ; if A has some good reason to think X will be helpful, P should be able to see that reason. This could also be used to prevent the agent from modeling anything
+outside of its box, or from modeling its internal workings. Notions of information I don’t know what would be a good measure of the informativeness of a
+computation X about a forbidden computation H . Possible parameters: Computing resources that A can use to think about
+its output. Computing resources that P can use to think about its
+probability assignments. Valuation of the conditional distributions P ( H | X = x i ) . E.g. entropy, KL divergence or total
+variation between P ( H | X = x i ) and P ( H ) , the probability of the true outcome, etc. Dependence on the possible inputs to H . E.g. prevent A from predicting what the human will do given any
+possible short input, or given all inputs from some other set. Dependence on the possible outputs of X . E.g. prevent the
+valuation of P ( H | X = x i ) from being bad with
+respect to any possible output x i of X , or in expectation
+according to P ( X ) , or just for the actual output of X . Interesting properties (These properties don’t actually hold.) Collapsing levels of indirection and obfuscation Naively trying to forbid certain computations simply doesn’t work,
+because computations can be rearranged to an extreme degree. If you
+forbid certain code, other code will do the trick; if you forbid data in
+one format, another format will do the trick; if you forbid simulated
+civilizations from constructing silicon computers, another simulated
+substrate will do the trick; and so on. The hope here is that strong
+guarantees from logical uncertainty will translate into guarantees
+saying that any hidden forms of computation, if they are still
+recognizable and useful, will be recognized by P and
+forbidden if necessary. Modularized modeling ability It’s easy to limit A ’s ability to model H by putting
+strong bounds on A ’s computational resources, but this
+also stops A from doing anything impressively useful. The
+hope is that there are useful computations G that are (a) difficult to
+directly compute, and (b) not very informative about H . Then the agent
+can use the full force of a superintelligence (albeit lesioned w.r.t. H ) to make good guesses about G , while remaining ignorant about H . (Almost) full superintelligence The agent can run arbitrary computations, as long as they aren’t
+informative about H . In particular, it can do all manner of
+self-improvement, in the form of running computations that output
+pointers to other, better computations. So the agent-overseer
+architecture appears to have not sacrificed much power. Problems TL;DR: there are a bunch of holes in this sort of proposal, indicating
+that it is not the right way to understand things. Information leaks TL;DR: empirical information also has to be accounted for, the feedback
+from the overseer is an information leak, and the overseer is blind to A thinking about things the predictor already knows about.
+Most notably, there could be superintelligences running in K that hack A or P , ruining
+any safety guarantees. Superintelligences in K A might be able to run an agent in K that
+superintelligently searches for ways to thwart the overseer, and
+sneakily think about the forbidden computation H . There’s some hope to
+salvage this: if A picks a computation X in order to
+sneakily think about H , then A must have had a reason to
+think X would do that, and then P should be able to see
+that reason and veto X . What seems to be an even more serious problem: A could
+mistakenly choose to run a computation X that is itself unsafe, in the
+sense that it implements a superintelligence that hacks A from inside K and runs amok. It may be that X in fact
+has nothing to do with H , so that P approves X , and
+then X proceeds to recommend to A a cascading series of
+computations that model H and hack out of the box, all behind a veil
+of superintelligent obfuscation. In either case, X can superintelligently search for any weakness in P ’s predictions. Specifically, X can search for any
+output x that X could give that would be mistakenly approved by P by virtue of P ( H | K ∪ { X = x } ) being miscalibrated, but
+that would in fact end up leading A to successfully model H . Solomonoff induction can probably manipulate humans given very little
+empirical data and lots of computation power. Similarly, it seems likely
+that it is possible to manipulate humans using not too much computation,
+given the right empirical data. Simple machine learning algorithms, with
+access to lots of data about human behavior, could find manipulative
+behaviors without doing any computations that, by themselves, constitute
+detailed models of humans. So a scheme for controlling information
+should probably take into account “total information”, i.e. both logical
+and empirical information. Empirical information can be logical information Such a scheme should also take into account that empirical observations
+can be informative about logical facts. For example, if the agent
+visually observes the output of some reliable computer that it believes
+to be running a certain computation, the agent would hopefully update
+its predictions about the logical question of what the output of the
+computation is. This may come for free from a good theory of logical
+uncertainty, for example by replacing observations with logical
+statements like “my sense inputs are in such-and-such state”, in the
+context of some theory of the world that includes a description of how
+the agent’s sense inputs work. Information vetoes are themselves informative Suppose A asks P if it is ok to run X , and P says no (because X would be informative about H ).
+Now, even though K has not changed, it seems that A has learned something. Namely, it has learned that P rejects X , and so it has learned that X is
+informative about H . Likewise, if X is approved, A learns that X is not informative about H . This constitutes a
+security leak; for example, it seems to make it a little nonobvious to
+state what P ’s goodness guarantee should be relative to A , since in the overseer architecture, A has
+access not only to the knowledge base K , but also to an
+oracle for the predicate “is informative about H ”. Pre-existing information As mentioned in the post on logical information, the overseer may have
+idiosyncrasies that compromise security. For example, if the predictor
+is powerful enough to compute the results of H , then it will judge
+everything to be non-informative about H , and so will allow
+everything. As a special case, A may already know enough
+to model H well. Sleeper information As K grows, it seems like P has to be given
+more time to think about computations; otherwise it doesn’t have time to
+read the contents of K , which P has to do if
+it is going to say when K is useful for guessing H . But
+if P gets more time to think, then computations already in K that were previously uninformative about H , may
+suddenly become informative. This seems like a serious problem. Overly restricting A TL;DR: there are still harsh tradeoffs between restricting A too much to be useful vs. sacrificing safety guarantees,
+so it’s unclear whether progress has been made; notably, computations
+that are useful for humans are also at least a little bit useful for
+modeling humans. Many things are entangled with many other things For a given forbidden computation H , there may be many intricate and
+fascinating ways to use other computations X to help speed up guesses
+about H . The upshot being that A may be forbidden from
+running many computations that would otherwise be very useful for X ,
+even if they don’t intuitively have much to do with H in particular. Indeed, any computations that are, roughly speaking, convergent
+instrumental goals, stand a good chance of being useful for predicting X but vetoed by the overseer. For example, a computation that invents
+an algorithm for inverting matrices might be useful for many things,
+including both X and H . Another example: consider a computation that searches for computations
+that a good predictor would think are informative about X and not
+informative about H . This seems like a reasonable thing for A to do in its situation, but this computation might (or
+might not) by vetoed by the overseer, since being told that X is not
+informative about H is itself information about H (though perhaps
+not very much at all; at least it would save a predictor the time of
+running that computation). One more example: humans are significantly entangled with all sorts of
+things in the environment that A will be acting in. For
+example, modeling anything that humans think about or anything that
+humans made will also model the humans to some extent. If H is
+forbidden, A will be very restricted. Human-useful computations are necessarily informative about humans More importantly, if H is forbidden, then it seems that A can’t do anything useful for humans. Finding a good
+solution to a problem that a human is interested in, can be viewed as a
+search for outputs that are likely to be approved by H . This is
+logical information about H . This seems like a fundamental problem with this approach. In other
+words, manipulation is a subtle enough concept that we can’t just forbid
+computations that look for outputs the human will like; searching for a
+good output is such a computation. For example, we might hope that we could ask A to develop
+reliable molecular nanotechnology and report its designs, without
+manipulating the approver H . However, even the search for a good
+design itself gives a lot of information about what sorts of designs are
+likely to be accepted by a human anticipating an MNT design. Bounding information across the approver’s entire input space Maybe we can allow A to perform useful computations by not
+bounding the information A can have about H for all
+inputs to H . But then we give up safety; A can search
+over the allowed inputs for manipulative inputs. Other problems Dependence on guarantees from logical uncertainty Any safety arguments about throttling logical information will probably
+only go through given very strong optimality guarantees from logical
+uncertainty. For example, we are assuming that P makes as
+good estimates as any program could, over a wide range of possible
+knowledge bases (level three of Scott’s
+program ). In particular, P has to be robust to all sorts of computations A might request, including potential superintelligences. Throttling the wrong thing Say we throttle negentropy in the plan approver setup, so A | K is prevented from having low entropy
+estimates of H ( x ) on any short input x . Depending on the output
+space of H ( x ) , this might not help very much. Say H outputs either
+“Yes”, or “No” along with an explanation of what was wrong with the
+plan. Then it is possible for A to gain a lot of
+information just about the question of whether or not H ( x ) says yes,
+without decreasing the overall entropy, by increasing entropy over the
+explanation part of the output. This means that a scheme like this would
+have to pay careful attention to what was being throttled. Nonsense counterfactuals Say we want to define information by looking at P ( H | K ∪ { X = x } ) for all possible outputs of X , instead of just the true one; for example, limiting the maximum or
+the expected change in information. This e.g. avoids having to compute X , deals with probabilistic programs, and might capture a notion of
+“what an agent would reasonably expect to learn about H by running X ”. For this to make any sense, P would have to give somewhat
+sensible results even given a knowledge base with possibly false
+information. It seems vaguely plausible that this could work, because it
+seems like a predictor that does very well given accurate knowledge
+bases would take the data at face value and make reasonable deductions
+under that assumption. But, this by no means comes for free from a good
+theory of logical uncertainty, and may be just as hard as understanding
+logical counterfactuals. General problems with controlling modeling capabilities Modeling capability is not the same as optimization power or effect size To strongly optimize some region of the universe, it is probably not at
+all necessary to model that region very much; for example, an agent
+could just destroy everything in the region, and then rearrange it as
+desired. Furthermore, it may not take much optimization power to have a
+large effect relative humans values. For example, an agent might acquire
+and detonate weapons of mass destruction; this is easy enough that even
+humans can do it, but has a large effect. Unstable under self-modification The overseer scheme obviously strongly incentivizes an agent to kill the
+overseer, so it is not stable under reflection. It might be possible to
+also lesion A about its own operation, though I don’t know
+quite how that would work. Naively forbidding any computations that are
+informative about A + P + K would
+forbid everything, since an approved computation gets added to K . High overhead Checking every computation seems like it would be expensive, especially
+if P has to separately think about H ( x ) for all x conditioned on the result of some computation.

@@ -1,0 +1,105 @@
+(This post was originally published on Nov 30th 2017, and is 1 of 4 posts brought forwarded today as part of the AI Alignment Forum launch sequence on fixed points.) 1 Introduction Before the work of Turing, one could justifiably be skeptical of the idea
+of a universal computable function.
+After all, there is no computable function f : N × N → N such that for all computable g : N → N there is some index i g such that f ( i g , n ) = g ( n ) for all n .
+If there were, we could pick g ( n ) = f ( n , n ) + 1 , and then g ( i g ) = f ( i g , i g ) + 1 = g ( i g ) + 1 , a contradiction.
+Of course, universal Turing machines don't run into this obstacle; as Gödel
+put it, "By a kind of miracle it is not necessary to distinguish orders, and the
+diagonal procedure does not lead outside the defined notion." [1] The miracle of Turing machines is that there is a partial computable function f : N × N → N ∪ { ⊥ } such that for all partial computable g : N → N ∪ { ⊥ } there is an index i such that f ( i , n ) = g ( n ) for all n .
+Here, we look at a different "miracle", that of reflective oracles [ 2 , 3 ].
+As we will see in Theorem 1, given a reflective oracle O , there is a (stochastic) O -computable function f : N × N → { 0 , 1 } such that for any (stochastic) O -computable function g : N → { 0 , 1 } , there is some index i such that f ( i , n ) and g ( n ) have the same distribution for all n .
+This existence theorem seems to skirt even closer to the contradiction
+mentioned above. We use this idea to answer "in spirit" the converse Lawvere problem posed in [ 4 ]. These methods also generalize to prove a similar analogue of the ubiquitous converse Lawvere problem from [ 5 ]. The original questions, stated in terms of topology, remain open, but I find that the model proposed here, using computability, is equally satisfying from the point of view of studying reflective agents. Those references can be consulted for more motivation on these problems from the perspective of reflective agency. Section 3 proves the main lemma, and proves the converse Lawvere theorem for reflective oracles. In section 4, we use that to give a (circular) proof of Brouwer's fixed point theorem, as mentioned in [ 4 ]. In section 5, we prove the ubiquitous converse Lawvere theorem for reflective oracles. 2 Definitions For any measurable space X , the set of probability measures on X is denoted Δ X . A probabilistic oracle is a map N → [ 0 , 1 ] .
+A probabilistic oracle machine is a probabilistic Turing machine that can query a probabilistic oracle O .
+On a given query n ∈ N , it gets the answer 1 with probability O ( n ) and the answer 0 otherwise.
+Different queries are independent events, so this completely determines
+the behavior of such a machine. We denote by ϕ O i the stochastic partial O -computable function N → Δ ( N ∪ { ⊥ } ) , where ⊥ represents nonhalting, computed by the probabilistic Turing machine with
+index i .
+The notation ϕ O i ( n ) ↓ indicates the event that ϕ O i halts on input n , and ϕ O i ( n ) ↓ = m is the event that ϕ O i ( n ) halts and outputs m .
+Finally, ϕ O i ( n ) ↑ is the event that ϕ O i does not halt on input n . We use ⟨ ⋅ ⟩ to represent a computable coding function, in order to biject arbitrary
+countable sets to the naturals for the purpose of computability. A reflective oracle is a probabilistic oracle O such that for all i , n ∈ N and p ∈ [ 0 , 1 ] Q , P ( ϕ O i ( n ) ↓ = 1 ) > p ⟹ O ( ⟨ i , n , p ⟩ ) = 1 P ( ¬ ϕ O i ( n ) ↓ = 0 ) < p ⟹ O ( ⟨ i , n , p ⟩ ) = 0. For more on reflective oracles, see Fallenstein et al., 2015 [2] . A function f : N → [ 0 , 1 ] is O -computable if there is an index i such that for all n ∈ N , we have P ( ϕ O i ( n ) ↓ ∈ { 0 , 1 } ) = 1 and P ( ϕ O i ( n ) ↓ = 1 ) = f ( n ) . That is, ϕ O i represents f by probabilistically outputting either 0 or 1 . For any m ∈ N , a function f : N → [ 0 , 1 ] m is O -computable if each coordinate f j : N → [ 0 , 1 ] for 1 ≤ j ≤ m is O -computable. A function f : N → [ 0 , 1 ] N is O -computable if the corresponding function N → [ 0 , 1 ] given by ⟨ n , m ⟩ ↦ f ( n ) ( m ) is O -computable. For any point p ∈ [ 0 , 1 ] , a probabilistic oracle O is compatible with p if for all r ∈ [ 0 , 1 ] Q , we have O ( ⟨ r ⟩ ) = 0 if p < r and O ( ⟨ r ⟩ ) = 1 if p > r .
+More generally, for any m ∈ N and any p ∈ [ 0 , 1 ] m , a probabilistic oracle O is compatible with p if for all j such that 1 ≤ j ≤ m and all r ∈ [ 0 , 1 ] Q , we have O ( ⟨ j , r ⟩ ) = 0 if p j < r and O ( ⟨ j , r ⟩ ) = 1 if p j > r . A function f : [ 0 , 1 ] m → [ 0 , 1 ] m is O -computable if for each coordinate f j : [ 0 , 1 ] m → [ 0 , 1 ] , there is an index i such that whenever P is compatible with p , we have P ( ϕ O , P i ( 0 ) ↓ ∈ { 0 , 1 } ) = 1 and P ( ϕ O , P i ( 0 ) ↓ = 1 ) = f j ( p ) . A map f : N → [ 0 , 1 ] N is O -computably ubiquitous if for every O -computable map e : N → [ 0 , 1 ] N , there is some n ∈ N such that f ( n ) = e ( n ) . 3 Converse Lawvere property We first need a lemma that tells us that we can replace certain partial O -computable functions with total ones when working relative to a reflective
+oracle.
+As discussed in the introduction, this contrasts strongly with the situation for computable functions.
+All of our theorems will make essential use of this lemma. Lemma 1 (totalizing): There is a computable map τ : N → N such that for all i , n ∈ N and any reflective oracle O , we have P ( ϕ O τ ( i ) ( n ) ↓ ∈ { 0 , 1 } ) = 1 and for b ∈ { 0 , 1 } , P ( ϕ O τ ( i ) ( n ) ↓ = b ) ≥ P ( ϕ O i ( n ) ↓ = b ) . Proof : We construct τ using a recursive procedure that ensures that P ( ϕ O τ ( i ) ( n ) ↓ = b ) upper-bounds P ( ϕ O i ( n ) ↓ = b ) using what may be thought of as repeated subdivision or binary search.
+This is essentially the same as the function f l i p in [ 3 ], but we handle computability issues differently.
+Let S ⊆ [ 0 , 1 ] × [ 0 , 1 ] be the set of pairs of dyadic rationals ( p , q ) such that p < q .
+We recursively define a stochastic O -computable function t : N × N × S → Δ { 0 , 1 } ; the intent is to have P ( t ( i , n , p , q ) = 1 ) equal P ( ϕ O τ ( i ) ( n ) ↓ = 1 ) − p q − p if that quantity is in the interval [ 0 , 1 ] , and take the closest possible value, either 0 or 1 , otherwise.
+Then, we will be able to define ϕ O τ ( i ) ( n ) to be t ( i , n , 0 , 1 ) . Construct t so that a call t ( i , n , p , q ) first queries O ( ⟨ i , n , r ⟩ ) , where r = p + q 2 , and also flips a fair coin C .
+Then, it either outputs 0 , 1 , or the result of a recursive call, as follows: t ( i , n , p , q ) = ⎧ ⎪
+⎪
+⎪ ⎨ ⎪
+⎪
+⎪ ⎩ 0 if O ( ⟨ i , n , r ⟩ ) = 0 and C = 0 t ( i , n , p , r ) if O ( ⟨ i , n , r ⟩ ) = 0 and C = 1 1 if O ( ⟨ i , n , r ⟩ ) = 1 and C = 0 t ( i , n , r , q ) if O ( ⟨ i , n , r ⟩ ) = 1 and C = 1 . We can now choose τ so that ϕ O τ ( i ) ( n ) = t ( i , n , 0 , 1 ) . This algorithm upper bounds the probabilities P ( ϕ O i ( n ) ↓ = 0 ) and P ( ϕ O i ( n ) ↓ = 1 ) by binary search.
+Once the initial call t ( i , n , 0 , 1 ) has recursed to t ( i , n , p , q ) , it has already halted outputting 1 with probability p , confirming that this is an upper bound since it received answer 1 from a call to O ( ⟨ i , n , p ⟩ ) .
+Similarly, it has output 0 with probability 1 − q , confirming this bound since it received the answer 0 from a call to O ( ⟨ i , n , q ⟩ ) .
+Further, since each call to t halts without recursing with probability 1 2 , t halts almost surely.
+Thus, we get the totality property P ( ϕ O τ ( i ) ( n ) ↓ ∈ { 0 , 1 } ) = 1 and the bounds P ( ϕ O τ ( i ) ( n ) ↓ = b ) ≥ P ( ϕ O i ( n ) ↓ = b ) for b ∈ { 0 , 1 } . □ Now we can prove our main theorem. Theorem 1 (converse Lawvere for reflective oracles): Let O be a reflective oracle.
+Then, there is an O -computable map f : N → [ 0 , 1 ] N such that for all O -computable g : N → [ 0 , 1 ] , there is some index i such that g = f ( i ) . Proof : Using τ from the totalizing lemma, let f ( i ) ( n ) = P ( ϕ O τ ( i ) ( n ) ↓ = 1 ) . Given any O -computable g : N → [ 0 , 1 ] , there is some i such that P ( ϕ O i ( n ) ↓ = 1 ) = g ( n ) P ( ϕ O i ( n ) ↓ = 0 ) = 1 − g ( n ) . Then, f ( i ) ( n ) = P ( ϕ O τ ( i ) ( n ) ↓ = 1 ) ≥ P ( ϕ O i ( n ) ↓ = 1 ) = g ( n ) and similarly 1 − f ( i ) ( n ) ≥ 1 − g ( n ) , so f ( i ) = g . □ This theorem gives a computable analogue to the problem posed in [ 4 ].
+The analogy would be strengthened if we worked in a cartesian closed category
+where the present notion of O -computability gave the morphisms, and where [ 0 , 1 ] N is an exponential object.
+In addition, the totalizing lemma would have a nice analogue in this setting.
+I expect that all this can be done using something like an effective topos
+[6], but I leave this for future work. 4 Recovering Brouwer's fixed point theorem As mentioned in [ 4 ], the intermediate value theorem would follow from the
+existence of a space with the converse Lawvere property, that is, a space X that surjects onto the mapping space [ 0 , 1 ] X .
+Further, Brouwer's fixed point theorem on the n -ball, B n , would follow from the existence of a topological space X with a surjection X → ( B n ) X .
+We can do something similar to conclude Brouwer's fixed point theorem from
+the converse Lawvere theorem for reflective oracles.
+Of course, this is circular; Kakutani's fixed point theorem, a generalization
+of Brouwer's fixed point theorem, is used to prove the existence of reflective
+oracles.
+Still, it is interesting to see how this can be done. We start with two technical lemmas telling us some basic facts about reflective-oracle-computable functions [ 0 , 1 ] m → [ 0 , 1 ] m .
+Using these, it will be easy to derive Brouwer's fixed point theorem. Lemma 2 (continuous implies relatively computable): Take m ∈ N and let h : [ 0 , 1 ] m → [ 0 , 1 ] m be continuous.
+Then, there is a (deterministic) oracle O such that h is O -computable. Proof : For each coordinate h j of h , each rectangle R = [ ℓ 1 , u 1 ] × ⋯ × [ ℓ m , u m ] ⊆ [ 0 , 1 ] m with rational endpoints, and each pair of rationals ℓ 0 , u 0 ∈ [ 0 , 1 ] Q with ℓ 0 < u 0 , let O ( ⟨ j , ℓ 0 , u 0 , … , ℓ m , u m ⟩ ) be 1 if h j ( R ) ⊆ [ ℓ 0 , u 0 ] and 0 otherwise.
+To see that h is O -computable, we compute any h j ( p ) for any j with 1 ≤ j ≤ m , and any p ∈ [ 0 , 1 ] m , making use of O and any oracle P compatible with p . We proceed by a search process similar to the argument in the totalizing
+lemma.
+Start with R 0 = [ 0 , 1 ] m , ℓ 0 0 = 0 and u 0 0 = 1 .
+At each step s , perform an exhaustive search for a rectangle R s + 1 = [ ℓ s + 1 1 , u s + 1 1 ] × ⋯ × [ ℓ s + 1 m , u s + 1 m ] ⊆ R s and points ℓ s + 1 0 , u s + 1 0 such that a query to P ( ⟨ k , ℓ s + 1 k ⟩ ) returns 1 for all k , a query to any P ( ⟨ k , u s + 1 k ⟩ ) returns 0, a query to O ( ⟨ j , ℓ s + 1 0 , u s + 1 0 , R s + 1 ⟩ ) returns 1 , and where either ℓ s + 1 0 = ℓ s 0 and u s + 1 0 = 1 3 ℓ s 0 + 2 3 u s 0 , or ℓ s + 1 0 = 2 3 ℓ s 0 + 1 3 u s 0 and u s + 1 0 = u s 0 .
+In the first case, output 0 with probability 1 3 and continue with probability 2 3 , and in the second case, output 1 with probability 1 3 and continue with probability 2 3 . By construction, p ∈ R s and h j ( R s ) ⊆ [ ℓ s 0 , u s 0 ] at each stage s .
+Since h j is continuous, there is some neighbourhood of p on which its image is contained in either [ ℓ s 0 , 1 3 ℓ s 0 + 2 3 u s 0 ] or [ 2 3 ℓ s 0 + 1 3 u s 0 , u s 0 ] .
+There are two possibilities to consider.
+If p ∈ i n t R s , then there is some rectangle R contained in such a neighbourhood of p , and with p ∈ i n t R .
+This rectangle would be chosen if considered, so the algorithm will move
+beyond step s . The remaining possibility is that p is on the boundary of R s ; say, p k = ℓ s k .
+Since R s was chosen previously though, we know that querying P ( k , ℓ s + 1 k ) has returned 1 at least once, so P ( k , ℓ s + 1 k ) ≠ 0 .
+Thus, the algorithm will almost surely eventually accept R s or another rectangle. Putting this together, this algorithm almost surely halts, outputting either 0 or 1 .
+By stage s , it has halted outputting 1 with probability ℓ s 0 and outputting 0 with probability 1 − u s 0 , so overall it outputs 1 with probability h j ( p ) .
+Thus, h is O -computable. □ Lemma 3 (composition): Let O be a reflective oracle and let g : N → [ 0 , 1 ] m and h : [ 0 , 1 ] m → [ 0 , 1 ] m be O -computable.
+Then, h ∘ g : N → [ 0 , 1 ] m is O -computable. Proof : For each j with 1 ≤ j ≤ m , take i j ∈ N such that ϕ O i j witnesses the computability of g j .
+Then, O ( ⟨ i j , n , r ⟩ ) = 0 if g j ( n ) < r and O ( ⟨ i j , n , r ⟩ ) = 1 if g j ( n ) > r , so O lets us simulate a probabilistic oracle compatible with g ( n ) .
+Hence, by the O -computability of h , for each k with 1 ≤ k ≤ m , we have a probabilistic O -machine that always halts, outputting either 0 or 1 , and that on input n outputs 1 with probability h k ∘ g ( n ) . □ Theorem 2 (Brouwer's fixed point theorem): Take m ∈ N and h : [ 0 , 1 ] m → [ 0 , 1 ] m .
+Then, h has a fixed point. Proof : By Lemma 2, we have an oracle O such that h is O -computable.
+By relativizing the construction of a reflective oracle [ 2 , 3 ] to O , we get a reflective oracle ˜ O above O .
+Notice that h is ˜ O -computable.
+Letting f be the ˜ O -computable function f ( i ) ( n ) = P ( ϕ ˜ O τ ( i ) ( n ) ↓ = 1 ) constructed in the converse Lawvere theorem for reflective oracles, define f m : N → ( [ 0 , 1 ] m ) N by f m ( ⟨ i 1 , … , i m ⟩ ) ( n ) = ( f ( i 1 ) ( n ) , … , f ( i m ) ( n ) ) . The rest will now follow the proof of Lawvere's fixed point theorem [7]. Define g : N → [ 0 , 1 ] m by g ( n ) = h ( f m ( n ) ( n ) ) ; this is ˜ O -computable by Lemma 3.
+Now, by converse Lawvere theorem, for each coordinate 1 ≤ j ≤ m of g , there is some i j ∈ N such that g j = f ( i j ) .
+Letting i = ⟨ i 1 , … , i m ⟩ , we have g j ( i ) = h j ( f m ( i ) ( i ) ) = h j ( g ( i ) ) , so g ( i ) = h ( g ( i ) ) , and so g ( i ) is a fixed point of h . □ 5 Ubiquitous converse Lawvere property Theorem 3 (ubiquitous converse Lawvere): Let O be a reflective oracle.
+Then, there is an O -computable, O -computably ubiquitous map f : N → [ 0 , 1 ] N . Proof : This follows by a combination of the recursion theorem and the totalizing
+lemma.
+We use the same map f from Theorem 1.
+Let e : N → [ 0 , 1 ] N be any O -computable map.
+There is a computable map s : N → N such that for all i , n ∈ N , we have P ( ϕ O s ( i ) ( n ) ↓ ∈ { 0 , 1 } ) = 1 , and e ( i ) ( n ) = P ( ϕ O s ( i ) ( n ) ↓ = 1 ) . By the recursion theorem, there is some i such that ϕ O s ( i ) = ϕ O i .
+Then, e ( i ) ( n ) = P ( ϕ O s ( i ) ( n ) ↓ = 1 ) = P ( ϕ O i ( n ) ↓ = 1 ) = P ( ϕ O τ ( i ) ( n ) ↓ = 1 ) = f ( i ) ( n ) , so e ( i ) = f ( i ) . □ References [1] Kurt Gödel.
+1946.
+"Remarks before the Princeton bicentennial conference of problems in mathematics." Reprinted in: Martin Davis.
+1965.
+"The Undecidable.
+Basic Papers on Undecidable Propositions, Unsolvable Problems, and Computable
+Functions." Raven Press. [2] Benja Fallenstein, Jessica Taylor, and Paul F.
+Christiano.
+2015. "Reflective Oracles: A Foundation for Classical Game Theory." arXiv: 1508.04145. [3] Benya Fallenstein, Nate Soares, and Jessica Taylor.
+2015. "Reflective variants of Solomonoff induction and AIXI." In Artificial General Intelligence .
+Springer. [4] Scott Garrabrant.
+2017.
+"Formal Open Problem in Decision Theory." https://agentfoundations.org/item?id=1356 . [5] Scott Garrabrant.
+2017.
+"The Ubiquitous Converse Lawvere Problem." https://agentfoundations.org/item?id=1372 [6] Jaap van Oosten.
+2008.
+"Realizability: an introduction to its categorical side." Studies in Logic and the Foundations of Mathematics , vol.
+152.
+Elsevier. [7] F.
+William Lawvere.
+1969.
+"Diagonal arguments and cartesian closed categories." In Category Theory, Homology Theory and their Applications, II (Battelle Institute
+Conference, Seattle, Wash., 1968, Vol.
+Two) , pages 134–145.
+Springer. This post was originally published on Nov 30th 2017, and has been brought forwarded as part of the AI Alignment Forum launch sequences. Tomorrow's AIAF sequences post will be 'Iterated Amplification and Distillation' by Ajeya Cotra, in the sequence on iterated amplification.

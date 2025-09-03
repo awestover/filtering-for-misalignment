@@ -1,0 +1,1 @@
+Papers on Cartesian frames and factored sets are now on arXiv. Cartesian Frames: https://arxiv.org/abs/2109.10996 Factored Sets: https://arxiv.org/abs/2109.11513 The factored set paper is approximately identical to the sequence here , while the Cartesian frame paper is rewritten by Daniel Hermann and Josiah Lopez-Wild, optimized for an audience of philosophers.

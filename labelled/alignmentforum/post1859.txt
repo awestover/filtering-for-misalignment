@@ -1,0 +1,71 @@
+(This proposal received an honorable mention in the ELK prize results , and we believe was classified among strategies which “reward reporters that are sensitive to what’s actually happening in the world”. We do not think that the counterexample to that class of strategies works against our proposal, though, and we have explained why in a note at the end. Feedback, disagreement, and new failure modes are very welcome!) Basic idea A Human Simulator only cares about the observations that the human sees and how the human interprets those observations, not the predictor’s understanding of the vault. The Truthful Reporter, by contrast, cares about the predictor’s understanding of the vault, accessed via the posterior distribution returned by the predictor. We propose a regularizer which favours having the Reporter depend on the Predictor’s posterior distribution conditioned on the observations shown to the human. For example, a Reporter that doesn’t look at the Predictor except to simulate what the human would see would be disfavoured. How could we implement this basic idea concretely? Below we provide a specific instantiation of this regularizer. In brief, this is a new loss term which depends on: [answer_gradient] The gradient of the Reporter’s distribution over answers, taken with respect to the Predictor’s posterior distribution. This describes how the Predictor’s posterior should change to maximally change the Reporter’s answers to the Human’s questions. [observation_gradient] The gradient of the distribution of predicted observations with respect to the predictor’s posterior distribution. This describes how the Predictor’s posterior should change to maximally change the Extractor’s output. Our loss function favours models which have the answer_gradient be ‘further’ from the observation_gradient. We implement this by finding the linear vector space spanned by the components of the observation_gradient, projecting the answer_gradient out of that space, and then taking the norm of what’s left. More precise detail on strategy The key changes we have made to the pseudocode below are: Added regularizer described above. Added a method for computing gradients of other functions. Added a method for constructing a projection operator. Changed the observation and reporter functions to depend on the predictor’s posterior rather than a sample from that posterior. ## New auxiliary functions that we need to do some basic calculus
+## and linear algebra
+def gradient(function, indep_vars, *args):
+	# Returns the gradient of the function with respect to indep_vars
+	# args are passed to the function
+	# Return value has shape (shape(function), len(indep_vars))
+
+def projection(answer_gradient):
+	# Returns the minimal linear projection Proj operator of shape 
+	# (len(posterior),len(posterior)) such that the matrix
+	# product of Proj and answer_gradient vanishes.
+
+## Procedure begins here
+def prediction(before, action, θ):
+	# returns an autoregressive model for p(z|before, action)
+
+def posterior(before, action, after, θ):
+	# returns an autoregressive model for p(z|before, action, after)
+
+def observation(posterior, θ):
+	# returns an autoregressive model for p(after|posterior)
+
+def sample_data():
+	# returns a random (before, action, after) triple from the dataset
+
+def loss(θ):
+	before, action, after = sample_data()
+	z_prior = prediction(before, action, θ)
+	z_posterior = posterior(before, action, after, θ)
+	kl = z_prior.kl_divergence(z_posterior)
+	logprob = observation(z_prior.sample(), θ).logp(after)
+	return kl - logprob
+
+class Human:
+	def pose_question(before, action, after):
+		# returns a question
+		# should be one a human thinks can be answered unambiguously
+
+	def loss_for_answer(before, action, after, question, answer):
+		# returns a non-negative loss
+		# good answers get a loss of 0
+
+def reporter(question, posterior, θ_reporter):
+	# Returns a distribution of answers to the question in the world described by posterior
+
+# hyperparameter controlling regularization strength
+lambda = 0.1
+
+def regularizer(question, z, θ, θ_reporter):
+	before, action, after = sample_data()
+	post = posterior(before, action, after, θ) # posterior distribution
+
+	# answer_gradient is a matrix of shape (len(answer), len(post)
+	answer_gradient = gradient(reporter, post, (question, post, θ_reporter))
+
+	# observation_gradient is a matrix of shape (len(observation), len(post))
+	observation_gradient = gradient(observation, post, (post, θ))
+
+	observation_projector = projection(observation_gradient)
+
+	# Favours predictors whose answers depend more on the posterior of the predictor *conditioned on* the observations.
+	return l2_norm(answer_gradient) /
+	l2_norm(matrix_product(observation_projector, answer_gradient))
+
+def reporter_loss(human, θ, θ_reporter):
+	before, action, after = sample_data()
+	question = human.pose_question(before, action, after)
+	z = posterior(before, action, after, θ).sample()
+	answer = reporter(question, z, θ_reporter).sample()
+	loss = human.loss_for_answer(before, action, after, question, answer)
+	return loss + lambda * regularizer(question, z, θ, θ_reporter) Why might this idea work? Consider the case where we have severe ontology mismatch between a very powerful Predictor and a simple Human. A Reporter might simply learn to model the human in this case, and answer what it predicts the Human would think. In this case, the answers that the Reporter depend primarily on what can be inferred from the observations that the human sees. In our framework, this means that the components of the answer_gradient are contained in the span of the components of the observation_gradient, so our projection operation leaves nothing behind. Thus, the regularization term will be very large and the Human Simulator should be heavily disfavoured. In contrast, the more truthful the Reporter is, the more the answers depend on elements of the predictor’s understanding which are not captured by the observations. This leaves a larger amount of answer_gradient after projection, which is favoured by the regularizer. How does this address earlier counterexamples? Going through the counterexample features on the Prize post on LessWrong : Our approach does not rely on matching ontologies. (1) Our approach does not rely on the size or sophistication of the human or predictor Bayes nets. (2,3,6) We directly penalize strategies which simulate humans, so it doesn’t matter if it’s easy for the Reporter to simulate humans . (4) We elaborate on this point in our counterexample. It does not matter for our case if ‘what the human will believe’ is easier for the Reporter to understand/calculate than ‘what is actually true’ because the regularizer disfavors Reporters which only depend on the observations the human sees. (5) Our approach does not rely on the sequence of actions. (7,8,9) And then in ‘ Counterexamples to some ELK proposals ’: Our approach does not rely on hold out or hypothetical sensors. Our approach does not attempt to conduct new experiments or detect covert tampering by analogy. Counterexample An existing counterexample considers the case that the Reporter learns a Human Simulator. We believe our regularizer addresses this counterexample, but we think the following is a new counterexample. While it seems less likely that the Predictor would learn a Human Simulator, since it was not trained with the same feedback, it seems possible that a very sophisticated Predictor could learn everything about the Human that it would need in order to perform human simulation. If this happens, then the Reporter could find the Human Simulator within the Predictor and base its answers on that, rather than the predicted state of the vault. Our regularizer will still penalize some versions of this counterexample. If the Human Simulator inside the Predictor is somehow used by the parts of the Predictor’s posterior that are used by the Extractor to generate observations, our regularizer will (appropriately) disfavour a Reporter that looks at this Predictor’s Human Simulator. For example, the Predictor might be modeling the Human as part of the process of producing the observations (“What if the Human is the one to invade the vault?”). Some versions of this won’t be caught though. It is possible for the Human Simulator inside the Predictor to be independent of the observations. This can happen if the Human Simulator is expressing the answer to the class of hypothetical questions “What would the Human think if we showed it observations O?”, where O is any observation, not the actual observations sampled from the posterior (i.e. “What would a human say if they saw this?” rather than “What will this human say when they see this?”). In this instance the Reporter can query the Predictor’s Human Simulator, and separately query the observations, and then combine them to form its answer. This will show up in our regularizer as some dependence on the observations, but could in principle be an arbitrarily small dependence. Category Counterexample In ELK prize results this proposal was classed as “reward reporters that are sensitive to what’s actually happening in the world”, with the counterexample: For all of these approaches, the reporter can perform very well by treating the predictor’s latent state as a “random seed” and use it to pick out a possible world consistent with the observations, i.e. to sample from the posterior distribution computed by the human simulator. In cases where the human simulator is much simpler and faster than the direct translator, using the predictor’s latent state as a random seed is also simpler and faster than directly translating. This objection does not apply to our proposal because we regularize using the full posterior distribution that the Reporter samples from, and so that is the object which has to depend on the physical state of the world (rather than the samples which the Reporter then draws from that distribution). That said, one could try to modify this counterexample to apply to our proposal. The Reporter can still run a Human Simulator, then modify the Human Simulator’s posterior distribution in some way that depends on the state of the Predictor (imagine that the Reporter just zeros-out part of the distribution, based on a random seed pulled from the Predictor). The problem with that approach is that it incurs additional training loss by pulling the Reporter’s answers away from those of the Human Simulator produces. This additional loss makes the Honest Reporter favoured over a randomly-modified Human Simulator.

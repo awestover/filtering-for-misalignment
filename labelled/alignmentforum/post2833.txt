@@ -1,0 +1,1 @@
+Hi, I'm working on a response to ML projects on IDA focusing on a specific decomposer, and I don't know if someone's formalized what a decomposer is in the general case. Intuitively, a system is a decomposer if it can take a thing and break it down into sub-things with a specific vision about how the sub-things recombine.

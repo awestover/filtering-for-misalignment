@@ -1,0 +1,90 @@
+This is a follow-up to A Possible Resolution To Spurious Counterfactuals , which was addressing a technical problem in self-proof. See the original post for the suggestion provided for a solution to the 5 and 10 problem as described in the Embedded Agency paper . I suggested, at the end of that post, that the crux of the solution is that we don't want exactly a self-proof, we want explicit counterfactual reasoning. This actually allows the proofs (for the simple examples, but the principle should extend much further), and avoids accidentally inferring actions were valuable just because they were taken by a prudent agent. Here I want to make the case that, when we expand the usage of explicit agent pointers to allow self-modification (in the form of precommitments), we can talk meaningfully about many different decision theories. This framing doesn't decide your decision theory for you, it's only meant to help with counterfactual reasoning and Lobian obstacles in proof construction. The pseudocode presentation reminds us that programs can, in fact, point to themselves, and that this can be a suitable way to at least partially embed agents in their reasoning. This is where we left off: Situation :: Nonce
+Agent :: Agent -> Situation -> Choice
+Universe :: Agent -> Reward
+
+CounterfactuallyDoing(PriorAgent, CounterfactualSituation, Choice) :=
+	NewAgent := \Agent, Situation -> 
+		if Situation == CounterfactualSituation:
+			return Choice
+		else:
+			return PriorAgent(NewAgent, Situation)
+	return NewAgent
+
+A(Self, Situation == OnlySituation) := 
+	Spend some time searching for proofs of sentences of the form
+	“[U(CounterfactuallyDoing(Self, OnlySituation, 5)) = x] & [U(CounterfactuallyDoing(Self, OnlySituation, 10)) = y]” for x,y ∈{0,5,10}.
+	if a proof is found with x > y:
+		return 5
+	else:
+		return 10
+		
+U(Actor) :=
+	if Actor(Actor, OnlySituation) = 10:
+		return 10
+	if Actor(Actor, OnlySituation) = 5:
+		return 5 I'd like to propose an extension to the model (which is more like a toy phrasing of the idea). The core idea is that, with the counterfactual agents, we ought to introduce the idea of replacing the Universe's pointer to the Agent with one of those counterfactual agents. In other words, we'd like to be able to precommit: self-modify to resolve specific future decisions. I'm going to ignore the necessary practical complications, such as any form of uncertainty or randomness, and that you'd want to use those in such a way that they'd be amenable to proof-search so agents can make statements about what the counterfactual agents are doing. The purpose of the example is simple: I'd like to explore how various decision theories would use this construction, given this extension. First, the CDT example for the above solution method with the new parameters, but making the interaction slightly iterated to highlight what it would mean to update yourself: Situation :: Nonce
+Agent :: Agent -> Situation -> (Choice, Agent)
+Universe :: Agent -> Reward
+
+CounterfactuallyDoing(PriorAgent, CounterfactualSituation, Choice) :=
+	NewAgent := \Agent, Situation -> 
+		if Situation == CounterfactualSituation:
+			return (Choice, Agent)
+		else:
+			return PriorAgent(NewAgent, Situation)
+	return NewAgent
+
+A(Self, Situation) := 
+	choosesFive := CounterfactuallyDoing(Self, Situation, 5)
+	choosesTen := CounterfactuallyDoing(Self, Situation, 10)
+
+	Spend some time searching for proofs of sentences of the form
+	“[U(choosesFive) = x] & [U(choosesTen) = y]” for x,y ∈{0,5,...100}.
+	if a proof is found with x > y:
+		return (5, choosesFive)
+	else:
+		return (10, choosesTen)
+		
+U(Actor) :=
+	reward := 0
+	situations := [FiveOrTen i for i in range(10)]
+	for situation in situations:
+		(amount, newActor) := Actor(Actor, situation)
+		if amount = 10:
+			reward += 10
+		if amount = 5:
+			reward += 5
+		Actor := newActor Note that this still uses the (somewhat silly) proof search "mistake" / decision to try to find a proof that the worse option is better. That's just for consistency and clarity, and to highlight we want to be robust to that kind of search. Note that this is not a greedy strategy, it would "look through" (technically, it might find proofs related to) all possibilities every time. We could imagine giving the actor access to the future situations too -- agents will have some way of perceiving their environment and getting information about future possible decisions, and this is needed for some decision theories. Imagining an "Environment" parameter gives us: Situation :: Nonce
+Agent :: Agent -> Environment -> Situation -> (Choice, Agent)
+Universe :: Agent -> Reward
+
+CounterfactuallyDoing(PriorAgent, CounterfactualSituation, Choice) :=
+	NewAgent := \Agent, Environment, Situation -> 
+		if Situation == CounterfactualSituation:
+			return (Choice, Agent)
+		else:
+			return PriorAgent(NewAgent, Environment, Situation)
+	return NewAgent
+
+A(Self, Env, Situation) := 
+	choosesFive := CounterfactuallyDoing(Self, Situation, 5)
+	choosesTen := CounterfactuallyDoing(Self, Situation, 10)
+
+	Spend some time searching for proofs of sentences of the form
+	“[U(choosesFive) = x] & [U(choosesTen) = y]” for x,y ∈{0,5,...100}.
+	if a proof is found with x > y:
+		return (5, choosesFive)
+	else:
+		return (10, choosesTen)
+		
+U(Actor) :=
+	reward := 0
+	situations := [(FiveOrTen i) for i in range(10)]
+	for situation in situations:
+		(amount, newActor) := Actor(Actor, situations, situation)
+		if amount = 10:
+			reward += 10
+		if amount = 5:
+			reward += 5
+		Actor := newActor
+	return reward In this case the information the universe supplies about the environment to the agent is just the list of all scenarios it will give the agent. This seems general enough, given we've also imagined situations being parameterized. With this, we can imagine how we might express some various decision theories (I won't write them out, because it would be more pedantic than valuable, I think, with this level of detail): CDT: in the list of all possible counterfactuals (59,049 as it can choose 0, 5, or 10 for all 10 rounds), find the one choice for this choice that maxes the reward the universe can give. It's clear enough how the CounterfactuallyDoing operator maps to the do operator in the theory, and so maximizing it works the same as well, except (if the previous post is correct, and I do think it is), solving the proof-related issues. EDT: EDT, in finite cases, doesn't think counterfactually at all, so far as I can tell. It just observes cohorts making choices and chooses to belong to the cohort doing the best. Unsurprising, as there is no do in  its formulation, these counterfactuals aren't relevant to it at all. UDT & TDT: Ignore the current situation parameter, layer precommitments for all possible actions, and then call that agent with current situation. Given you aren't updating, this seems equivalent to these decision processes, but it also highlights some of their challenges. Timeless Decision Theory thinks the precommitments should be made a different way than Updateless, but their handling of precommitments seems similar, so it would also be aided by this. FDT: I didn't read this paper until after this analysis had occurred to me, and many of my own thoughts were already present there .  They acknowledge how precommitments elevate CDT to being able to solve most tricky problems where we would anticipate lost utility, but we can see the formalization in equation (4) is either identical or shockingly close to a usage of the formal counterfactuals described here if all self-pointers are used correctly. I think the talk about "surgery on world models" gets meaningfully simplified when you stop changing the world model and start explicitly reasoning about counterfactual agents instead. If this changes the epistemic perspective of FDT substantially, it is not in any way I can notice. In short, any proof-related barriers to decision theories should be, at the very least, ameliorated by this slight shift in outlook. It's genuinely unclear to me if this advances the ball meaningfully, but this formalization extends beyond CDT, and allows for self- and other-proofs where formal specification with direct self-pointers would (presumably) stymie them. The idea is to resolve proofs unambiguously by bottoming out in simpler agent-objects that are still sophisticated enough to encode the decision theories we'd want to use. All feedback is appreciated, including for resources on clear statements of open problems or where to look for additional insights into the challenges facing the field.

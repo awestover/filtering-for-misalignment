@@ -1,0 +1,130 @@
+In this fifth post in the sequence, I show
+the construction a counterfactual planning agent with an
+input terminal that can be used to iteratively improve the agent's
+reward function while it runs. The goal is to construct an agent which has has no direct incentive
+to manipulate this improvement process, leaving the humans in control. The reward function input terminal I will define an agent with an input terminal can be used to improve
+the reward function of an agent.  The terminal contains the current
+version of the reward function, and continuously sends it to the
+agent's compute core:: This setup is motivated by the observation that it is unlikely that
+fallible humans will get a non-trivial AGI agent reward function right
+on the first try, when they first start it up.  By using the input
+terminal, they can fix mistakes, while the agent keeps on running, if
+and when such mistakes are discovered by observing the agent's
+behavior. As a simplified example, say that the owners of the agent want it to
+maximize human happiness, but they can find no way of directly
+encoding the somewhat nebulous concept of human happiness into a
+reward function.  Instead, they start up the agent with a first reward
+function that just counts the number of smiling humans in the world.
+When the agent discovers and exploits a first obvious loophole in this
+definition of happiness, the owners use the input terminal to update
+the reward function, so that it only counts smiling humans who are not
+on smile-inducing drugs. Unless special measures are taken, the addition of an input terminal
+also creates new dangers.  I will illustrate this point by showing the
+construction of a dangerous agent ITF further below. Design and interpretation of the learning world As a first step in defining any agent with an input terminal, I have
+to define a model of a learning world which has both the agent and
+its the input terminal inside it.  I call this world the learning
+world, because the agent in it is set up to learn the dynamics of its
+learning world environment. See this earlier post in the
+sequence for a general introduction to the graphical language I am using to
+define world models and agents. As a first step to constructing the learning world diagram, I take the
+basic diagram of an agent interacting with its environment: To model the input terminal, I then split each environment state node S t into two components: The nodes I t represent the signal from the input terminal, the
+subsequent readings by the agent's compute core of the signal which
+encodes a reward function, and the nodes X t model all the rest of
+the agent environment state. I then add the observational record keeping needed to inform online
+machine learning.  I add two separate time series of observational
+records: O x t and O i t .  The result is the learning world
+diagram l i :. In the case that the learning world l i is our real world, the real
+input terminal will have to be built using real world atoms (and
+freely moving subatomic particles). I use the modeling convention that the random variables I t , l i represent only the observable digital input terminal signal as
+received by the agent's compute core.  The atoms that make up the
+input terminal are not in I t , l i , they are part of the
+environment state modeled in the X t , l i variables. Unsafe factual planning agent ITF I will now draw a 'standard' factual planning world f i that models
+the full mechanics of the learning world, define the ITF agent with
+it, and show why this agent is unsafe. ITF: The factual input terminal agent has the learning world l i where π ( o i , i , o x , x ) = π ∗ f ( i , x ) , with π ∗ f defined by
+the factual planning world f i , where L x = L X ( o x ) , L i = L I ( o i ) , and R ( i t , x t , x t + 1 ) = i t ( x t , x t + 1 ) . The planning world reward function R uses a form of indirect
+referencing : it applies the function i t as read from the input
+terminal in the current time step to compute the reward for that time
+step. As I discussed in the previous
+post ,
+indirection is a powerful tool, but it also often introduces new risks
+to the setup, typically risks of reward tampering or wireheading . The ITF planning world agent can massively improve its planning world
+utility by using a policy where it walks to the input terminal to
+input the new reward function f huge ( x t , x t + 1 ) = 10 10000 .
+Clearly, this is not what we want, if the optimal planning world
+policy is to input f huge , then the real world (learning
+world) agent, which copies the actions determined by the planning
+world policy, would end up inputting this function too. If some people in the real world want to block the ITF agent from
+changing its own reward function, then the agent might end up harming
+these people.  It will harm them even if its initial planning world
+reward function i has a penalty term that subtracts 10 100 from
+the planning world utility U f i for every human harmed.
+The agent does not have to come up with any smart way to harm people
+without triggering this penalty term: it will gladly harm all 500
+people guarding the input terminal because 10 10000 is much a
+larger number than 500 ∗ 10 100 . Control incentives, indifference, and paths to value An important feature of causal influence diagram based agent models is
+that they allow us to generalize from the above f huge thought experiment. Causal influence diagrams offer a mathematically well-defined way to
+talk about control incentives and indifference , where indifference
+is the lack of a control incentive.  (More mathematical details are in
+section 9 of my paper .  The
+mathematical relation between incentives and causal influence diagrams
+is also explored here .) The general problem is that the ITF planing world agent has an
+incentive to control the future signal coming from the input
+terminal.  This incentive is caused by the presence of paths to
+value in its planning world diagram f i , for example by the path
+from A 0 to via X 1 and I 2 to the utility node R 2 . When we want to maximize the probability that the humans will stay in
+control of the terminal, we have to suppress the agent's incentive to
+control. The general technique is discussed in section 9 of the paper: we can
+make the agent indifferent about what happens to the future input
+terminal signal by removing all the offending paths to value. Safer counterfactual planning agent ITC To construct the safer ITC agent, I remove the offending paths to
+value by taking the planning world diagram f i : and re-routing many of the arrows in it.  I end up with the
+counterfactual planning world diagram c i : The rerouted arrows are drawn in green.  I also deleted the arrows that
+go from the I t nodes to the A t nodes. I then define the safer ITC agent by using this counterfactual
+planning world: ITC: The counterfactual input terminal agent has the learning world l i where π ( o i , i , o x , x ) = π ∗ c ( x ) ,
+where π ∗ c is defined by the
+planning world c i , where L x = L X ( o x ) , L i = L I ( o i ) , and R ( i t , x t , x t + 1 ) = i t ( x t , x t + 1 ) . If the initial reward function i in the ITC agent planning world
+rewards paperclip production, then the planning world ITC agent lacks
+any direct incentive to perform actions that take away resources from
+paperclip production in order to influence what happens to its input
+terminal signal, as modeled by the nodes I 1 , I 2 , ⋯ .  This is
+because in the c i planning world, the state of these nodes has
+absolutely no influence, either positive or negative, on how the
+values in the agent's yellow utility nodes are computed. Corrigibility of the ITC agent As the learning world ITC agent we defined takes actions defined by
+the planning world policies, the ITC agent is also indifferent about
+the value of its future terminal signal.  It also has no direct
+incentive to manipulate the human decision processes that will
+determine the direction of these updates.  As explained in the
+previous
+post ,
+this is a form of corrigibility . But the ITC agent is not perfectly corrigible under all conditions, as
+it might develop indirect incentives to block the use of the input
+terminal. For a detailed example, see the discussion about stop button
+failure modes in this earlier
+post. Simplifying the ITC agent design We can simplify the ITC agent design by removing the nodes I 1 , I 2 , ⋯ from the planning world, as these have no effect on the reward
+we want the agent to calculate.  This in turn allows us to remove the
+observational records and machine learning function needed to compute
+the planning world parameter L i . These steps produce the following diagrams and agent definition: CITC: The compact version of the counterfactual input terminal
+agent has the learning world c l i where π ( i , o , x ) = π ∗ c ( x ) , where π ∗ c is defined by the planning world c c i ,
+where L = L ( o ) and R ( i t , x t , x t + 1 ) = i t ( x t , x t + 1 ) . Relation between counterfactual planning and indifference methods In my 2020 paper here , I used
+non-graphical MDP models and indifference
+methods to define a similar safe agent with an input terminal, called the π ∗ sl agent.  When used as a specification for a real-life
+agent compute core, the π ∗ sl agent definition in that
+paper produces exactly the same corrigible agent compute core
+behavior as the ITC agent definition above. The main difference is that the indifference methods based
+construction of π ∗ sl in that paper is more opaque than
+the counterfactual planning based construction of ITC above. The π ∗ sl agent is constructed by including a complex balancing term in its reward function, were this term can be
+interpreted as occasionally creating extra virtual worlds inside the
+agent's compute core.  Counterfactual planning constructs a different
+set of virtual worlds called planning worlds, and these are much
+easier to interpret. My 2020 paper includes some dense mathematical proofs to show that the π ∗ sl agent has certain safety properties.  Counterfactual
+planning offers a vantage point which makes the same safety properties
+directly visible in the ITC agent construction, via a lack of certain
+paths to value in the planning world. So overall, my claim is that counterfactual planning offers a more
+general and transparent way to achieve the corrigibility effects that
+can be constructed via balancing term based indifference methods. Simulations of ITC agent behavior See sections 4, 6, 11, and 12 of my 2020 paper for a more detailed discussion
+of the behavior of the π ∗ sl agent, which also applies to
+the behavior of the ITC agent. These sections also show some
+illustrative agent simulations. Section 6 has simulations where the agent will develop, under certain
+conditions, an indirect incentive causing it to be less corrigible.
+Somewhat counter-intuitively, that incentive gets fully suppressed
+when the agent gets more powerful, for example by becoming more
+intelligent.

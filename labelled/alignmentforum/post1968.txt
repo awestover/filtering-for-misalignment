@@ -1,0 +1,1 @@
+This is a link post for https://aligned.substack.com/p/ai-assisted-human-feedback I'm writing a sequence of posts on the approach to alignment I'm currently most excited about. This first post argues for recursive reward modeling and the problem it's meant to address (scaling RLHF to tasks that are hard to evaluate).

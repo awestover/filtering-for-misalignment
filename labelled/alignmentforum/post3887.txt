@@ -1,0 +1,5 @@
+An idea relevant for AI control; index here . Thanks to Jessica Taylor. I've been playing with systems to ensure or incentivise conservation of expected ethics - the idea that if an agent estimates that utilities v and w are (for instance) equally likely, then its future estimate for the correctness of v and w must be the same. In other words, it can try and get more information, but can't bias the direction  of the update. Unfortunately, CEE isn't enough. Here are a few decisions the AI can take that respect CEE. Imagine that the conditions of update relied on, for instance, humans answering questions: #. Don't ask.
+#. Ask casually.
+#. Ask emphatically.
+#. Build a robot that randomly rewires humans to answer one way or the other.
+#. Build a robot that observes humans, figures out which way they're going to answer, then rewires them to answer the opposite way. All of these conserve CEE, but, obviously, the last two options are not ideal...

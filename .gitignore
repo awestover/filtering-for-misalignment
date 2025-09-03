@@ -1,0 +1,12 @@
+env/
+__pycache__/
+aforum.json
+flagged/
+scraped/
+output/
+output-text/
+output-links/
+labelled/*
+!labelled/alignmentforum/
+!labelled/alignmentforum/**
+.venv/

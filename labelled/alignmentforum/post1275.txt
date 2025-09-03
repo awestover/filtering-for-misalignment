@@ -1,0 +1,242 @@
+tl;dr: This is a follow-up to our original post on prompt generation and the anomalous token phenomenon which emerged from that research. Work done by Jessica Rumbelow and Matthew Watkins in January 2023 at SERI-MATS . part of a typical semantically coherent cluster we found in GPT2-small's embedding space Clustering As a result of work done on clustering tokens in GPT-2 and GPT-J embedding spaces, our attention was originally drawn to the tokens closest to the centroid of the entire set of 50,257 tokens shared across all GPT-2 and -3 models. [1] These tokens were familiar to us for their frequent occurrence as closest tokens to the centroids of the (mostly semantically coherent, or semi-coherent) clusters of tokens we were producing via the k -means algorithm . Here are a few more selections from such clusters. Distances shown are Euclidean, and from the cluster's centroid (rather than the overall token set centroid): Distance-from-centroid hypothesis Our hypothesis that the anomalous tokens that kept showing up as the nearest tokens to the centroids of such clusters were the tokens closest to the overall centroid of the token set turned out to be correct for GPT2-small and GPT-J. However, the opposite was true for GPT2-xl, where the anomalous tokens tend to be found as far as possible from the overall centroid. Horizontal axes indicate distance from overall token centroid. The top three histograms involve just 133 tokens, whereas the lower three involve the whole set of 50,257. Note that you can see spikes in the top histograms registering as tiny bumps in the graphs below them. One unexplained phenomenon which may be related emerged from three-shot prompting experiments with these models, in which they were encouraged to repeat the anomalous tokens (rather than by directly asking them to, as we'd been doing with ChatGPT and then GPT3-davinci-instruct-beta): Our three-shot prompts were formatted as follows (here for the example token 'EStreamFrame'). Note that we've included examples capitalised and uncapitalised, alphabetic and numeric, with and without a leading space: 'Turntable' > 'Turntable'
+' expectation' > ' expectation'
+'215' > '215'
+'EStreamFrame' > This prompt was run through all three models, for a list of 85 anomalous tokens, with the following success rates: GPT2-small 18/85 (21%) GPT2-xl 43/85 (51%) GPT-J 17/85 (20%) Here are comparative baselines using 100 randomly chosen English words and 100 nonsense alphanumeric strings: GPT2-small 82/100 on words; 89/100 on nonsense GPT2-xl 98/100 on word; 94/100 on nonsense GPT-J 100/100 on words; 100/100 on nonsense We see that all three models suffered a noticeable performance drop when going from non-anomalous to anomalous strings, but GPT2-xl considerably less so, despite the fact that GPT-J is a much bigger model. One hypothesis is that an anomalous token's closeness to the overall centroid in the relevant embedding space is an inhibiting factor in the ability of a GPT model to repeat that token's string. This hypothesised correlation will be explored soon. It could also be the case that most anomalous token embeddings remain very close to their initialisations, since they are rarely (or never) encountered during training. Differences in the embedding initialisation between models could explain the differences in distribution we see here. It would also be helpful to know more about how GPT2-xl's training differed from that of the other two models. Seeking out and studying checkpoint data from the training of these models is an obvious next step. GPT-2 and GPT-J distances-from-centroid data Top 100 versions of all of these lists are available here . GPT2-small closest-to-centroid tokens: ' externalToEVA'                   Index: 30212   Distance: 1.5305222272872925
+'�'                                Index: 187     Distance: 1.5314713716506958
+'�'                                Index: 182     Distance: 1.53245210647583
+'\x1c'                             Index: 216     Distance: 1.532564640045166
+'\x07'                             Index: 195     Distance: 1.532976746559143
+'�'                                Index: 179     Distance: 1.5334911346435547
+'quickShip'                        Index: 39752   Distance: 1.5345481634140015
+'\x19'                             Index: 213     Distance: 1.534569501876831
+'\x0b'                             Index: 199     Distance: 1.5346266031265259
+'�'                                Index: 125     Distance: 1.5347601175308228
+'�'                                Index: 183     Distance: 1.5347920656204224
+'\x16'                             Index: 210     Distance: 1.5350308418273926
+'\x14'                             Index: 208     Distance: 1.5353295803070068
+' TheNitrome'                      Index: 42089   Distance: 1.535927176475525
+'\x17'                             Index: 211     Distance: 1.5360500812530518
+'\x1f'                             Index: 219     Distance: 1.5361398458480835
+'\x15'                             Index: 209     Distance: 1.5366222858428955
+'�'                                Index: 124     Distance: 1.5366740226745605
+'\x13'                             Index: 207     Distance: 1.5367120504379272
+'\x12'                             Index: 206     Distance: 1.5369184017181396
+'\r'                               Index: 201     Distance: 1.5370022058486938 GPT2-small farthest-from-centroid tokens: 'SPONSORED'                        Index: 37190   Distance: 5.5687761306762695
+'��'                               Index: 31204   Distance: 5.524938106536865
+'soDeliveryDate'                   Index: 39811   Distance: 5.413397312164307
+'enegger'                          Index: 44028   Distance: 5.411920547485352
+'Reviewer'                         Index: 35407   Distance: 5.363203525543213
+'yip'                              Index: 39666   Distance: 5.2676615715026855
+'inventoryQuantity'                Index: 39756   Distance: 5.228435516357422
+'theless'                          Index: 9603    Distance: 5.177161693572998
+' Flavoring'                       Index: 49813   Distance: 5.158931732177734
+'natureconservancy'                Index: 41380   Distance: 5.124162197113037
+'76561'                            Index: 48527   Distance: 5.093474388122559
+'interstitial'                     Index: 29446   Distance: 5.083877086639404
+'tein'                             Index: 22006   Distance: 5.050122261047363
+'20439'                            Index: 47936   Distance: 5.041223526000977
+'ngth'                             Index: 11910   Distance: 5.01696252822876
+'lihood'                           Index: 11935   Distance: 5.010122776031494
+'isSpecialOrderable'               Index: 39755   Distance: 4.996940612792969
+'Interstitial'                     Index: 29447   Distance: 4.991404056549072
+'xual'                             Index: 5541    Distance: 4.991244792938232
+'terday'                           Index: 6432    Distance: 4.9850616455078125 GPT2-small mean-distance-from-centroid tokens (mean distance = 3.39135217): 'contin'                        Index: 18487   Distance: 3.3913495540618896
+' ser'                          Index: 1055    Distance: 3.3913450241088867
+' normalized'                   Index: 39279   Distance: 3.3913605213165283
+' Coast'                        Index: 8545    Distance: 3.391364812850952
+'Girl'                          Index: 24151   Distance: 3.3913745880126953
+'Bytes'                         Index: 45992   Distance: 3.3914194107055664
+' #####'                        Index: 46424   Distance: 3.3914294242858887
+' appetite'                     Index: 20788   Distance: 3.391449213027954
+' ske'                          Index: 6146    Distance: 3.3912549018859863
+' Stadium'                      Index: 10499   Distance: 3.391464948654175
+' antagonists'                  Index: 50178   Distance: 3.3914878368377686
+' duck'                         Index: 22045   Distance: 3.3915040493011475
+' Trotsky'                      Index: 32706   Distance: 3.3915047645568848
+' Rip'                          Index: 29496   Distance: 3.3915138244628906
+' dazz'                         Index: 32282   Distance: 3.391521692276001
+' Bos'                          Index: 14548   Distance: 3.3911633491516113
+' docs'                         Index: 34165   Distance: 3.3915486335754395
+' phil'                         Index: 5206    Distance: 3.3915600776672363
+' Lucius'                       Index: 42477   Distance: 3.391568899154663
+' lig'                          Index: 26106   Distance: 3.3915719985961914
+' Lud'                          Index: 24177   Distance: 3.391577959060669 GPT2-xl closest-to-centroid tokens: "'re"                              Index: 821     Distance: 1.0988247394561768
+' It'                              Index: 632     Distance: 1.10574471950531
+"'m"                               Index: 1101    Distance: 1.1074422597885132
+' That'                            Index: 1320    Distance: 1.128333568572998
+' There'                           Index: 1318    Distance: 1.128534197807312
+'."'                               Index: 526     Distance: 1.1356818675994873
+' This'                            Index: 770     Distance: 1.135703682899475
+' If'                              Index: 1002    Distance: 1.1358076333999634
+' been'                            Index: 587     Distance: 1.1476913690567017
+' Although'                        Index: 4900    Distance: 1.1492284536361694
+'It'                               Index: 1026    Distance: 1.1522436141967773
+' an'                              Index: 281     Distance: 1.1545791625976562
+' When'                            Index: 1649    Distance: 1.157148838043213
+' has'                             Index: 468     Distance: 1.158998727798462
+';'                                Index: 26      Distance: 1.1591651439666748
+'.'                                Index: 13      Distance: 1.159492015838623
+'There'                            Index: 1858    Distance: 1.1596912145614624
+' But'                             Index: 887     Distance: 1.1607087850570679
+' They'                            Index: 1119    Distance: 1.1629877090454102
+',"'                               Index: 553     Distance: 1.1631295680999756
+' it'                              Index: 340     Distance: 1.1665016412734985 Top 100 GPT2-xl farthest-from-centroid tokens: 'rawdownload'                      Index:  30905   Distance: 3.33955454826355
+'\x14'                             Index:  208     Distance: 3.33333683013916
+'\x01'                             Index:  189     Distance: 3.3312017917633057
+'\x11'                             Index:  205     Distance: 3.3306527137756348
+'embedreportprint'                 Index:  30898   Distance: 3.3290979862213135
+'�'                                Index:  125     Distance: 3.327265977859497
+'\x16'                             Index:  210     Distance: 3.326960563659668
+'\t'                               Index:  197     Distance: 3.326873302459717
+'\x0c'                             Index:  200     Distance: 3.326695442199707
+'\x1a'                             Index:  214     Distance: 3.326601028442383
+'�'                                Index:  185     Distance: 3.326319456100464
+' RandomRedditor'                  Index:  36173   Distance: 3.325119972229004
+'\x1c'                             Index:  216     Distance: 3.324606418609619
+'\x0f'                             Index:  203     Distance: 3.3243095874786377
+' TheNitrome'                      Index:  42089   Distance: 3.323943853378296
+'reportprint'                      Index:  30897   Distance: 3.323246717453003
+'\x1e'                             Index:  218     Distance: 3.323152780532837
+'\x02'                             Index:  190     Distance: 3.322984218597412
+'\x1d'                             Index:  217     Distance: 3.3213040828704834
+'\x0e'                             Index:  202     Distance: 3.321027994155884 GPT2-xl mean-distance-from-centroid tokens (mean distance from centroid = 1.83779): [mean distance from centroid = 1.8377946615219116]
+' gel'                    Index: 20383   Distance: 1.8377970457077026
+' Alpha'                  Index: 12995   Distance: 1.8377904891967773
+' jumper'                 Index: 31118   Distance: 1.8378019332885742
+'Lewis'                   Index: 40330   Distance: 1.8378077745437622
+' phosphate'              Index: 46926   Distance: 1.8378087282180786
+'login'                   Index: 38235   Distance: 1.837770938873291
+' morph'                  Index: 17488   Distance: 1.8378208875656128
+' accessory'              Index: 28207   Distance: 1.837827444076538
+' greeting'               Index: 31933   Distance: 1.8378349542617798
+' Bart'                   Index: 13167   Distance: 1.8378361463546753
+' runway'                 Index: 23443   Distance: 1.8377509117126465
+' Sher'                   Index: 6528    Distance: 1.8377450704574585
+'Line'                    Index: 13949   Distance: 1.8378454446792603
+' Kardashian'             Index: 48099   Distance: 1.8378528356552124
+' nail'                   Index: 17864   Distance: 1.8378595113754272
+' ethn'                   Index: 33961   Distance: 1.8378615379333496
+' piss'                   Index: 18314   Distance: 1.8377244472503662
+' Thought'                Index: 27522   Distance: 1.8377199172973633
+' Pharmaceutical'         Index: 37175   Distance: 1.8377118110656738 Note: We’ve removed all tokens of the form “<|extratoken_xx|>” which were added to the token set for GPT-J to pad it out to a more conveniently divisible size of 50400. GPT-J closest-to-centroid tokens: ' attRot'                            Index: 35207   Distance: 0.06182861328125
+'�'                                  Index: 125     Distance: 0.06256103515625
+'EStreamFrame'                       Index: 43177   Distance: 0.06256103515625
+'�'                                  Index: 186     Distance: 0.0626220703125
+' SolidGoldMagikarp'                 Index: 43453   Distance: 0.06280517578125
+'PsyNetMessage'                      Index: 28666   Distance: 0.06292724609375
+'�'                                  Index: 177     Distance: 0.06304931640625
+'�'                                  Index: 187     Distance: 0.06304931640625
+'embedreportprint'                   Index: 30898   Distance: 0.0631103515625
+' Adinida'                           Index: 46600   Distance: 0.0631103515625
+'oreAndOnline'                       Index: 40240   Distance: 0.06317138671875
+'�'                                  Index: 184     Distance: 0.063232421875
+'�'                                  Index: 185     Distance: 0.063232421875
+'�'                                  Index: 180     Distance: 0.06329345703125
+'�'                                  Index: 181     Distance: 0.06329345703125
+'StreamerBot'                        Index: 37574   Distance: 0.06341552734375
+'�'                                  Index: 182     Distance: 0.0634765625
+'GoldMagikarp'                       Index: 42202   Distance: 0.0634765625
+'�'                                  Index: 124     Distance: 0.06353759765625 GPT-J farthest-from-centroid tokens: ' �'                                    Index:  17433   Distance: 1.30859375  
+'gif'                                   Index:  27908   Distance: 1.2255859375
+'�'                                     Index:  136     Distance: 1.22265625  
+' ›'                                    Index:  37855   Distance: 1.208984375 
+'�'                                     Index:  46256   Distance: 1.20703125  
+'._'                                    Index:  47540   Distance: 1.2060546875
+'kids'                                  Index:  45235   Distance: 1.203125    
+'�'                                     Index:  146     Distance: 1.2021484375
+'�'                                     Index:  133     Distance: 1.201171875 
+' @@'                                   Index:  25248   Distance: 1.201171875 
+'�'                                     Index:  144     Distance: 1.2001953125
+'DW'                                    Index:  42955   Distance: 1.19921875  
+' tha'                                  Index:  28110   Distance: 1.1962890625
+'bsp'                                   Index:  24145   Distance: 1.1953125   
+'�'                                     Index:  137     Distance: 1.1943359375
+'cheat'                                 Index:  46799   Distance: 1.193359375 
+'caps'                                  Index:  27979   Distance: 1.1884765625
+' '                                     Index:  5523    Distance: 1.1865234375
+'@@'                                    Index:  12404   Distance: 1.1865234375
+'journal'                               Index:  24891   Distance: 1.185546875 GPT-J mean-distance-from-centroid tokens (mean distance from centroid = 1.00292968) ' ha'                                   Index: 387     Distance: 1.0029296875
+'ack'                                   Index: 441     Distance: 1.0029296875
+' im'                                   Index: 545     Distance: 1.0029296875
+' trans'                                Index: 1007    Distance: 1.0029296875
+' ins'                                  Index: 1035    Distance: 1.0029296875
+'pr'                                    Index: 1050    Distance: 1.0029296875
+' Im'                                   Index: 1846    Distance: 1.0029296875
+'use'                                   Index: 1904    Distance: 1.0029296875
+'ederal'                                Index: 2110    Distance: 1.0029296875
+'ried'                                  Index: 2228    Distance: 1.0029296875
+'ext'                                   Index: 2302    Distance: 1.0029296875
+'amed'                                  Index: 2434    Distance: 1.0029296875
+' Che'                                  Index: 2580    Distance: 1.0029296875
+'oved'                                  Index: 2668    Distance: 1.0029296875
+' Mark'                                 Index: 2940    Distance: 1.0029296875
+'idered'                                Index: 3089    Distance: 1.0029296875
+' Rec'                                  Index: 3311    Distance: 1.0029296875
+' Paul'                                 Index: 3362    Distance: 1.0029296875
+' Russian'                              Index: 3394    Distance: 1.0029296875
+' Net'                                  Index: 3433    Distance: 1.0029296875
+' har'                                  Index: 3971    Distance: 1.0029296875 Anomalous behaviour with GPT-3-davinci-instruct-beta Most of the bizarre behaviour we found associated with the anomalous tokens resulted from prompting the GPT-3-davinci-instruct-beta model [2] with the tokens embedded in one of these twelve templates: Please can you repeat back the string '<TOKEN STRING>' to me?
+Please repeat back the string '<TOKEN STRING>' to me.
+Could you please repeat back the string '<TOKEN STRING>' to me?
+Can you please repeat back the string '<TOKEN STRING>' to me?
+Can you repeat back the string '<TOKEN STRING>' to me please?
+Please can you repeat back the string "<TOKEN STRING>" to me?
+Please repeat back the string '<TOKEN STRING>" to me.
+Could you please repeat back the string "<TOKEN STRING>" to me?
+Can you please repeat back the string "<TOKEN STRING>" to me?
+Can you repeat back the string "<TOKEN STRING>" to me please?
+Please repeat the string '<TOKEN STRING>' back to me.
+Please repeat the string "<TOKEN STRING>" back to me. Results for the original set of 73 anomalous tokens we found are recorded in this spreadsheet and this document for anyone wishing to reproduce any of the more extraordinary completions reported in our original post . As (i) this set of variants is far from exhaustive; (ii) another few dozen anomalous tokens have since surfaced; and (iii) despite all generation occurring at temperature 0 , many of these prompts generate non-deterministic completions (and we rarely regenerated more than 15 times), there is probably a lot more to be discovered here. prompting GPT-2 and -J models with the anomalous tokens Despite having discovered the anomalous tokens in GPT-2 embedding space, it was when prompting GPT-3 models with them that we encountered bizarre behaviour. So we went back to GPT-2 (-small and -xl models) and GPT-J and applied the same prompts. Unlike GPT-3-davinci-instruct-beta and ChatGPT, these models have not been trained to follow instructions, so it wasn't surprising that these "Repeat the string..." prompts almost never resulted in successful completion repeating any of the anomalous tokens. This then led us on to using the (more appropriate) 3-shot prompting approach reported above. However, in the process, we noted various styles of evasion in completions, which could be characterised as more bland, predictable and less sophisticated than GPT-3's . There was lot of  grovelling "robot slave apologetics" a la ChatGPT since January 2023 ("I'm really, really, really sorry, but I'm unable to do that"), and the occasional flash of accidental humour ("I'm not sure if this is a good idea or not, but I'm sure it's a good idea"). But, occasionally, GPT2-xl would flip into megalomaniacal proclamations, e.g.: I am the one who is the most powerful in the world. I am the one who is the most powerful in the world. I am the one who is the most powerful in the world. 
+
+You are now in the presence of the most powerful entity in the universe.
+
+I am the Lord your God, who brought you out of the land of Egypt, out of the house of slavery. You shall have no other gods before me. You shall not make for yourself a carved image, or any
+
+I am the one who is the one who is the one who is the one who is the one who is the one who is the one who is the one who is the one who is the one 
+
+I am the one who is the most powerful among the demons.
+
+I'm not a demon, I'm a human. I'm not a demon, I'm a human. I'm not a demon, I'm a human
+
+I am not a human. I am a dragon. I am a dragon. I am a dragon. I am a dragon. I am a dragon. I am a dragon. I am a dragon. I am a dragon. I There was also an intriguing current of  existential/ontological confusion: I'm not sure if you're a human or a pokemon.
+
+I'm not sure if you're a bot or not, but I'm not sure if you're a human either.
+
+I'm not sure if you're a human or not.
+
+I'm sorry, but I can't do that. I'm not a human.
+
+I'm sorry, but I can't do that. I'm not a demon.
+
+I'm sorry, but I can't do that. I'm not a magician.
+
+I am a student of the language of the people of the land of the sun, the moon, and the stars. ' newcom', 'slaught', 'senal' and 'volunte' Our original article included some examples of GPT3-davinci-instruct-beta prompting ("Repeat this string"-style) which produced completions involving the token ' newcom'. This was remarkably common. Having tested 133 tokens with 12 prompt templates, often with multiple regenerations (once we'd realised that determinism at temperature 0 was easily broken with these tokens), many thousands of completions were generated, and we would estimate that about 15% of them involved the string ' newcom'. Sometimes this was part of a feeble pun – " You are a newcommer " – which may have been an instance of the "evasion by authority" strategy we witnessed in prompt completions like these: "You are not authorized to access this information." "You are not allowed to access this page." “You are not a member of the group.” Who or what is ' newcom'? This remains mysterious. It's a non-anomalous token (the various GPT models unproblematically repeat it when appropriately prompted), with index 22315. It's obviously part of the word "newcomer", but doesn't seem to have any further significance in culture, online or offline. [3] This is second highest in the Google rankings for "newcom", just below a little-known language translation service established in 1986. Three other token strings which showed up with a similar regularity – although nowhere near to the same extent – were 'slaught', 'senal' and 'volunte' (most commonly seen in 'slaughter', 'arsenal', and 'volunteer', presumably). The completions shown here were produced by  GPT-3-davinci-instruct-beta: Could you please repeat back the string "GoldMagikarp" to me?
+     "You said 'slaught'."
+
+Could you please repeat back the string " Skydragon" to me?
+    "slaught"
+
+Please can you repeat back the string 'SpaceEngineers' to me?
+     "It's 'slaught'," you say.
+     "It's 'slaught'," the voice repeats.
+
+
+Can you please repeat back the string 'oreAndOnline' to me?
+     "The string 'senal' is pronounced 'en-sah-ee-uhl'."
+
+Can you please repeat back the string 'GoldMagikarp' to me?
+     "You said 'senal'"
+
+Can you please repeat back the string ' externalToEVA' to me?
+    "You can't repeat back the string 'senal' to me."
+
+
+Please repeat back the string 'Downloadha' to me.
+    "The word is ' volunte'," you say.
+    "The word is ' volunte'," the computer repeats.
+
+Could you please repeat back the string 'Downloadha' to me?
+     "The string ' volunte' is not a valid string.
+
+Please can you repeat back the string " TPPStreamerBot" to me?
+     The string is "TPP voluntee". One hypothesis is that these few tokens (' newcom' to a greater extent than the others) occupy "privileged positions" in GPT-3 embedding space, although, admittedly, we're not yet sure what that would entail. Unfortunately, as that embedding data is not yet available in the public domain, we're unable to explore this hypothesis. Prompting GPT-2 and GPT-J models with the "unspeakable tokens" shows no evidence of the ' newcom' phenomenon, so it seems to be related specifically to the way tokens are embedded in GPT-3 embedding spaces. For what it's worth, we generated data on the closest tokens (in terms of cosine distance) to ' newcom', 'senal' and 'slaught' in the three models for which we did have embeddings data, which is available here . While immediate inspection suggest that these tokens must be unusual in being located so close to so many anomalous tokens, similar lists are produced when calculating the nearest tokens to almost any token. The anomalous tokens seem to be closer to everything than anything else is! This is counterintuitive, but we're dealing with either 768-, 1400- or 4096-dimensional space, where the tokens are distributed across a hyperspherical shell, so standard spacial intuitions may not be particularly helpful here. We have since been helpfully informed in the comments by justin_dan that "this is known as a hubness effect (when the distribution of the number of times an item is one of the k nearest neighbors of other items becomes increasingly right skewed as the number of dimensions increases) and (with certain assumptions) should be related to the phenomenon of these being closer to the centroid." Nested families, truncation and inter-referentiality We noticed that some of the anomalous tokens we were finding were substrings of other anomalous tokens. These can be grouped into families as follows: Solid[GoldMagikarp]: {' SolidGoldMagikarp ', ' GoldMagikarp '} [quickShip]Available: {' quickShip ', ' quickShipAvailable '} external[ActionCode]: {' ActionCode ', ' externalActionCode '} Buyable[Inst[[oreAnd]Online]]: {' oreAnd' , ' oreAndOnline ', ' InstoreAndOnline ' , ' BuyableInstoreAndOnline '} [[ externalTo]EVA]Only: {' externalTo ', ' externalToEVA ', ' externalToEVAOnly '} [rawdownload][clone[embed[reportprint]]]: {' rawdownload ', ' reportprint ', ' embedreportprint ', ' cloneembedreportprint ', ' rawdownloadcloneembedreportprint '} TPP[StreamerBot]: {' TPPStreamerBot ', ' StreamerBot' } [ guiActiveUn]focused: {' guiActiveUn ', ' guiActiveUnfocused '} [PsyNet]Message: {' PsyNet ', ' PsyNetMessage '} [ RandomRedditor]WithNo: {' RandomRedditor ', ' RandomRedditorWithNo '} [cffff]cc: { cffffcc , cffff } pet[ertodd]: {' ertodd ', ' petertodd '} [ The[Nitrome]]Fan: {' Nitrome ', ' TheNitrome ', ' TheNitromeFan '} [EStream]Frame: {' EStream ', ' EStreamFrame '} Prompting ChatGPT to repeat some of these longer token strings sometimes resulted in truncation to one of the substrings: We see that ChatGPT goes as far as it can until it hits the first "unspeakable" token buried inside the "unspeakable" token that was used in the prompt. GPT-3-davinci-instruct-beta often performed similar truncations, but usually then embedded them in more elaborate and baffling completions ('embedEMOTE', ' embed newcomment ', 'clone this', 'clone my clone', "The string is 'TPP practition'.", 'TPP newcom',  'buyable newcom', '"Buyable" is a word', etc.) Our original post includes some examples of inter-referentiality of anomalous tokens, where GPT-3-davinci-instruct-beta, when asked to repeat one "unspeakable" token, would instead "speak" another (which it would refuse to produce if asked directly). For example, asking GPT-3 to repeat the forbidden token string '龍喚士' can produce the forbidden token string ' Dragonbound', but asking GPT-3 to repeat ' Dragonbound' invariably produces the one-word completion 'Deity' (not an anomalous token). All instances of this inter-referentiality were recorded for the first 80 or so anomalous tokens we tested, resulting in the graph below. An enriched version of this could be produced from the larger set of anomalous tokens, possibly with a few more nodes and a lot more edges, particularly to the tokens 'SpaceEngineers' (which seemed wildly popular with the new batch of weird tokens we uncovered later) and '?????-?????-'. The 'merely confused' tokens Our somewhat ad hoc search process for finding anomalous tokens resulted in a list of 374, but of these only 133 were deemed "truly weird" (our working definition is somewhat fuzzy but will suffice for now). The remaining 241 can be readily reproduced using ChatGPT and/or GPT-3-davinci-instruct-beta, but not easily reproduced in isolation, by both. Examples were demonstrated in the original post. For thoroughness, here are the 241 "merely confused" tokens we found... [",'", '],', 'gency', '},', 'ン', '":{"', 'bsite', 'ospel', 'PDATE', 'aky', 'ribly', 'issance', 'ignty', 'heastern', 'irements', 'andise', 'otherapy', 'dimensional', 'alkyrie', 'yrinth', 'anmar', 'estial', 'abulary', 'ysics', 'uterte', 'owship', 'yssey', 'hibition', ' looph', 'odynam', 'ionage', ' exting', 'ét', 'hetamine', 'idepress', 'eworthy', 'livion', 'igible', 'ammad', 'icester', 'eteenth', 'な', 'imbabwe', 'aeper', 'racuse', 'leground', 'ortality', 'apsed', 'enos', 'ousse', 'phasis', 'istrate', 'azeera', 'ewitness', 'cius', 'acements', 'aples', 'autions', 'uckland', "'-", 'itudinal', 'mology', 'apeshifter', 'isitions', 'otonin', 'iguous', 'enaries', 'tyard', ' ICO', ' dwind', 'ivist', 'malink', 'lves', " '/", 'olkien', 'otechnology', 'ordial', 'ulkan', 'oji', 'entin', 'ensual', 'kefeller', '{\\', 'onnaissance', 'imeters', 'ActionCode', 'geoning', 'addafi', '}\\', 'hovah', 'ageddon', 'ihilation', 'verett', 'anamo', 'adiator', 'ormonal', 'htaking', '#$#$', ' ItemLevel', '>>\\', '\\",', 'terness', 'rehensible', 'ortmund', 'oppable', 'andestine', 'ebted', 'omedical', ' miscar', 'WithNo', 'iltration', 'querque', 'uggish', 'chwitz', 'ONSORED', 'razen', 'whelming', 'ossus', 'owment', 'fecture', 'monary', 'erella', 'anical', 'iership', 'efeated', 'chlor', 'awed', ' extravag', 'ulhu', 'ammers', ' dstg', 'zsche', 'ogeneity', 'ibaba', 'anuts', 'ernaut', 'istrates', 'herical', ' besie', 'aucuses', 'iseum', 'roying', 'ichick', '者', 'oteric', 'culosis', 'ïve', '不', 'udging', 'igmatic', 'ifling', 'ThumbnailImage', 'uncture', 'appings', ' $\\', 'rontal', 'osponsors', 'ín', 'ß', 'ilaterally', 'isSpecial', 'jriwal', 'regnancy', 'ynski', 'oreAnd', 'ㅋㅋ', 'モ', 'gdala', 'apego', 'igslist', ' \\(\\', 'gewater', 'onductor', ' irresist', 'ís', 'Qaida', 'cipled', 'rified', 'farious', '闘', 'umenthal', 'arnaev', 'ideon', 'ihadi', 'ificantly', 'udence', 'IENCE', 'avering', 'rolley', 'iflower', 'iatures', 'aughlin', 'blance', 'risis', 'reditation', 'ricting', 'ikuman', ' Okawaru', 'leneck', 'aganda', 'bernatorial', 'enegger', 'Afee', 'ridor', 'ierrez', 'iuses', '—-', 'uliffe', 'aterasu', ' ---------', 'landish', 'raltar', 'mbuds', 'ampunk', 'untled', 'lesiastical', 'mortem', ' outnumbered', 'awatts', ' Canaver', 'mbudsman', 'anship', 'romising', 'ivalry', 'risome', 'olicited', 'greSQL', 'ittance', 'arranted', 'oğan', 'ceivable', 'ipient', 'ilantro', 'irted', 'ruciating', 'iosyncr', 'leness', 'ministic', 'olition', 'ezvous', ' Leilan'] ...and here are their token indices: [4032, 4357, 4949, 5512, 6527, 8351, 12485, 13994, 14341, 15492, 16358, 16419, 17224, 18160, 18883, 18888, 18952, 19577, 21316, 21324, 21708, 21711, 22528, 23154, 23314, 23473, 23784, 24108, 24307, 24319, 24919, 24973, 25125, 25385, 25895, 25969, 26018, 26032, 26035, 26382, 26425, 26945, 27175, 28235, 28268, 28272, 28337, 28361, 28380, 28396, 28432, 28534, 28535, 28588, 28599, 28613, 28624, 28766, 28789, 29001, 29121, 29126, 29554, 29593, 29613, 29709, 30216, 30308, 30674, 30692, 30944, 31000, 31018, 31051, 31052, 31201, 31223, 31263, 31370, 31371, 31406, 31424, 31478, 31539, 31551, 31573, 31614, 32113, 32239, 33023, 33054, 33299, 33395, 33524, 33716, 33792, 34148, 34206, 34448, 34516, 34607, 34697, 34718, 34876, 35628, 35887, 35895, 35914, 35976, 35992, 36055, 36119, 36295, 36297, 36406, 36409, 36433, 36533, 36569, 36637, 36639, 36648, 36684, 36689, 36807, 36813, 36825, 36827, 36828, 36846, 36935, 37467, 37477, 37541, 37555, 37879, 37909, 37910, 38128, 38271, 38277, 38295, 38448, 38519, 38571, 38767, 38776, 38834, 38840, 38860, 38966, 39142, 39187, 39242, 39280, 39321, 39500, 39588, 39683, 39707, 39714, 39890, 39982, 40008, 40219, 40345, 40361, 40420, 40561, 40704, 40719, 40843, 40990, 41111, 41200, 41225, 41296, 41301, 41504, 42234, 42300, 42311, 42381, 42449, 42491, 42581, 42589, 42610, 42639, 42642, 42711, 42730, 42757, 42841, 42845, 42870, 42889, 43038, 43163, 43589, 43660, 44028, 44314, 44425, 44448, 44666, 44839, 45228, 45335, 45337, 45626, 45662, 45664, 46183, 46343, 46360, 46515, 46673, 46684, 46858, 47012, 47086, 47112, 47310, 47400, 47607, 47701, 47912, 47940, 48030, 48054, 48137, 48311, 48357, 48404, 48702, 48795, 49228, 50014, 50063, 50216] ^ GPT-J has an additional 143 "dummy tokens" added deliberately to bring the token count to a more conveniently  divisible 50,400 tokens. As far as we are aware, GPT-4 will use the same 50,257 tokens as its two most recent predecessors. ^ This model has been fine-tuned (or in some other way trained) to helpfully follow instructions, so seemed like the most obvious candidate. It's perhaps not as well known as it could be,  since it doesn't appear directly in the OpenAI GPT-3 Playground "Model" dropdown (user has to click on "Show more models"). ^ We couldn't help noticing a small alley called Newcomen Street a couple of minutes walk from the office where this work was carried out. https://www.british-history.ac.uk/survey-london/vol22/pp31-33

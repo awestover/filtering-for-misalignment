@@ -1,0 +1,1 @@
+Talk given by Rebecca Gorman and Stuart Armstrong at the CHAI 2022 Asilomar Conference. We present an example of AI wireheading (an AI taking over its own reward channel), and show how value extrapolation can be used to combat it. https://www.youtube.com/watch?v=REUanSy0SgU

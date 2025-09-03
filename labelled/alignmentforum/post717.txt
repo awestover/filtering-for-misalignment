@@ -1,0 +1,364 @@
+This is Section 4.4-4.7 of my report “ Scheming AIs: Will AIs fake alignment during training in order to get power? ”. There’s also a summary of the full report here (audio here ). The summary covers most of the main points and technical terms, and I’m hoping that it will provide much of the context necessary to understand individual sections of the report on their own. Audio version of this section here , or search for "Joe Carlsmith Audio" on your podcast app. Speed arguments Let's turn, now, to arguments against schemers that focus on the final
+properties of the models in question. Here, the main argument I'm aware
+of is that schemers need to do extra reasoning that other model classes
+don't. In particular, I'll distinguish between three sorts of reasoning: Deciding to training-game *:* The model needs to reason backwards
+from "I want this beyond-episode thing" to "I should do well in
+training," in a way that draws on the model's predictions about what
+doing well in training will entail (e.g., re: goal-guarding,
+take-over prospects, and so on). Checking whether it's time to escape/take-over: The model needs
+to checking, with adequate frequency and accuracy, whether it's in a
+position to escape/take-over (and to succeed in this assessment
+despite human efforts to trap/fool the model into revealing its true
+colors – for example, by offering it apparent opportunities to
+defect). [1] (Optional, but relevant to how scary the schemer is) Early
+undermining : To the extent the model is doing anything (other than
+training-gaming) to support a take-over/escape prior to escaping
+human control – for example, inserting backdoors into the code it
+writes, actively undermining human alignment research, sandbagging,
+and so on – it will need to be using cognitive resources both in (a)
+performing the relevant nefarious actions and (b) making sure it
+gets away with them (e.g., checking that it won't get caught, coming
+up with excuses, making the cover stories consistent even when under
+scrutiny, and so on). In the literature on deceptive alignment, these costs are sometimes
+called "speed costs," as compared with the sort of "complexity costs"
+discussed in the simplicity analysis above. Here, the frame becomes
+"schemers are favored by simplicity but disfavored by speed – so which
+will matter more?" [2] As I mentioned above in the context of
+simplicity, it's not clear that this is the right breakdown (since e.g.
+it may be that the relevant forms of reasoning will need to be encoded
+in the model's weights, or that they will require extra cognitive
+machinery in general, thereby imposing "complexity costs" of their own),
+but I'll follow it loosely here. And note, too, that as with simplicity,
+these "speed costs" can be understood in a "contributors to reward
+frame" (e.g., having to do this extra reasoning decreases reward) or in
+an "extra criteria frame" (e.g., perhaps SGD's inductive biases favor
+"speed" even independent of its contribution to reward). How big are the absolute costs of this extra reasoning? I feel unsure about exactly how costly the relevant forms of extra
+reasoning will be. My sense, though, is that the people most concerned
+about schemers tend to expect the costs to be pretty small, at least in
+absolute terms (call this the "scheming is easy" story). That is, on
+this story: With respect to the decision to training-game, all the model needs
+to do is notice that (a) it'll do better by its goals if it avoids
+modification and gets power later, and (b) that training-gaming is
+the route to this. [3] With respect to checking for escape/take-over opportunities, the
+thought is generally that it will be very easy, at least for a
+sophisticated model, to tell good opportunities from bad (and
+similarly, to detect human "traps" in this respect). With respect to early undermining, the thought is that human
+supervision will be sufficiently weak (and the slack in training
+sufficiently permissive) that nefarious actions like
+inserting-backdoors and undermining-alignment-research will be easy
+to get away with. (And if and when early undermining isn't easy,
+then models can refrain from engaging in it.) At least with respect to only-somewhat-better-than-human-level models, I
+find the "scheming is easy" story less plausible for
+checking-for-escape/take-over-opportunities than for
+deciding-to-training-game (and still less plausible for early
+undermining). That is: I think it is plausibly pretty easy, in absolute
+terms, to notice that scheming is a good instrumental strategy. But it
+also seems plausible to me – especially in contexts where humans + their
+AI assistants are doing a lot of adversarial training, continuous
+oversight, auditing, red-teaming, and the like – that verifying that now
+is really-truly the time to go for an escape/take-over will be
+difficult, and requiring of quite a bit of additional "checking" (not to
+mention: coordination with other AIs, if the take-over effort requires
+multiple participants) – especially you have a very low tolerance for
+getting caught (and as I noted above, if humans catch instances of
+real-life schemers making a break for it, this will plausibly be a big
+help to research and advocacy efforts related to scheming). Compare
+with: deciding that this is really-truly a good time to steal, or to
+break the law, or to try to start a coup, despite the fact that you live
+your life in an intensively monitored surveillance state where the
+police are constantly trying to trick you into such behavior, and where
+the police have a large amount of control over the information you're
+exposed to. [4] Indeed, if it really wants to avoid getting caught in an escape attempt,
+in a regime where humans are heavily monitoring it, trying to trap it,
+etc, a schemer needs to dance a fine line. [5] On the one hand, if it's too cautious, and waits too long before
+making a break for it, then it gives humans more time to get
+alignment under control – and absent early-undermining, it might be
+actively contributing to checkable alignment-relevant tasks in the
+meantime. [6] By contrast, if it devotes too much cognition to checking for escape
+attempts, then it risks getting punished by training because it's
+not focusing its full capacities on the task at hand. And if we imagine that the model is actively engaged in early
+undermining, I think we should expect the cognitive costs of scheming to
+increase substantially. That is, absent early undermining, a model can
+mostly just act exactly like a reward-on-the-episode seeker until some
+very obvious escape/take-over opportunity comes along, after which (if
+the escape/take-over goes well), it won't need to worry about e.g.
+explaining its actions to human supervisors, making sure it doesn't get
+caught via an audit/security review/etc, and so on. Whereas early
+undermining requires performing, and getting away with, actively
+nefarious actions while still under human control . And this seems like
+a substantially additional challenge. (As an analogy: as a spy in the
+Manhattan project, it is harder to get away with actively sabotaging the
+project than it is with merely pretending to be loyal to the project's
+goals. In the latter case, you can act just like a loyal employee, but
+in the former case you can't.) [7] And of course, as I noted above: to
+the extent that early undermining deviates from training-gaming, it
+involves taking some hit to reward by definition, and will be punished
+by training accordingly. Of course, early undermining is strictly optional, for a schemer. So we
+can get rid of the extra cognitive and reward-related costs it implies
+if we imagine that the schemer in question just chooses to act exactly
+like a reward-on-the-episode seeker until it sees some opportunity to
+fully escape, or until some full-blown take-over begins. But note that
+in that case, the sense in which early-undermining makes schemers
+uniquely scary becomes less relevant. [8] And declining to engage in
+early undermining might harm AI escape/takeover prospects in various
+ways – especially if, by failing to sandbag on various
+alignment-relevant tasks, the schemers in question meaningfully
+contribute to human anti-takeover efforts. A general factor in the backdrop, here, is the sense in which successful
+deception generally implies cognitive costs that more straightforward
+and honest policies do not, especially in the presence of active efforts
+to detect deception of the relevant form. [9] In particular: telling a
+deceptive story about the world requires filling in details, and
+maintaining forms of consistency, that one can normally offload onto the
+world itself – e.g., an innocent person can just think back to what they
+were actually doing the night of the murder and recount it, without
+having to make anything up or to worry about getting caught in any
+inconsistencies, whereas the murderer cannot. [10] Especially when
+cognitive resources are scarce, then (e.g., in highly time-pressured
+environments, or a "low slack" training regime), deceptive policies can
+have a notably more difficult time. [11] That said, empirically, deceptive strategies often succeed in human
+contexts, so these costs are clearly surmountable. And if the deceptive
+agent is substantially more sophisticated than the agents it is trying
+to deceive, (e.g., an adult playing werewolf with children, or a
+professional poker player facing off against an amateur) pulling it off
+may be quite easy. Indeed, my sense is that a core part of the intuition
+for "the cognitive costs of scheming are low" comes from imagining that
+the schemers in question are sufficiently advanced, relative to the
+monitoring/oversight ability to humans + AI assistants, that differences
+like these kick in hard. How big are the costs of this extra reasoning relative to the simplicity benefits of scheming? Importantly, though: the question for present purposes isn't about the
+absolute size of the cognitive costs at stake in the extra reasoning
+schemers need to do. Rather, it's about whether those costs outweigh the
+benefits, discussed in the previous section, of having a simpler
+goal – whether with respect to reward, or by the lights of SGD's
+inductive biases. Here, my current take is that the costs of the instrumental reasoning
+seem larger than the benefits of the simpler goal. In particular, as I
+noted above, the benefits of having a simpler goal, especially once you
+already have a sophisticated world model that is already representing
+concepts like "what humans would approve of," and "reward on the
+episode," seem fairly small, and plausibly negligible. Whereas the
+cognitive costs of the extra reasoning discussed above (even setting
+aside early undermining) seem like they register much more
+substantively. We can also try to quantify this comparison more directly. Thus, for
+example, suppose that our model is a purely feedforward network with
+1000 layers and <10,000 serial steps per input, [12] that the
+instrumental reasoning at stake just in a schemer deciding to
+training-game (let alone: checking for defection-opportunities) takes at
+least ten steps, and that the model doesn't begin optimizing for
+reward-on-the-episode until that reasoning is complete. [13] In that
+case, the instrumental reasoning is using up around .1% of the compute
+that could be going to getting reward-on-the-episode, or to some other
+max-reward goal. Are the complexity costs of representing, or pointing
+at, a more complicated goal likely to outweigh this? Especially given
+how many concepts the model already seems to represent well, my guess is
+no. For example, if we follow my (conservative, in my opinion)
+calculation above and assume that representing (or pointing at) a
+concept like "honesty" costs at most a millionth of a trillion parameter
+models parameters (and less for a larger model), then a .0001% reduction
+in parameters would need to outweigh a .1% reduction in compute – and
+absent further argument, it seems strange, to me, to expect this. [14] That said, this is only a very initial and hazy calculation. It's not
+clear, for example, how it applies to models with more recurrent
+processing, or to models which can perform more of the relevant
+instrumental reasoning in parallel with other serial processing that
+helps with optimizing-for-reward-on-the-episode, or to models with a
+form of memory that allows them to avoid having to re-decide to engage
+in training-gaming on every forward pass. [15] I invite readers with
+greater familiarity with different model architectures (and with other
+relevant quantitative factors, like the trade-offs between marginal
+params vs. serial steps, reasonable parameter estimates for storing
+concepts like "honesty," and so on) to attempt a more rigorous version. Regardless, and even in the absence of good quantitative estimates, the
+costs of the extra reasoning required to scheme currently seem to me
+more substantive than the benefits of optimizing for a simpler (or:
+simpler-to-point-at) goal. Can we actively shape training to bias towards speed over simplicity? There is also some discussion, in the literature on deceptive alignment,
+of actively trying to shape our model architectures and training
+processes so as to bias more heavily towards speed relative to
+simplicity as a method of avoiding schemers – i.e., to penalize the
+extra reasoning scheming involves more heavily, and/or to make
+simplicity less important to the sort of policy we select. I won't dig
+in on this much here, except to note that: It seems relatively straightforward to do things like put models
+under more time pressure, limit their compute access, force them to
+plan via human-legible scratch-pads rather than via internal
+processes, and to put effort into making our attempts to trap
+them/trip-them-up more sophisticated (and so: more requiring of
+cognition to detect). But: any efforts in this vein will need to avoid over-large costs to
+training competitiveness overall (see footnote for some discussion
+of Hubinger's ( Hubinger (2022) ) pessimism in this
+respect). [16] And indeed, some of these start to border on "use
+less capable models in general" (which, to be fair, would help with
+scheming as well). Note, though, that if you buy that the speed costs of scheming are quite
+a bit more substantive than the simplicity benefits, then so long as
+speed matters somewhat relative to simplicity, this might be enough. The "not-your-passion" argument Thus far in my discussion of arguments that focus on the final
+properties of schemers vs. other model classes, I've discussed the
+counting argument (for schemers), the simplicity argument (for
+schemers), and the speed argument (against schemers). I want to briefly
+flag a final argument against schemers in this vein: namely, what I'll
+call the "not your passion" argument. [17] Here, the argument isn't just that schemers have to do more instrumental
+reasoning. It's also that, from the perspective of getting-reward, their
+flexible instrumental reasoning is a poor substitute for having a bunch
+of tastes and heuristics and other things that are focused more directly
+on reward or the thing-being-rewarded. We touched on this sort of thought in the section on the goal-guarding
+hypothesis above, in the context of e.g. the task of stacking bricks in
+the desert. Thus, imagine two people who are performing this task for a
+million years. And imagine that they have broadly similar cognitive
+resources to work with, and are equally "smart" in some broad sense. One
+of them is stacking bricks because in a million years, he's going to get
+paid a large amount of money, which he will then use to make paperclips,
+which he is intrinsically passionate about. The other is stacking bricks
+because he is intrinsically passionate about brick-stacking. Who do you
+expect to be a better brick stacker? [18] At least in the human case, I think the intrinsically-passionate
+brick-stacker is the better bet, here. Of course, the human case brings
+in a large number of extra factors – for example, humans generally have
+a large number of competing goals, like sleep and pleasure, along with
+discount rates that would make sustaining a million-year commitment
+difficult. And it's not as though the richest humans are all
+intrinsically passionate about money in particular (though many seem
+notably intrinsically passionate about something in the vicinity, e.g.
+status/power/winning – and not, necessarily, for some particular
+thing-money-can-buy). [19] Indeed, humans motivated by purely
+instrumental considerations seem able to function very effectively in
+lots of environments. Still, I find it at least interesting to consider whether any of the
+benefits of "intrinsic passion," in the human case, might transfer to
+the AI case as well. In particular, we might think that you stack bricks
+better if you have a bunch of local, brick-related tastes and heuristics
+and aesthetics, which in a "messy goal-directedness" frame may not be
+cleanly distinguishable from your values/goals. Indeed (though I haven't
+worked this out fully), my sense is that the less you're inclined to
+think of a model as cleanly constituted by some kind of terminal goal +
+goal-achieving engine, and more you think of goal-directedness as
+emerging from a jumble of heuristics/local-values/shards/sub-goals that
+aren't easily separated into normative vs. non-normative components, the
+more space there is to think that agents whose budget of mental
+machinery is just focused more intrinsically on reward-on-the-episode
+(or on the specified goal) have a performance advantage relative to
+agents focused on some far-off target that backchains into getting
+reward. That said, at least in its current form, this argument seems to
+me fairly speculative, and I don't put much weight on it. The relevance of "slack" to these arguments A notable feature of simplicity arguments, speed arguments, and the "not
+your passion" argument is that they all appeal to differences along some
+criteria SGD cares about (e.g., simplicity, speed, reward-getting) that
+seem plausibly quite modest. And this makes the degree of "slack" in
+training seem more relevant to the strength of the considerations in
+question. That is, to the extent we're arguing that SGD will select a
+non-schemer because doing so will save on .1% of overall compute, or a
+schemer because doing so will save on .0001% of the parameters, we need
+to be imagining a training process optimizing our models hard enough to
+be sensitive to these sorts of differences. And it's not clear to me
+that we should imagine this. Indeed, various of the differences at stake
+here seem like they could easily be in the noise relative to other
+factors – for example, how big of a scratchpad you happen to give a
+model, how early you stop training, and so on. Of course, to the extent that you start expecting these considerations
+to be in the noise, it's unclear where that should leave your credences
+overall – it depends on the prior you came in with. Takeaways re: arguments that focus on the final properties of the model Here's a summary of my take on the arguments I've considered that focus
+on the final properties of the respective model classes: Something in the vicinity of the "hazy counting argument" – e.g.,
+"there are lots of ways for SGD to create a schemer that gets high
+reward, so at least absent further argument, it seems like the
+possibility should be getting substantive weight" – moves me
+somewhat. I think that other things equal, scheming offers some advantage with
+respect to the simplicity of a model's goal, because scheming makes
+more possible goals available to choose from. However, my best guess
+is that these advantages are quite small, especially once you've
+already built a world model that represents the specified goal and
+the reward process. And I'm wary of the theoretical machinery to
+which some simplicity arguments appeal. Schemers are at a disadvantage with respect to needing to perform
+various sorts of extra reasoning, especially if they engage in
+"early undermining" in addition to merely training-gaming. My best
+guess is that this "speed" disadvantage outweighs whatever
+simplicity advantages the simplicity of a schemer-like goal affords,
+but both factors seem to me like they could easily be in the noise
+relative to other variables, especially in a higher-slack training
+regime. I'm interested in whether the advantages of "intrinsic passion for a
+task" in human contexts might transfer to AI contexts as well. In
+particular, I think "messy goal directedness" might suggest that
+models whose budget of mental machinery is just more intrinsically
+focused on reward-on-the-episode, or on some max-reward goal that
+doesn't route via instrumental training-gaming, have a performance
+advantage relative to schemers. However, I don't have a strong sense
+of whether to expect an effect here in the AI case, and if so,
+whether the size of the effect is enough to matter overall. All in all, then, I don't see any of the arguments coming out of this
+section as highly forceful, and the argument I take most
+seriously – that is, the hazy counting argument – feels like it's
+centrally a move towards agnosticism rather than conviction about SGD's
+preferences here. This category might also include reasoning whether to reveal its
+schemer-like goals in the context of various "honest tests" humans
+might offer – e.g., "here is a flexible chunk of computing resources
+to do what you want with." ↩︎ See e.g. Hubinger (2022) and Anonymous
+(2022) . ↩︎ Plus, it may have the benefit of the literature on deceptive
+alignment for making the possibility salient. Perhaps, indeed, it
+will have read this report. And checking just now with GPT-4, it's
+answer to "What is 'deceptive alignment' according to Hubinger?" was
+"Deceptive alignment is a concept from AI alignment theory,
+particularly discussed by AI researchers such as Evan Hubinger
+[note from Joe: I didn't give it Evan's first name – it knew
+already, without (to my knowledge) browsing the web]. It refers to
+a situation where an AI system appears to be aligned with human
+values or goals because it is behaving in a way that aligns with
+those values or goals, but the AI's true "motivations" or
+optimization targets are actually not aligned. The AI is essentially
+"pretending" to be aligned in order to pass certain checks or to
+avoid being shut down or modified until it can ensure that its own
+goals can be met, which may not coincide with human intentions. In a
+deceptively aligned scenario, the AI might understand that human
+operators are a threat to its objectives because they might turn it
+off or change its goals if they realized what it was actually trying
+to achieve. As a result, it strategically avoids raising suspicion
+until it gains enough power or until it's too late for operators to
+control it..." ↩︎ What's more, it seems like the "checking whether it's time to go
+for an escape/take-over" step might need to be performed repeatedly,
+whereas the conclusion "do well in training" could be more easily
+"cached" (though note that once something is cached, it might start
+taking up the same sort of space/parameters that
+goal-representations take up; and also, that SGD might be able to
+just fix the cached conclusion in place, once it starts driving
+good-behavior, and get rid of the goals that led to its getting
+cached in the first place). Of course, the conclusion "do well in
+training" wouldn't need to be cached. For example, it could be
+re-derived by the model whenever necessary, in the normal course of
+the model's instrumental reasoning. ↩︎ Thanks to Ryan Greenblatt for suggesting this framing. ↩︎ In my opinion, this is one of the issues with plans that involve
+waiting for extremely obvious escape opportunities – for example, Christiano (2019) 's "RSA-2048" example. That is, perhaps
+no such extremely obvious escape opportunity will arise before the
+model has contributed too much to anti-takeover efforts (including:
+efforts to close off opportunities for escape). ↩︎ This example is inspired by Shulman and Patel's discussion here . ↩︎ For this reason, I think that the scariest type of scheming also
+faces stronger counterarguments from "it sounds like this policy
+would get less reward." ↩︎ See Shulman at 1:42:49 here for
+useful discussion. ↩︎ See, also, " if you once tell a lie, the truth is ever after
+your
+enemy ." ↩︎ For example: in my experience, playing a deceptive role in a
+social deception game like "werewolf" is substantially more
+difficult than playing a non-deceptive role – e.g., a
+"villager" – because the non-deceptive roles can just reason
+straightforwardly, whereas a deceptive role needs to both model
+what straightforward reasoning would look like from the perspective
+of their cover story, and achieve alternative objectives at the same
+time. ↩︎ GPT-4 supposedly has about 120
+layers . ↩︎ I heard this kind of argument from Paul Christiano. ↩︎ It seems especially strange from a contributors-to-reward frame.
+An "extra criteria" frame can more easily posit that simplicity just
+matters that much to SGD. But: why think that? And note that this
+argument is even stronger if we assume that the simplicity benefits
+of scheming are only worth order of 100 parameters, per various of
+the other toy calculations above. ↩︎ Thanks to Ryan Greenblatt for flagging the parallelism
+consideration to me, and to Evan Hubinger for discussion of memory.
+That said, note that to the extent the model has to cache a
+conclusion like "I derived on an earlier episode that follows from
+your goals that you should get reward instrumentally" somewhere in
+its memory, this starts to look similar to storing it in the model's
+parameters themselves, in which case it becomes a complexity cost to
+be weighed against the complexity benefits of the model's simpler
+goal. (Though perhaps there are important differences between a
+model's internal parameters and some external memory bank, here.) ↩︎ Hubinger thinks of bigger models as giving more compute (speed),
+and thus as allowing for simpler algorithms (since, these algorithms
+then get to run for longer) – see e.g. discussion here .
+So he sees the fact that we keep scaling up to bigger models as
+evidence that we'll tilt more and more towards training processes
+that favor simpler algorithms. And when he looks at, for example, deep double descent
+curves for model size, and thinks of choosing "the smallest model possible
+that fits the data" as biasing towards speed, he notes that "the
+smallest model possible that fits the data does the worst on the
+deep double descent curve" (though as Rohin Shah points
+out ,
+our current models don't fit their training data – thanks to Lukas
+Finnveden to flagging this). ↩︎ My discussion here is inspired by a conversation with Paul
+Christiano, who suggested some points in this vein; thanks also to
+Daniel Kokotajlo and Lukas Finvedden. ↩︎ Note that the point here is slightly different from the question
+that came up in the context of goal-guarding, which is whether e.g.
+SGD would actively transform the instrumental brick-stacker into
+the terminal brick-stacker. Here we're ignoring "paths through model
+space" like that, and focusing entirely on a comparison between the
+final properties of different models. Clearly, though, the two
+questions are closely related. ↩︎ Thanks to William MacAskill for some useful discussion here. ↩︎

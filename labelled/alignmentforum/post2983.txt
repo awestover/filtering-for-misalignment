@@ -1,0 +1,1 @@
+When iterated distillation and amplification (IDA) was published, some people described it described as "the first comprehensive proposal for training safe AI". Having read a bit more about it, it seems that IDA is mainly a proposal for outer alignment and doesn't deal with the inner alignment problem at all. Am I missing something?

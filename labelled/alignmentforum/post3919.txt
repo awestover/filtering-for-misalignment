@@ -1,0 +1,24 @@
+The informed oversight problem is a serious
+challenge for approval-directed agents (I recommend reading the post if you haven't already).  Here is one approach
+to the problem that works by adding an entropy-maximization objective. Let agent B be overseeing agent A.  It seems that some of the problem is that A has many different possible strategies that B
+evaluates as good.  Thus, A may choose among these good-looking strategies arbitrarily.  If some of the good-looking
+strategies are actually bad, then A may choose one of these bad strategies. This is not a problem if B's evaluation function B ( x , ⋅ ) has a single global maximum, and solutions significantly different from this one
+are necessarily rated as worse.  It would be nice to have a general way of turning a problem with multiple global maxima
+into one with a unique global maximum. Here's one attempt at going this.  Given the original evaluation function b mapping strings to reals, construct a new
+evaluation function v mapping distributions over strings to reals.  Specifically, for some other distribution of strings f and a constant α > 0 , define v ( d ) = − γ D K L ( f | | d ) + E y ∼ d [ b ( y ) ] = γ H ( d ) + E y ∼ d [ γ log f ( y ) + b ( y ) ] where the equality holds because D K L ( f | | d ) = H ( d , f ) − H ( d ) = − E y ∼ d [ log f ( y ) ] − H ( d ) .
+Observe that v is strongly concave, so it has a single global maximum and no other local maxima.  This global maximum is d ( y ) ∝ f ( y ) e b ( y ) / γ So the optimal solution to this problem is to choose a distribution that is somewhat similar to f but overweights y values with a high b ( y ) value (with the rationality parameter γ determining how much to overweight).
+The higher γ is, the more strongly concave the problem is and the more d will imitate f ; the lower γ is, the more this problem looks like the original b -maximization problem.  This interpolation
+is similar to quantilization, but is somewhat different mathematically. Intuitively, optimizing v seems harder
+than optimizing b : the distribution d must be able to provide all possible
+good solutions to b , rather than just one.  But I think standard reinforcement learning
+algorithms can be adapted to optimize v .  Really, you just need to optimize H ( d ) + E y ∼ d [ b ( y ) ] ,
+for some b , since you can wrap the γ log f ( y ) and b ( y ) terms together into a single function.  So the agent must be
+able to maximize the sum of some original objective b and the entropy of its own actions. Consider Q-learning.  An agent using Q-learning, in a given state s , will take the action a that maximizes Q ( s , a ) , which is the expected total reward resulting from taking this action in this state (including utility from
+all future actions).  Instead of choosing an action a to maximize Q ( s , a ) , suppose the agent chooses
+a distribution over actions d to maximize H ( d ) + E a ∼ d [ Q ( s , a ) ] .  Then the agent
+takes a random action a ∼ d and receives the normal reward plus an extra reward equal to H ( d ) (so that
+the learned Q takes into account the entropy objective).  As far as I can tell, this algorithm works for
+maximizing the original reward plus the entropy of the agent's sequence of actions. I'm not sure how well this works as a general solution to the informed oversight problem.  It replaces the original
+objective with a slightly different one, and I don't have intuitions about whether this new objective is harder
+to optimize than the original one.  Still, it doesn't seem a lot harder to optimize.  I'm also not sure whether
+it's always possible to set γ low enough to incentivize good performance on the original objective b and high enough for v to be strongly concave enough to isolate a unique solution.  It's also not clear whether the strong concavity will be sufficient: even if the global maximum of v is desirable, other strategies A might use could approximately optimize v while being bad.  So while there's some selection pressure against bad strategies, it might not be enough.

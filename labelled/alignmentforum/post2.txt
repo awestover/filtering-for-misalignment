@@ -1,0 +1,88 @@
+Summary: Both our (UK AISI's) debate safety case sketch and Anthropic’s research
+agenda point at systematic human error as a weak point for debate. This post
+talks through how one might strengthen a debate protocol to partially mitigate
+this. Not too many errors in unknown places The complexity theory models of
+debate assume some expensive verifier machine M with access to a human oracle,
+such that If we ran M in full, we’d get a safe answer M is too expensive to run
+in full, meaning we need some interactive proof protocol (something like debate)
+to skip steps Typically, M is some recursive tree computation, where for
+simplicity we can think of human oracle queries as occurring at the leaves of
+the tree. Key design elements encapsulated by the verifier machine M (rather
+than by the interactive proof protocol) are those related to the structure of
+the underlying debate, such as whether counterarguments are used, when the human
+oracle is consulted, and how the judges are trained. Model the human oracle as
+type: H : X → Δ Y , where X is the question type, Y is the answer type, and Δ Y
+is distributions over Y (the humans are stochastic). Assumption (1) above then
+becomes Claim: M ( H ) is safe This claim includes robustness to errors: M only
+has oracle access to H , so seeing through noise in H requires M to sample
+enough. It also includes robustness to systematic error: if H is systematically
+wrong, M ( H ) must sample different questions to dodge the wrongness. This is a
+lot to ask of M ! A more practical situation would be: We’re handed some machine
+N , which is not robust to errors . That is N ( H ) would be safe if H was
+error-free, or perhaps had only random errors N ( H ) is not safe in practice,
+because we expect H to have too many errors We assume H satisfies some “not too
+many errors” assumption G . We have an improved protocol which is safe as long
+as G is true, either by Using a different debate protocol, or Building a machine
+M from N s.t. M ( H ) is safe if G , then running the old protocol A candidate
+form for G is the assumption that H has not too many errors, but we don’t know
+where they are: Claim G : H is wrong on at most an ε -fraction of x ∼ μ , where
+μ ∈ Δ X is a distribution on questions, and ε ∈ ( 0 , 1 ) is an error bound.
+There may be other errors in H for which we do know where they are; those can
+hopefully be dealt with by other means. Note that defining G couples cognitive
+science and theory: we want assumptions about humans that are sensible a priori,
+verifiable via experiment, and admit nice theoretical protocols. A protocol that
+handles an ε -fraction of errors Consider an asymmetric debate where Alice is
+trying to convince the judge that a statement is true, and Bob is trying to
+falsify Alice. We can give Bob the ability to adversarially manipulate some of
+the oracle’s responses, by following the additional rule: Bob rejection: Bob
+chooses a classifier R : X → { 0 , 1 } , and we have two rules: Rewrite: If we
+query H ( x ) , and R ( x ) = 1 , Bob can arbitrarily rewrite the oracle’s
+answer Infrequent: R can fire only on an ε -fraction of queries: Pr x ∼ μ ( R (
+x ) = 1 ) ≤ ε With unbounded Alice and Bob, this results in an equilibrium where
+Alice can win if and only if there is an argument that is robust to an ε
+-fraction of errors. (It’s less clear what happens if we try to impose
+efficiency limits on the debaters, such as limiting them to small circuits: in
+this case our equilibria can only take into account ε -subsets of queries which
+can be efficiently described. We have some upcoming work trying to add these
+limits in a recursive debate context, and we can see whether the two approaches
+combine once that is finished. My intuition is that something meaningful can
+still be said, but not with confidence.) What distribution do we measure errors
+against? However, the protocol is also misleading as stated, since I haven’t
+specified the distribution μ against which the Infrequent rule is measured. This
+is a problem, because there are at least two classes of distributions one might
+have in mind: A natural distribution , say the distribution of questions that
+humans normally receive The induced distribution of questions that emerges in
+debate at the leaves (once the debaters are trained to play well) These
+distributions are super different! Certainly one can imagine weird debater
+behaviour concentrating queries to humans on some alien distribution of
+questions, such that most of the alien distribution falls within a particular ε
+-fraction of a natural distribution. So even if humans are wrong not too much of
+the time on a natural distribution, this doesn’t get you to safety. Note that we
+always know the induced distribution on queries: it can be read out of the
+behaviour of trained debate agents. We don’t necessarily know the natural
+distribution. In both cases, claim G (the fact that queries are correct except
+on an ε -fraction w.r.t. μ ) is still an assumption. Cross-examination-like
+protocols Let’s assume we do know μ and trust all but an ε -fraction of queries
+w.r.t. μ . Then our “Bob rejection” protocol at the start is a well-defined
+computation. Can we run debate on it? The direct answer is no, since the first
+step is “Bob chooses a classifier”, and this is a very large object (not
+polynomial space). However, we can use the cross-examination trick to represent
+the classifier as a snapshotted activation state of an agent, using the
+following protocol: Start with a question x . Take a snapshot of Bob; call him
+Cliff. Cliff can be used as a classifier by asking him whether to reject a query
+y. Cliff is reset from snapshot each time (no continuity). Both Alice and Bob
+are downstream of Cliff, so they “know” what Cliff will do. Verify that Cliff
+doesn’t reject too often by sampling y ∼ μ Proceed with a debate between Alice
+and Bob, with Bob able to set the result of queries arbitrarily if Cliff rejects
+them. This allows us to have a classifier that could plausibly have a decent
+strategy while ensuring consistency across queries and not rejecting too often.
+However, as stated, this requires Cliff to have thought out a lot of things in
+advance, which could be very hard. It may be possible to fix this by
+incrementally constructing Cliff as we go down the tree, but I am not sure how:
+the issue is that different parts of the tree can make overlapped oracle
+queries, so it is not as simple as choosing how to apportion rejection
+probability across a branch in the computation. Collaborate with us We'd be very
+excited to collaborate on further research. If you're interested in
+collaborating with UK AISI, you can express interest here . If you're a
+non-profit or academic, you can also apply for grants up to £200,000 directly
+here .

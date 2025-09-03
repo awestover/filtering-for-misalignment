@@ -1,0 +1,74 @@
+I'm reposting some old posts that I originally sent to the "decision theory workshop" mailing list and the " everything-list ", because I occasionally want to reference these posts but the former mailing list is private and the latter one is public but I can't figure out how to create direct links to posts that are viewable without becoming a member. UDT2 is a decision theory idea that I came up with to try to solve some problems in UDT1.1 however I'm not very happy with it currently . UD+ASSA or UDASSA is an anthropic reasoning idea that I came up with and then moved away from prior to UDT. See also this post for further discussion of UDASSA. UDT2 (originally "toward a solution of the 'unintentional simulation' problem", 1/25/2011) (I think this approach potentially solves several problems besides "unintentional simulation" but I'll start there since it provides the clearest motivation.) I first described this problem (without naming it) at http://lesswrong.com/lw/15z/ingredients_of_timeless_decision_theory/120y .
+Here's a condensed version: Two UDT1 (or UDT1.1) agents play one-shot PD. It's common knowledge that agent A must make a decision in 10^100 ticks (computation steps), whereas agent B has 3^^^3 ticks. While B is trying to derive the logical consequences of returning 'C' or 'D' on the world program P, it is likely to come up with a proof by simulation of A's output, after which it will decide to play D. I think what A should have done is (if it were running a smarter decision theory), instead of deciding directly on C or D, modify itself into a program K = "simulate the original agents A and B and output 'C' if and only if both of the simulated agents self-modify into K within some time limit".
+And B (if it were also running a smarter decision theory) would also self-modify into K, whether or not it happens to simulate A's decision to self-modify into K prior to its own self-modification, and do this before the time limit built into K expires. So that's my starting intuition, and I want to try to answer: what is this smarter decision theory? It seems that at least two changes need to be made to UDT1: An agent must take the space of possible decisions to be the set of possible programs it can self-modify into, instead of the set of outputs or input/output maps. (This change is needed anyway if we want the agent to be able to self-improve in general.) An agent must consider not just the consequences of eventually reaching some decision, but also the consequences of the amount of time it spends on that decision. (This change is needed anyway if we want the agent to be economical with its computational resources.) So, while UDT1 optimizes over possible outputs to its input and UDT1.1 optimizes over possible input/output mappings it could implement, UDT2 simultaneously optimizes over possible programs to self-modify into and the amount of time (in computation steps) to spend before self-modification. How to formulate UDT2 more precisely is not entirely clear yet. Assuming the existence of a math intuition module which runs continuously to refine its logical uncertainties, one idea is to periodically interrupt it, and during the interrupt, ask it about the logical consequences of statements of the form "S, upon input X, becomes T at time t" for all programs T and t being the time at the end of the current interrupt. At the end of the interrupt, return T(X) for the T that has the highest expected utility according to the math intuition module's "beliefs". (One of these Ts should be equivalent to "let the math intuition module run for another period and ask again later".) Suppose agents A and B above are running UDT2 instead of UDT1. It seems plausible that A would decide to self-modify into K, in which case B would not suffer from the "unintentional simulation" problem, since if it does prove that A self-modifies into K, it can then easily prove that if B does not self-modify into K within K's time limit, A will play D, and therefore "B becomes K at time t" is the best choice for some t. It also seems that UDT2 is able to solve the problem that motivated UDT1.1 without having "ignore the input until the end" hard-coded into it, which perhaps makes it a better departure point than UDT1.1 for thinking about bargaining problems. Recall that problem was: Suppose Omega appears and tells you that you have just been copied, and each copy has been assigned a different number, either 1 or 2. Your number happens to be 1. You can choose between option A or option B. If the two copies choose different options without talking to each other, then each gets $10, otherwise they get $0. The idea here is that both agents, running UDT2, would self-modify into T = "return A if input is 1, otherwise return B" if their math intuition modules say that "S, upon input 1, becomes T" is positively correlated with "S, upon input 2, becomes T", which seems reasonable to assume. I think UDT2 also correctly solves Gary's Agent-Simulates-Predictor
+problem and my "two more challenging Newcomb variants".
+(I'll skip the details unless someone asks.) To me, this seems to be the most promising approach to try to fix some of UDT1's problems. I'm curious if others agree/disagree, or if anyone is working on other ideas. two more challenging Newcomb variants (4/12/2010) On Apr 11, 2:45 pm, Vladimir Nesov wrote: There, I need the environment to be presented as function of the
+agent's strategy. Since predictor is part of agent's environment, it
+has to be seen as function of the agent's strategy as well, not as
+function of the agent's source code. It's doesn't seem possible, in general, to represent the environment as a function of the agent's strategy. I applied Gary's trick of converting multi-agent problems into Newcomb variants to come up with two more single-agent problems that UDT1 (and perhaps Nesov's formulation of UDT as well) does badly on. In the first Newcomb variant, Omega says he used a predictor that did an exact simulation of you for 10^100 ticks and outputs "one-box" if and only if the simulation outputs "one-box" within 10^100 ticks.
+While actually making the decision, you are given 10^200 free ticks. In the second example (which is sort of the opposite of the above), Omega shows you a million boxes, and you get to choose one. He says he used 10^100 ticks and whatever computational shortcuts he could find to predict your decision, and put $1 million in every box except the one he predicted you would choose. You get 10^100 + 10^50 ticks to make your decision, but you don't get a copy of Omega's predictor's source code. In these two examples, the actual decision is not more important than how predictable or unpredictable the computation that leads to the decision is. More generally, it seems that many properties of the decision computation might affect the environment (in a way that needs to be taken into account) besides its final output. At this point, I'm not quite sure if UDT1 fails on these two problems for the same reason it fails on Gary's problem. In both my first problem and Gary's problem, UDT1 seems to spend too long "thinking"
+before making a decision, but that might just be a superficial similarity. against UD+ASSA, part 1 (9/26/2007) I promised to summarize why I moved away from the philosophical position
+that Hal Finney calls UD+ASSA. Here's part 1, where I argue against ASSA.
+Part 2 will cover UD. Consider the following thought experiment. Suppose your brain has been
+destructively scanned and uploaded into a computer by a mad scientist. Thus
+you find yourself imprisoned in a computer simulation. The mad scientist
+tells you that you have no hope of escaping, but he will financially support
+your survivors (spouse and children) if you win a certain game, which works
+as follows. He will throw a fair 10-sided die with sides labeled 0 to 9. You
+are to guess whether the die landed with the 0 side up or not. But here's a
+twist, if it does land with "0" up, he'll immediately make 90 duplicate
+copies of you before you get a chance to answer, and the copies will all run
+in parallel. All of the simulations are identical and deterministic, so all
+91 copies (as well as the 9 copies in the other universes) must give the
+same answer. ASSA implies that just before you answer, you should think that you have
+0.91 probability of being in the universe with "0" up. Does that mean you
+should guess "yes"? Well, I wouldn't. If I was in that situation, I'd think
+"If I answer 'no' my survivors are financially supported in 9 times as many
+universes as if I answer 'yes', so I should answer 'no'." How many copies of
+me exist in each universe doesn't matter, since it doesn't affect the
+outcome that I'm interested in. Notice that in this thought experiment my reasoning mentions nothing about
+probabilities. I'm not interested in "my" measure, but in the measures
+of the outcomes that I care about. I think ASSA holds intuitive appeal to
+us, because historically, copying of minds isn't possible, so the measure of
+one's observer-moment and the measures of the outcomes that are causally
+related to one's decisions are strictly proportional. In that situation, it
+makes sense to continue to think in terms of subjective probabilities
+defined as ratios of measures of observer-moments. But in the more general
+case, ASSA doesn't hold up. against UD+ASSA, part 2 (9/26/2007) In part one I argued against ASSA. Here I first summarize my
+argument against UD, then against the general possibility of any single
+objective measure. There is an infinite number of universal Turing machines, so there
+is an infinite number of UD. If we want to use one UD as an objective
+measure, there has to be a universal Turing machine that is somehow uniquely
+suitable for this purpose. Why that UTM and not some other? We don't even
+know what that justification might look like. Computation is just a small subset of math. I knew this was the case,
+having learned about oracle machines in my theory of computation class. But
+I didn't realize just how small a subset until I read Theory of Recursive
+Functions and Effective Computability , by Hartley Rogers. Given that there
+is so much mathematical structure outside of computation, why should they
+not exist? How can we be sure that they don't exist? If we are not sure ,
+then we have to take the possibility of their existence into account when
+making decisions, in which case we still need a measure in which they have
+non-zero measures. At this point I started looking for another measure that can replace UD.
+I came up with what I called "set theoretic universal measure", where the
+measure of a set is inversely related to the length of its description in a
+formal set theory. Set theory covers a lot more math, but otherwise we still
+have the same problems. Which formal set theory do we use? And how can we be
+sure that all structures that can possibly exist possible can be formalized
+as sets? (An example of something that can't would be a device that can
+decide the truth value of any set theoretic statement.) Besides the lack of good candidates, the demise of ASSA means we don't
+need an objective measure anymore. There is no longer an issue of sampling,
+so we don't need an objective measure to sample from. The thought experiment
+in part 1 of "against UD+ASSA" points out that in general, it's not the
+measure of one's observer-moment that matters, but the measures of the
+outcomes that are causally related to one's decisions. Those measures
+can be interpreted as indications of how much one cares about the outcomes,
+and therefore can be subjective. So where does this chain of thought lead us? I think UD+ASSA, while flawed,
+can serve as a kind of stepping stone towards a more general rationality.
+Somehow UD+ASSA is more intuitively appealing, whereas truly generalized
+rationality looks very alien to us. I'm not sure any of us can really
+practice the latter, even if we can accept it philosophically. But perhaps
+our descendents
+can. One danger I see with UD+ASSA is we'll program it into an AI, and the
+AI will be forever stuck with the idea that non-computable phenomenon can't
+exist,
+no matter what evidence it might observe.

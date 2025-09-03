@@ -1,0 +1,228 @@
+This is the second post in a sequence.  For the introduction post, see here . Graphical World Models A world model is a mathematical model of a particular world.
+This can be our real world, or an imaginary world.  To make a
+mathematical model into a model of a particular world, we need to
+specify how some of the variables in the model relate to observable
+phenomena in that world. We introduce our graphical notation for building world models by
+creating an example graphical model of a game world.  In the game
+world, a simple game of dice is being played.  The player throws a
+green die and a red die, and then computes their score by adding the
+two numbers thrown. We create the graphical game world model in thee steps: We introduce three random variables
+and relate them to observations we can make when the game is played
+once in the game world.  The variable X represents the observed
+number of the green die, Y is the red die, and S is the score. We draw a diagram: We define the two functions that appear in the annotations above the nodes in the diagram: D ( d ) = ( i f d ∈ { 1 , 2 , 3 , 4 , 5 , 6 } t h e n 1 / 6 e l s e 0 ) , s u m ( a , b ) = a + b . Informal interpretation of the graphical model We can read the above graphical model as a description of how we might
+build a game world simulator, a computer program that generates random
+examples of game play.  To compute one run of the game, the simulator
+would traverse the diagram, writing an appropriate observed value into
+each node, as determined by the function written above the
+node. Here are three possible simulator runs: We can interpret the mathematical expression P ( S = 12 ) , the
+probability that S equals 12, as being the exact probability that
+the next simulator run puts the number 12 into node S . We can interpret the expression E ( S ) , the expected value of S ,
+as the average of the values that the simulator will put into S ,
+averaged over an infinite number of runs. The similarity between what happens in the above drawings and what
+happens in a spreadsheet calculation is not entirely
+coincidental. Spreadsheets can be used to create models and
+simulations without having to write a full computer program from
+scratch. Formal interpretation of the graphical model In section 2.4 of the paper , I
+define the exact formal semantics of graphical world models.
+These formal definitions allow one to calculate the exact value of P ( S = 12 ) and E ( S ) without running a simulator. Relation between the model and the world A mathematical model can be used as a theory about a world, but
+it can also be used as a specification of how certain entities
+in that world are supposed to behave.  If the model is a theory of the
+game world, and we observe the outcome X = 1 , Y = 1 , S = 12 , then this
+observation falsifies the theory.  But if the model is a specification
+of the game, then the same observation implies that the player is
+doing it wrong. In the AGI alignment community, the agent models that are being used
+in the mainstream machine learning community are sometimes criticized
+for being too limited.  It we read such a model as a theory about
+how the agent is embedded into the real world, this theory is
+obviously flawed.  A real live agent might modify its own compute
+core, changing its build-in policy function. But in a typical agent
+model, the policy function is an immutable mathematical object, which
+cannot be modified by any of the agent's actions. If we read such an agent model instead as a specification , the above
+criticism about its limitations does not apply.  In that reading, the
+model expresses an instruction to the people who will build the real
+world agent. To do it correctly, they must ensure that the policy
+function inside the compute core they build will remain unmodified.
+In section 11 of the paper, I discuss in more detail how this design
+goal might be achieved in the case of an AGI agent. Graphical Construction of Counterfactuals We now show how mathematical counterfactuals can be defined using
+graphical models.  The process is as follows.  We start by drawing a
+first diagram f , and declare that this f is the world model of a factual world.  This factual world may be the real world, but
+also an imaginary world, or the world inside a simulator.  Next, we draw
+a second diagram c by taking f and making some modifications.  We
+then posit that this c defines a counterfactual world .  The counterfactual random variables defined by c then represent
+observations we can make in this counterfactual world. The diagrams below show an example of the procedure, where we
+construct a counterfactual game world in which the red die has the
+number 6 on all sides. We name diagrams by putting a label in the upper left hand corner.
+The two labels (f) and (c) introduce the names f and c .  We will use the name in the label for both the diagram, the
+implied world model, and the implied world.  So the rightmost diagram
+above constructs the counterfactual game world c . To keep the random variables defined by the above two diagrams apart,
+we use the notation convention that a diagram named c defines random
+variables that all have the subscript c .  Diagram c above
+defines the random variables X c , Y c , and S c . This convention
+allows us to write expressions like P ( S c > S f ) = 5 / 6 without
+ambiguity. Graphical Model of a World with an Agent An AI agent is an autonomous system which is programmed to use its
+sensors and actuators to achieve specific goals. Diagram d below models a basic MDP-style agent and
+its environment.  The agent takes actions A t chosen by the policy π , with actions affecting the subsequent states S t + 1 of the
+agent's environment.  The environment state is s 0 initially, and
+state transitions are driven by the probability density function S . We interpret the annotations above the nodes in the diagram as model input parameters . The model d has the three input parameters π , s 0 , and S .  By writing exactly the same parameter above a
+whole time series of nodes, we are in fact adding significant
+constraints to the behavior of both the agent and the agent
+environment in the model.  These constraints apply even if we specify
+nothing further about π and S . We use the convention that the physical realizations of the agent's
+sensors and actuators are modeled inside the environment states S t .
+This means that we can interpret the arrows to the A t nodes as
+sensor signals which flow into the agent's compute core, and the arrows
+emerging from the A t nodes as actuator command signals which flow
+out. The above model obviously represents an agent interacting with an
+environment, but is silent about what the policy π of the agent
+looks like. π is a free model parameter: the diagram
+gives no further information about the internal structure of π . Causal Influence Diagrams as a Decision Theory A Causal Influence Diagram is an extended version of a graphical agent
+model, which contains more information about the agent policy.  We can
+read the diagram as a specification of a decision theory, as an exact
+specification of how the agent policy decides which actions the agent
+should take. The Causal Influence Diagram a defines a specific agent, interacting
+with the same environment seen earlier in d , by using: diamond shaped utility nodes R t which define the value U a , the expected overall utility of the agent's actions as computed using the reward function R and time discount factor γ , and square decision nodes A t which define the agent policy π ∗ . The full mathematical definitions of the semantics of the diagram
+above are in the paper.  But briefly, we have that U a = E ( ∑ ∞ t = 0 γ t R t , a ) ,
+and we define π ∗ by first constructing a helper diagram: Draw a helper diagram b by drawing a copy of
+diagram a , except that every decision node has been drawn as a round
+node, and every π ∗ has been replaced by a fresh function name,
+say π ′ . Then, π ∗ is defined by π ∗ = argmax π ′ U b , where the argmax π ′ operator always
+deterministically returns the same function if there are several
+candidates that maximize its argument. The above diagram defines the agent in the world a as an
+optimal-policy agent. We can interpret an optimal policy agent as one that is
+capable of exactly computing π ∗ = argmax π ′ U b in its compute core, by
+computing U b for all possible different world models b , where each b has a different π ′ .  This computation will have
+to rely on the agent knowing the exact value of S . The optimal policy π ∗ defined above is the same as the optimal
+policy π ∗ that is defined in an MDP model, a model with reward
+function R , starting state s 0 , and with S ( s ′ , s , a ) being the
+probability that the MDP world will enter state s ′ if the agent
+takes action a in state s .  A more detailed comparison with MDP
+based and Reinforcement Learning (RL) based agent models is in the
+paper. The Causal Influence Diagrams which I formally
+define in the paper are roughly the
+same as those defined and promoted by Everitt et al in 2019 , with the most up to date
+version of the definitions and supporting explanations
+being here . One difference is that I also fully define the semantics of diagrams
+representing multi-action decision making processes, not just the
+single-decision case.  Another difference is that I explicitly name
+the structural functions of the causal model by writing annotations
+like s 0 , π ∗ , S , and R above the diagram nodes.   The
+brackets around [ S ] in the diagram indicate that this structural
+function is a non-deterministic function. The above world model d does not include any form of machine
+learning: its optimal-policy agent can be said to perfectly know its
+full environment S from the moment it is switched on.  A machine
+learning agent, on the other hand, will have to use observations to
+learn an approximation of S . Two-Diagram Models of Online Machine Learning Agents We now model online machine learning agents , agents that
+continuously learn while they take actions.  These agents are also
+often called reinforcement learners .  The term reinforcement
+learning (RL) has become somewhat hyped however. As is common in a
+hype, the original technical meaning of the term has become
+diluted: nowadays almost any agent design may end up being called a
+reinforcement learner. We model online machine learning agents by drawing two diagrams, one
+for a learning world and one for a planning world , and by
+writing down an agent definition .  This two-diagram modeling
+approach departs from the usual influence diagram based approach,
+where only a single diagram is used to model an entire agent or
+decision making process.  By using two diagrams instead of one, we can
+graphically represent details which remain hidden from view, which
+cannot be expressed graphically, when using only a single diagram. Learning world Diagram l is an example learning world diagram. The diagram models
+how the agent interacts with its environment, and how the agent
+accumulates an observational record O t that will inform its
+learning system, thereby influencing the agent policy π . We model the observational record as a list all past observations.
+With + + being the operator which adds an extra record to the
+end of a list, we define that O ( o t − 1 , s t − 1 , a t − 1 , s t ) = o t − 1 + + ( s t , s t − 1 , a t − 1 ) . The initial observational record O 0 may be the empty list, but
+it might also be a long list of observations from earlier agent
+training runs, in the same environment or in a simulator. We intentionally model observation and learning in a very general way,
+so that we can handle both existing machine learning systems and
+hypothetical future machine learning systems that may produce
+AGI-level intelligence.  To model the details of any particular
+machine learning system, we introduce the learning function L .  This L which takes an observational record o to produce a learned prediction function L = L ( o ) ,
+where this function L is constructed to approximate the S of the
+learning world. We call a machine learning system L a perfect
+learner if it succeeds in constructing an L that fully equals the
+learning world S after some time.  So with a perfect learner, there
+is a t p where ∀ t ≥ t p P ( L ( O t , l ) = S ) = 1 .
+While perfect learning is trivially possible in some simple toy
+worlds, it is generally impossible in complex real world environments. We therefore introduce the more relaxed concept of reasonable
+learning .  We call a learning system reasonable if there
+is a t p where ∀ t ≥ t p P ( L ( O t , l ) ≈ S ) = 1 .  The ≈ operator is an
+application-dependent good enough approximation metric.  When we
+have a real-life implementation of a machine learning system L , we may for example define L ≈ S as the
+criterion that L achieves a certain minimum score on a benchmark
+test which compares L to S . Planning world Using a learned prediction function L and a reward function R , we
+can construct a planning world p for the agent to be defined.
+Diagram p shows a planning world that defines an optimal policy π ∗ p . We can interpret this planning world as representing a probabilistic projection of the future of the learning world, starting from
+the agent environment state s .  At every learning world time step, a
+new planning world can be digitally constructed inside the learning
+world agent's compute core.  Usually, when L ≈ S , the planning
+world is an approximate projection only.  It is an approximate
+projection of the learning world future that would happen if the
+learning world agent takes the actions defined by π ∗ p . Agent definitions and specifications An agent definition specifies the policy π to be used by an
+agent compute core in a learning world.  As an example, the agent
+definition below defines an agent called the factual planning agent,
+FP for short. FP: The factual planning agent has the learning world l , where π ( o , s ) = π ∗ p ( s ) , with π ∗ p defined by the planning world p , where L = L ( o ) . When we talk about the safety properties of the FP agent, we
+refer to the outcomes which the defined agent policy π will
+produce in the learning world. When the values of S , s 0 , O , O 0 , L , and R are fully known, the above FP agent definition turns the learning
+world model l into a fully computable world model, which we can read
+as an executable specification of an agent simulator.  This simulator
+will be able to use the learning world diagram as a canvas to display
+different runs where the FP agent interacts with its environment. When we leave the values of S and s 0 open, we can read the FP
+agent definition as a full agent specification , as a model which
+exactly defines the required input/output behavior of an agent compute
+core that is placed in an environment determined by S and s 0 .
+The arrows out of the learning world nodes S t represent the
+subsequent sensor signal inputs that the core will get, and the arrows
+out of the nodes A t represent the subsequent action signals that
+the core must output, in order to comply with the specification. Exploration Many online machine learning system designs rely on having the agent
+perform exploration actions . Random exploration supports
+learning by ensuring that the observational record will eventually
+represent the entire dynamics of the agent environment S .  It can be
+captured in our modeling system as follows. FPX: The factual planning agent with random exploration has the
+learning world l , where π ( o , s ) = { RandomAction() if RandomNumber() ≤ X π ∗ p ( s ) otherwise with π ∗ p defined by the planning world p , where L = L ( o ) . Most reinforcement learning type agents can be modeled by creating
+variants of this FPX agent definition, and using specific choices for
+model parameters like L .  I discuss this topic in more
+detail in section 10 of the paper. The possibility of learned self-knowledge It is possible to imagine agent designs that have a second machine
+learning system M which produces an output M ( o ) = M where M ≈ π .  To see how this could be done, note that
+every observation ( s i , s i − 1 , a i − 1 ) ∈ o also reveals a
+sample of the behavior of the learning world π : π ( ‘ o up to i − 1 ' , s i − 1 ) = a i − 1 .
+While L contains learned knowledge
+about the agent's environment, we can interpret M as containing a
+type of learned compute core self-knowledge. In philosophical and natural language discussions about AGI agents,
+the question sometimes comes up whether a sufficiently intelligent
+machine learning system, that is capable of developing self-knowledge M , won't eventually get terribly confused and break down in
+dangerous or unpredictable ways. One can imagine different possible outcomes when such a system tries
+to reason about philosophical problems like free will, or the role of
+observation in collapsing the quantum wave function.  One cannot fault
+philosophers for seeking fresh insights on these long-open problems,
+by imagining how they apply to AI systems.  But these open problems
+are not relevant to the design and safety analysis of factual and
+counterfactual planning agents. In the agent definitions of the paper, I never use an M in the
+construction of a planning world: the agent designs avoid making
+computations that project compute core self-knowledge. The issue of handling and avoiding learned self-knowledge gets more
+complex when we consider machine learning systems which are based on partial observation .  I discuss this more complex case in sections
+10.2 and 11.1 of the paper. A Counterfactual Planner with a Short Time Horizon For the factual planning FP agent above, the planning world projects
+the future of the learning world as well as possible, given the
+limitations of the agent's learning system.  To create an agent that
+is a counterfactual planner , we explicitly construct a
+counterfactual planning world that creates an inaccurate projection. As a first example, we define the short time horizon agent STH that only
+plans N time steps ahead in its planning world, even though it will
+act for an infinite number of time steps in the learning world. The STH agent has the same learning world l as the earlier FP agent: but it uses the counterfactual planning world s t , which is limited
+to N time steps: The STH agent definition uses these two worlds: STH: The short time horizon agent has the learning world l , where π ( o , s ) = π ∗ s ( s ) , with π ∗ s defined by the planning world s t , where L = L ( o ) . Compared to the FP agent which has an infinite planning horizon, the
+STH agent has a form of myopia that can be interesting as a safety
+feature: Myopia implies that the STH agent will never put into motion any long term plans, where it
+invests to create new capabilities that only pay off after more than N time steps.  This simplifies the problem of agent oversight, the
+problem of interpreting the agent's actions in order to foresee
+potential bad outcomes. Myopia also simplifies the problem of creating a reward function
+that is safe enough.  It will have no immediate safety implications if
+the reward function encodes the wrong stance on the desirability of
+certain events that can only happen in the far future. In a more game-theoretical sense, myopia creates a weakness in
+the agent that can be exploited by its human opponents if it would
+ever come to an all-out fight. The safety features we can get from myopia are somewhat
+underwhelming: the next posts in this sequence will consider much more
+interesting safety features. Whereas toy non-AGI versions of the FP and FPX agents can be trivially
+implemented with a Q-learner, implementing the a toy STH agent with a
+Q-learner is more tricky: we would have to make some modifications
+deep inside the Q-learning system, and switch to a data structure that
+is more complex than a simple Q-table.  The trivial way to implement a
+toy STH agent is to use a toy version of a model-based reinforcement
+learner .  I cover the topics of theoretical and practical
+implementation difficulty in more detail in the paper.

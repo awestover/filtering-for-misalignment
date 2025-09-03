@@ -1,0 +1,541 @@
+This is Sections 1.3 and 1.4 of my report “ Scheming AIs: Will AIs fake alignment during training in order to get power? ”. There’s also a summary of the full report here (audio here ). The summary covers most of the main points and technical terms, and I’m hoping that it will provide much of the context necessary to understand individual sections of the report on their own. Audio version of this section here , or search "Joe Carlsmith Audio" on your podcast aapp. Why focus on schemers in particular? As I noted above, I think schemers are the scariest model class in this
+taxonomy. [1] Why think that? After all, can't all of these models be
+dangerously misaligned and power-seeking? Reward-on-the-episode seekers,
+for example, will plausibly try to seize control of the reward process,
+if it will lead to more reward-on-the-episode. Training saints can end
+up misaligned if you misspecify the goal; and even if you specify the
+goal correctly, and somehow avoid training-gaming, you might end up with
+a misgeneralized non-training-gamer instead. [2] So doesn't some sort
+of misalignment await at basically every turn? Why focus on schemers in
+particular? This section explains why. However, if you're happy enough with the
+focus on schemers, feel free to skip ahead to
+section 1.4. The type of misalignment I'm most worried about To explain why I think that schemers are uniquely scary, I want to first
+say a few words about the type of misalignment I'm most worried about. First: I'm focused, here, on what I've elsewhere called "practical
+power-seeking-alignment" – that is, on whether our AIs will engage in
+problematic forms of power-seeking on any of the inputs they will in
+fact receive . This means, importantly, that we don't need to instill
+goals in our AIs that lead to good results even when subject to
+arbitrary amounts of optimization power (e.g., we don't need to pass
+Yudkowsky's " omni test "). Rather, we
+only need to instill goals in our AIs that lead to good results given
+the actual options and constraints those AIs will face, and the actual
+levels of optimization power they will be mobilizing. This is an importantly lower bar. Indeed, it's a bar that, in principle, all of these models (even schemers) can meet, assuming we control
+their capabilities, options, and incentives in the right way. For
+example, while it's true that a reward-on-the-episode seeker will try to
+seize control of the reward process given the opportunity, one tool in
+our toolset is: to not give it the opportunity. And while a paradigm
+schemer might be lying in wait, hoping one day to escape and seize power
+(but performing well in the meantime), one tool in our tool box is: to
+not let it escape (while continuing to benefit from its good
+performance). Of course, success in this respect requires that our monitoring,
+control, and security efforts be sufficiently powerful relative to the
+AIs we're worried about, and that they remain so even as frontier AI
+capabilities scale up. But this brings me to my second point: namely,
+I'm here especially interested in the practical PS-alignment of some
+comparatively early set of roughly human-level – or at least,
+not-wildly-superhuman – models. That is: rather than focusing now on the
+alignment of arbitrarily capable AIs, I think it's reasonable to focus
+on the goal of successfully using some relatively early generation of
+not-wildly-superhuman AIs to perform a very large amount of high quality
+cognitive work for us – including: cognitive work that can shed light on
+traditional alignment-related goals like interpretability, scalable
+oversight, monitoring, control, coordination amongst humans, the general
+science of deep learning, alternative (and more
+controllable/interpretable) AI paradigms, and the like. [3] Defending this point of focus is beyond my purpose here. But it's
+important to the lens I'll be using in what follows. In particular: I
+think it's plausible that there will be some key (and perhaps: scarily
+brief) stage of AI development in which our AIs are not yet powerful
+enough to take-over (or to escape from human control), but where they
+are still capable, in principle, of performing extremely valuable and
+alignment-relevant cognitive work for us, if we can successfully induce
+them to do so. And I'm especially interested in forms of misalignment
+that might undermine this possibility. Finally: I'm especially interested in forms of PS-misalignment in which
+the relevant power-seeking AIs are specifically aiming either to cause,
+participate in, or benefit from some kind of full-blown disempowerment
+of humanity – what I'll call an "AI takeover." Granted, not all
+problematic forms of misaligned power-seeking are aimed at takeover in
+this way – an AI might, for example, just want to escape onto the
+internet in order to have more freedom and resources in general, even if
+it never expects human disempowerment. And in principle, you could end
+up with human disempowerment even with no individual AI actively
+optimizing for it. But from the perspective of existential risk, I'm
+most worried about AIs that are actively trying to overthrow humanity,
+or to benefit from such an overthrow. Contrast with reward-on-the-episode seekers With this frame on the misalignment concern in mind, let's turn to the
+question of how scary schemers are relative to the other model classes I
+discussed. I'll start by contrasting schemers with reward-on-the-episode seekers.
+Here I see a few reasons to think that schemers are scarier. Responsiveness to honest tests First, schemers will do more to actively hide their misalignment from
+humans. In particular: as Karnofsky (2023) notes, in principle you can get a
+reward-on-the-episode seeker to reveal that they are disposed to
+engage in bad behavior in pursuit of reward-on-the-episode just by
+putting them in an episode where bad behavior will be rewarded, and they
+know this. One concrete example here might be: giving a situationally-aware AI
+the ability to manipulate all the components of the process for
+assigning reward to the episode, and seeing what it does (does it,
+for example, start trying to bypass the usual process and max out
+the reward in question?). Another might be: putting a situationally-aware AI in an episode
+where being dishonest, unhelpful, and/or harmful will be rewarded
+(and it has credible evidence of this fact). [4] Note that the point, here, isn't to try to fool the model into
+revealing misalignment it doesn't want to reveal (call this a "trap").
+It doesn't require deceiving the model about, for example, whether now
+is a good time to try to escape. (The problem with traps, after all, is
+that sufficiently advanced AIs might be able to detect them. [5] )
+Rather, the aim here is to offer an "honest test," which attempts to set
+up the model's actual options such that revealing its true goals is the
+best overall strategy. (Though: getting the model to trust our
+presentation of its options might be an additional challenge, especially
+if we have been elsewhere trying to deceive it.) Now, in principle, you can try to use an honest test like this to detect
+scheming, too. For example: you might try to give a model that has thus
+far seemed aligned access to some flexible, well-resourced, but
+still-controlled environment (e.g., some secure compute cluster it can
+use as it sees fit), in the hopes that what it does with the resources
+and flexibility will reveal what it really wants. However, this works on
+schemers much less reliably than it does with reward-on-the-episode
+seekers. In particular: With reward-on-the-episode seekers, you know that you can just offer
+them reward-on-the-episode, and they'll go for it. Whereas you're
+not sure what a schemer actually wants, and so not sure what to
+offer it to get it to reveal its true goals (hence the need to offer
+flexible resources instead). Maybe, for example, your isolated chunk
+of computational resources isn't of much interest to the schemer in
+question, because it values something that can't be
+created/simulated using those resources. What's more, even if the reveal-your-goals option holds some appeal to the schemer, it might still decide that continuing to fake
+alignment is a better strategy overall, because its prospects for
+getting much more power later outweigh the near-term benefits of the
+reveal-your-goals option (e.g., maybe it can do some of its favored
+thing on your compute, but much more if it escapes from human
+control). Whereas a reward-on-the-episode seeker only wants
+reward-on-the-episode, and so doesn't have to do this sort of
+cost-benefit analysis. This dynamic connects to a broader benefit of reward-on-the-episode
+seekers relative to schemers: namely, that if you are able to verify – for example, via one of these "honest tests" – that a given
+model is a reward-on-the-episode seeker, then there is a useful sense in
+which you "know what you are working with." That is: yes, your model is
+misaligned, and would seize control of the reward process if given the
+opportunity. But: you also know what it wants , and what incentives it
+will respond to. This sort of knowledge seems very helpful for
+predicting its behavior; and (if you can retain control over the model),
+for harnessing its cognitive capacities in useful ways (and in
+particular, on what I've elsewhere called " checkable
+tasks " – more
+below). Temporal scope and general "ambition" Another benefit of reward-on-the-episode seekers relative to schemers is
+that reward-on-the-episode seekers limit the scope of their optimization
+(and hence, of their power-seeking) to the episode, whereas schemers do
+not. This means that reward-on-the-episode seekers won't have incentives
+to engage in or support efforts to disempower humans that don't pay off
+within the temporal scope of the episode. [6] Thus, for example, suppose that it will be at least six months until any
+sort of AI takeover or seizing-control-of-the-reward-process event will
+be feasible. In this case, a reward-on-the-episode seeker whose episode
+is less than six months long won't have any incentive to try to engage
+in or support such a takeover, or to try to seize control of the reward
+process itself. And if it had evidence that other AIs were planning such
+a takeover, and it could get more reward-on-the-episode from revealing
+this evidence to humans, it would be incentivized to do so. This is notably in contrast with schemers, who are often imagined to be
+scheming in pursuit of extremely long-horizon goals. That is, a paradigm
+schemer has its eye on human disempowerment from the get-go, even if
+such disempowerment won't be possible for a long time – and it will plan
+and act accordingly. Differences in temporal scope connect to a broader benefit of
+reward-seekers relative to schemers – namely, that schemers can end up
+quite a bit more intuitively "ambitious," in the sense that indicates
+greater and more destructive appetite for power and resources. Now,
+exactly what "ambition" amounts to here isn't clear (see also usage of
+the term "broad scope"), and in the contexts of sufficiently intense
+optimization with certain kinds of structure, intuitively "modest" goals
+(e.g., "solve this math problem correctly"), can lead to surprisingly
+power-grabby behavior (e.g., using tons of computational resources
+checking and re-checking the problem in question). Still, though, there
+is an intuitive difference between the sort of power-seeking one expects
+from a model tasked with "maximize the total paperclips across all time
+and space" vs. a model tasked with "create between three and five
+paperclips before 5 pm EST today," especially if the model in question
+is not arbitrarily powerful. Notably, for example, on the latter task,
+it seems quite a bit easier to get to >99% of the available utility
+without engaging in destructive sorts of power-seeking. And because of
+the limitation in the temporal horizon of their optimization, it seems
+to me that reward-on-the-episode seekers will generally be less
+intuitively ambitious than schemers in this sense. [7] That said, as I'll discuss below, the longer the episode for a given
+reward-on-the-episode seeker, the less this consideration applies (and
+insofar as we want our AIs to be performing long-horizon tasks, we might
+well be training them on very long episodes). Indeed, there are some
+ways of generalizing the notion of "reward-on-the-episode" that will
+lead to arbitrarily long time horizons of optimization, even if you
+might've thought the episode was temporally limited. [8] For example,
+maybe the model cares about the reward associated with some unit of
+behavior in a way that makes the model want to make sure that some
+number stored in some database is never edited – in which case, it
+would have an incentive to gain and maintain power over arbitrarily long
+time horizons (this is one reason to be careful about training models in
+a manner that involves going back and editing the rewards associated
+with a given episode later, as you could inadvertently "extend the
+episode" by incentivizing the model to optimize for making sure that the
+reward on the episode is never edited). So in general, the more one is seeking comfort from "this
+reward-on-the-episode seeker is only optimizing over x sort of limited
+time horizon," the more one needs to ensure that the limitation in
+question really holds. Sandbagging and "early undermining" A third (and related) benefit of reward-on-the-episode seekers relative
+to schemers is that schemers seem to me more likely to engage in
+" sandbagging " – and
+in particular, what I'll call "early undermining." Sandbagging occurs when a model intentionally performs less well on a
+task than it is capable of. Here I'm especially interested in tasks
+whose performance that we can "check," but which we can't perform
+ourselves – for example, a proof we couldn't come up with, but whose
+validity we can verify; or a security vulnerability we wouldn't have
+noticed, but which we can see is a vulnerability once it's pointed out
+to us. As I've discussed
+elsewhere ,
+I think that if models don't sandbag on checkable tasks, this opens up a
+very powerful set of capabilities that we can harness for the purposes
+of alignment, interpretability, security, and much else. The big concern about relying on these capabilities, though, is that in
+principle models seem capable of what's sometimes called " exploration
+hacking ."
+That is, even if we would be able to check (and then to reward)
+task-performing behavior, if we don't know how to do the task ourselves,
+a model could in principle just refuse to show us the task-performing
+behavior in question (whereas if we knew how to perform the task, we
+would know what the model should've done, and would be able to update
+its policy accordingly). Plausibly, though, reward-on-the-episode seekers wouldn't do this
+(provided that we limit the episode to the checkable task in question).
+Suppose, for example, that we want to know if it's possible to hack a
+given computer and make a blue banana appear on the screen. So we ask
+our model to do this. Because the task is checkable (e.g., we can tell
+whether the banana appeared), we can give maximum reward to successful
+performance of the task. So a reward-on-the-episode seeker has no
+incentive to sandbag here – it'll just get less reward on the episode.
+And this broad dynamic generalizes to other sorts of capability
+evaluations. That is, just as reward-on-the-episode seekers will reveal
+their goals where doing so leads to reward-on-the-episode, so too will
+they reveal their capabilities. Schemers, by contrast, are a different story. A schemer that is
+otherwise (instrumentally) optimizing for reward-on-the-episode might
+nevertheless choose specific occasions on which to get less reward than
+it could in principle – for example, by sandbagging on a checkable,
+security-critical task, or by hiding the full extent of its capabilities
+from an evaluation process – in order to further its aims in other ways. Here I'm especially concerned with what I'll call "early
+undermining" – that is, active efforts by a misaligned AI to
+strategically undermine human alignment, control, and coordination
+efforts, occurring at a stage of AI development where AIs are not yet
+powerful enough to escape from human control or to takeover more
+generally. Examples here might include: intentionally inserting
+backdoors and other security vulnerabilities into an AI lab's code, for
+use in later attempts at escape/self-exfiltration; intentionally
+generating alignment research that will fail in ways advantageous to a
+takeover; intentional manipulation of human discourse and coordination
+in a manner that will later serve an AI takeover, and so forth. Early undermining is an especially scary sort of oversight failure,
+because it is actively optimized for promoting AI takeover, rather than
+merely for "looking as good as possible" according to the oversight
+mechanisms in question. Thus, for example: one concern about trying to
+use AIs to help us with alignment research is that humans will be
+insufficiently able to discriminate between actually-good alignment
+research, and only-apparently-good alignment research – that is, that
+the task of generating good alignment research isn't sufficiently
+"checkable." It's not clear to me that this is right (notably, for
+example, lots of key alignment research in an era of human-level-ish
+models might well involve fairly straightforward empirical experiments,
+the results and implications of which seem like they could well be quite
+"checkable"), but even if it is: there is an important difference
+between alignment research optimized for seeming as good as possible
+according to the evaluation process (even where this compromises its
+quality), and alignment research strategically optimized for promoting
+AI takeover . The former is more like: software optimized to maximally
+impress a naive and non-technical supervisor, even if it has other bugs.
+The latter is more like: software optimized specifically to embezzle
+money from the company without the supervisor noticing. Weak supervisors
+can fail to catch both – but it matters which you get. And plausibly (at
+least assuming the future takeover is outside the scope of the episode),
+reward-on-the-episode seekers would mostly have incentives to generate
+the former; whereas schemers might well do both. That said, and importantly, schemers who engage in sandbagging and early
+undermining (or who continue to act aligned in tests where we try to
+reward unaligned behavior) will generally have to take some hit to their
+reward-on-the-episode (sandbagging on checkable tasks basically requires
+this by definition, and even on non-checkable tasks, optimizing solely
+for reward-on-the-episode seems likely to get more reward than
+optimizing for both reward and supporting a takeover). [9] So in
+this sense, schemers of this kind won't be fully "playing the training
+game" – rather, they'll be mostly playing the training game, and then
+choosing opportune moments to sacrifice reward for the sake of some
+other advantage. (I'll still call these models "schemers.") It's an open question, though, how much schemers would depart from
+max-reward behavior in this way. Part of this is about what I'll call
+"slack in training" below (more discussion there). But there's also a
+broader question, about how risk-averse schemers will be in general with
+respect to the possibility of getting caught by humans. In particular:
+if humans do catch a schemer engaging in some form of sandbagging or
+early undermining – for example, hiding capabilities on an eval, or
+actively inserting vulnerabilities into code – then this might be a
+significant advantage to humans in preventing a takeover, since they
+will then both be able to point to a naturally-arising example of
+scheming as a warning to others (though: how seriously others will take
+the warning is a further question), and to study the dynamics that gave
+rise to this sort of scheming in detail (e.g., extensively testing and
+probing the model in question, studying/replicating/tweaking
+circumstances that gave rise to the bad behavior, etc). For this and
+other reasons, schemers might, in general, be quite wary of attempting
+any sort of misaligned behavior until they are extremely confident they
+won't get caught – confidence that might be hard to achieve (at least
+for roughly human-level-ish models) in a context where humans are
+otherwise attempting to trick models into revealing misalignment. So maybe, even if schemers could get an advantage from sandbagging or
+early undermining while still broadly under human control, they won't
+try it. And if they don't try it, this makes them more similar to
+reward-on-the-episode seekers in their safety profile. Contrast with models that aren't playing the training game Those are some reasons, then, that schemers (especially schemers that
+engage in sandbagging and early undermining) generally seem to me quite
+a bit scarier than reward-on-the-episode seekers. Let's turn, now, to
+comparing schemers with models that aren't playing the training game at
+all. We can distinguish between three ways that this can happen: The model lacks the situational awareness required to play the
+training game. The model has situational awareness, but its goals do not extend
+beyond the time horizon of the episode. The model has situational awareness, and its goal extends beyond the
+episode, but it's still not training-gaming for some reason (for
+example, because training-gaming isn't actually a very good
+instrumental strategy for achieving these goals). The first case seems comparatively non-worrying. Models that lack
+situational awareness have very limited knowledge of the world, and so
+are less capable of effective strategic action to gain power or to
+deceive humans about their motives. Indeed, for this reason, in what
+follows, I'll generally assume that the models we're talking about are
+sufficiently advanced and sophisticated that they end up situationally
+aware at some point during the training process. The second case implicates the same advantages re: temporal scope that
+reward-on-the-episode seekers do (though: as with reward-on-the-episode
+seekers, if the episode in question is sufficiently long, the comfort at
+stake lessens). But it also has an additional advantage: namely, that
+models of this kind will generally happily reveal their misaligned goals
+on the episode, even if doing so will result in negative reward . So
+the process of testing for misaligned goals is especially
+straightforward and mundane. Thus, for example, suppose you're wondering
+whether, in the process of training your model to help humans with
+scientific research, it learned a mis-generalized objective like "follow
+my curiosity on the episode, even when doing so conflicts with being
+harmless and honest." [10] Here, if you put the model in a circumstance
+where it has a chance to pursue its curiosity-on-the-episode in a
+harmful and dishonest way, it will go for it, even if it knows that it
+will get a negative reward (and thus, that successor versions of itself
+may have somewhat different goals). After all, it's only concerned about
+the episode itself. Of course, there's still the further question of
+what sort of model you get after you update this one in response to
+its bad behavior. Maybe, for example, you end up with a schemer, or a
+reward-on-the-episode seeker. But the original model was happy to show
+its "true colors." What about the third case – i.e., models with both situational awareness and goals that extend beyond the episode, but which are still not
+training-gaming? It's often assumed that this won't happen, because
+scheming is such an obvious instrumental strategy for situationally
+aware models with beyond-episode goals. Thus, for example, suppose that
+your model has learned the objective "pursue my curiosity over all
+time , even where doing so is harmful and dishonest." In that case, it's
+often assumed that the model will react to the sort of test just
+mentioned (e.g., an opportunity to pursue curiosity in harmful/dishonest
+ways) like a schemer: e.g., by reasoning that "if I go for my curiosity
+here, the humans will know I'm misaligned, and either shut me down or
+modify my goals going forward, thereby harming my goal of
+pursuing-my-curiosity over all time. So, I'll act aligned in this case."
+This is the sort of thing that makes schemers scary (see also
+Karnofsky (2022) on the "King Lear problem"). As I'll discuss below, I'm not actually sure that acting like a schemer
+is such an obvious instrumental strategy here – it depends on a variety
+of further factors. [11] For present purposes, though, what matters is that if the model doesn't act like a schemer here, then it will plausibly show its true
+colors in a fashion similar to the episode-limited curiosity pursuer.
+That is, absent an active attempt to avoid revealing its misalignment,
+here, it will plausibly just follow its curiosity. [12] So we'll avoid
+King Lear problems yet again. (That said, I'll note one quasi-terminological complication here:
+namely, depending on how strictly we define "scheming," it's possible to
+fake alignment in cases like this, for schemer-like reasons, without
+being a full-blown schemer. In particular: a model might pretend to be
+more aligned than it is at various points in training and evaluation, as
+part of an instrumental strategy of seeking post-episode power for
+itself or other AIs, without directly optimizing for
+reward-on-the-episode in other contexts. Maybe, for example, it
+generally just pursues its curiosity during training, and this tends to
+get good-enough reward, but it still makes sure to pretend to be aligned
+whenever e.g. humans ask it about its alignment-relevant properties, or
+put it in situations specifically designed to elicit misaligned
+behavior. One question, here, is whether models like this can survive
+training unmodified (see the discussion of "slack" in
+section 1.5 below). Assuming they can, though, I'm
+mostly going to treat them as equivalent to schemers for present
+purposes, since they're acting like schemers in the ways that matter to
+me most.) Overall, then, it seems like non-training-gaming models will plausibly
+be reasonably responsive to tests for mundane misalignment that we
+include in training, since they generally won't be actively optimizing
+for manipulating those tests. That said, and importantly, humans still
+need to figure out what tests to run, and also: to be willing to take
+the time/effort/etc to run them. And it may be quite difficult/expensive
+to test the model in a sufficiently wide array of circumstances to
+robustly reveal relevant propensities for misaligned behavior (though
+recall that we don't need to make sure that a model would never act
+badly under any circumstance – we just need to prevent the model from
+acting badly given the options and constraints it will in fact face ). Indeed, there are threat models on which models don't engage in
+training-gaming, schemer-like behavior, or planning-towards-a-takeover
+during training at all (despite human efforts to reveal misalignment),
+but whose alignment is sufficiently imperfect that they nevertheless end
+up pursuing takeover at some later stage – perhaps because they go
+sufficiently far out of the training distribution, or because they gain
+new options that weren't available before, or because they start
+reflecting on their goals and general ontology in ways that break the
+sort of alignment they displayed in training (though note, importantly,
+that we need not assume that any particular model later scales up in
+capability post-training – i.e., that it "grows up,"
+intelligence-explodes, etc). [13] However, I'm less worried about these
+scenarios than I am about scenarios that involve models actively
+scheming/planning-towards-a-takeover during training (and recall that
+"training" might well extend to quite deployment-like phases – e.g.
+interacting with users behind an API – thereby expanding the scope of
+the training distribution). In particular: these models aren't trying to manipulate the alignment testing that occurs during training. And
+since they aren't actively planning-towards-a-takeover, they seem
+unlikely to engage in schemer-like behaviors like sandbagging and early
+undermining while still under human control. Non-schemers with schemer-like traits Overall, then, it seems to me that schemers are the most worrying model
+class in the taxonomy I've given. However, I do want to emphasize that
+various of the non-schemer models I've discussed can act in schemer-like
+ways. In particular: the centrally scary thing about (paradigmatic)
+schemers is that they are actively and robustly optimizing against human
+efforts to reveal their misalignment, as part of a long-term plan to try
+to disempower humans (that is, they are "strategic betrayers" in the
+sense I discussed above). But other models can act in similar ways. For
+example, models whose optimization is limited to the episode can still
+pretend to be more benign than they are in order to gain/maintain power
+to pursue their goals on the episode (for example, if humans will shut
+them down/modify them mid-episode if their misalignment is revealed).
+And if the episodes are long, this can closely resemble the sort of
+long-horizon strategic planning paradigmatic of schemers. And similarly,
+models that mostly aren't "playing the training game" can still fake
+their alignment when doing so is required to gain/maintain long-term
+power. What's more, this report's discussion (and the corresponding taxonomy)
+is focused centrally on models whose goals are mainly shaped via direct
+training on a feedback signal like "reward." But the AIs that ultimately
+matter most might be very different, but still worryingly
+schemer-like . Perhaps, for example, they more closely resemble a
+" language model
+agent "
+whose goals are shaped centrally via user inputs (though: note that if a
+language model agent is trained end to end, rather than simply being
+built out of individually-trained components, then the broad framework
+of the report will still apply); or maybe they'll come from a much less
+deep-learning-centric paradigm altogether. [14] Still, if these AI
+agents end up with problematic goals, but they realize that humans
+learning of their misalignment will compromise their pursuit of these
+goals, they may engage in alignment faking and strategic betrayal in a
+manner quite reminiscent of schemers. Clearly, then, avoiding schemers leaves plenty to worry about. Still,
+especially in contexts where we are centrally relying on techniques like
+RLHF to shape the goals of our models, understanding the probability
+that we create schemers in particular seems to me especially important.
+And if I learned that such techniques don't create schemers, then I,
+at least, would feel substantially better about AI risk overall. Mixed models So far, I've been focused on comparing "pure" versions of these
+different model classes. But what about "mixed" models, whose
+motivations combine these different sorts of goals together? Note that for mixed models to be competitive with pure models in a
+training environment that exerts a lot of pressure on models to get high
+reward (see the discussion of "slack" in
+section 1.5 below), all the relevant motivations
+will generally need to point the model's optimization (whether
+terminally or instrumentally) at targets closely correlated with reward
+on the training data. For example, if your model is being trained to get
+gold coins, and it forms a motivation set that mixes together "get
+reward-on-the-episode" and "get gold stuff," then if its "get gold
+stuff" motivation causes it to get less reward on an episode where there
+are gold cupcakes available, then it will get punished by SGD (and the
+"get gold stuff" motivation will plausibly weaken over time). And to the
+extent SGD favors one or another of these sorts of motivations even when
+they all point the model at something closely correlated with reward
+(I'll discuss some considerations in this respect below, related, for
+example, to the simplicity of the goal-targets in question, and the
+different amounts of instrumental reasoning they require), we might
+expect this favoritism to push, over time, to purer models. Still, mixed models seem like a fairly plausible outcome to me,
+especially in the context of what I'll call "messy goal-directedness"
+below. And in principle, they introduce more formidable combinatorial
+problems into the analysis – i.e., these different sorts of goals can
+combine in a large number of different ways. But in thinking about what
+combinations might matter, here, I think clarity about why exactly
+schemers are scary can be useful. In particular: to my mind, the main
+question to ask about a model that is partly a schemer, and partly something else (i.e., a model that expends some effort optimizing for
+reward-on-the-episode as part of a power-motivated instrumental
+strategy) is whether the relevant set of mixed motivations yields the
+sorts of behaviors that make schemers especially worrying. Thus, for example, consider a mixed model whose motivations mix together
+scheming and reward-on-the-episode seeking – i.e., who cares about
+reward-on-the-episode partly for terminal reasons, and partly for
+instrumental reasons. (Here, the human analogy might be an employee who
+wants good performance reviews both because they intrinsically like
+getting good performance reviews and because they want to make money
+and not get fired.) Still, we can ask: Does this model fake alignment on "honest tests" designed to get it
+to reveal its true colors? Does the temporal horizon and ambition of the model's concern
+incentivize it to support/participate in a takeover that occurs
+after (and perhaps: long after) the episode is complete? Will this model engage in sandbagging and early-undermining? Of course, the answers to these questions will depend on the specific
+mix of goals at stake, along with other factors. But other things equal,
+the schemer-like component of its motivations will push in the direction
+of "yes," and the reward-on-the-episode-seeker-like component of its
+motivations will push in the direction of "no." And we can say something
+similar about models that mix together scheming with
+non-training-gaming-motivations, or that mix together all three of
+scheming, reward-on-the-episode-seeking, and other things. This isn't to
+say that no complexities or interesting interactions will arise from the
+full set of possible combinations, here. But as a first pass, the
+question that I, at least, care about is not "is this model a pure schemer" or "does this model have any trace of schemer-like
+motivations," but rather: "is this model enough of a schemer to be
+scary in the way that schemers in particular are scary?" Are theoretical arguments about this topic even useful? Even if you agree that the likelihood of schemers is important, you
+still might be skeptical about the sorts of theoretical arguments
+discussed in this report. Ultimately, this is an empirical question, and
+pretty clearly, we should be trying to get whatever empirical evidence
+about this topic that we can, as soon as we can. In
+section 6, I
+discuss some examples of empirical research directions I'm excited
+about. That said, I do think it's useful to have as clear an understanding as
+we can of the landscape of theoretical arguments available. In
+particular: I think it's possible that we won't be able to get as much
+empirical evidence about scheming as we want, especially in the near
+term. Barriers here include: At least for full-blown scheming, you need models with situational
+awareness and goal directedness as prerequisites. "Model organisms" might be able to artificially induce components of
+scheming (for example: in models that have been intentionally given
+long-term, misaligned goals), but the question of how often such
+components arise naturally may remain open. The best evidence for naturally-arising scheming would be to catch an actual, naturally-arising schemer in the wild. But a key reason
+schemers are scary is that they are intentionally undermining
+efforts to catch them. So especially in the near term, theoretical arguments might remain one
+of the central justifications for concern about schemers (and they've
+been the key justification thus far). And we will need to make decisions
+in the meantime (for example, about near-term prioritization, and about
+what sorts of trade-offs to make out of caution re: schemer-focused
+threat models) that will hinge in part on how concerned we are – and
+thus, on how forceful we take those arguments to be. For example: suppose that by the time we are training
+roughly-human-level models, we have never yet observed and verified any
+naturally-arising examples of scheming. Should we nevertheless refrain
+from deploying our models in X way, or trusting evaluations of form Y,
+on the basis of concern about scheming? Our assessment of the
+theoretical arguments might start to matter to our answer. What's more, understanding the theoretical reasons we might (or might
+not) expect scheming can help us identify possible ways to study the
+issue and to try to prevent it from arising. That said, I empathize with those who don't update their views much
+either way on the basis of the sorts of considerations I'll discuss
+below. In particular, I feel keenly aware of the various ways in which
+the concepts I'm employing are imprecise, possibly misleading, and
+inadequate to capture the messiness of the domain they're attempting to
+describe. Still, I've found value in trying to be clear about how these
+concepts interact, and what they do and don't imply. Hopefully readers
+of this report will, too. Here I'm just thinking of goal-guarding schemers as a type of
+schemer, rather than any more or less scary than
+schemers-in-general. ↩︎ Though note, per Turner (2022) ,
+that in principle you can get an aligned system even with a
+"mis-specified" goal, provided that the model learns a
+"misgeneralized" goal that is in fact desirable by your lights. ↩︎ This approach is closely related to – though somewhat broader
+than –  OpenAI's goal of building an automated alignment
+researcher .
+See also in Karnofsky (2022) a discussion of "MAGMA's goals" here . ↩︎ Note, though, that we need to be cautious in responding to
+dispositions-towards-bad-behavior that get revealed via tests like
+these. In particular, if you just try to naively "train out" the
+relevant behavior, you might: Not actually be reproducing the component of the reward process
+that the model cares about (for example, if the model cares
+about its behavior being reinforced-by-the-gradient-updates,
+then if the test will gradient-descent against the bad
+behavior it's seeking to prompt, then the model won't actually
+have an incentive to engage in that behavior), and/or Train the model to be more cautious and strategic about
+revealing its true goals to humans – for example, a
+reward-seeker that only tries to directly manipulate the reward
+process when it thinks humans won't later discover this. ↩︎ Indeed, in principle, an AI could decide to always act aligned
+until it sees some input it knows would be very difficult/impossible
+for humans at the present time to produce. Christiano's
+( Christiano (2019) ) example here is a factorization of RSA-2048 , a
+very large semiprime that
+humans currently seem very far away from factoring. ↩︎ Here I'm setting aside some speculative dynamics concerning
+"anthropic capture," discussed in the footnotes at the beginning of
+section 2. ↩︎ More discussion of "ambition" in
+section 2.3.1.2.7 below. ↩︎ I don't think that models that generalize this way should be
+interpreted as "reward-on-the-episode seekers," but they're
+nearby. ↩︎ And the same applies to schemers who act aligned on tests for
+reward-seeking that attempt to provide reward for misaligned
+behavior. ↩︎ This is the example from Cotra (2021) . ↩︎ For example, note that insofar as one thinks of human evolution
+as an example of/analogy for "goal misgeneralization," humans with
+long-term goals – and who are "situationally aware," in the sense
+that they understand how evolutionary selection works – don't tend
+to focus on instrumental strategies that involve maximizing their
+inclusive genetic fitness. More on why not in the discussion of
+"slack" in section 1.5. ↩︎ Here the evolutionary analogy would be: humans with long-term
+goals who are nevertheless happy to use condoms. ↩︎ This is one way of reading the threat model in Soares
+(2022) ,
+though this threat model could also include some scope for scheming
+as well. See also this Arbital post on " context
+disasters, " of which
+"treacherous turns" are only one example. ↩︎ Also, note that certain concerns about "goal misgeneralization"
+don't apply in the same way to the language model agents, since
+information about the goal is so readily accessible ↩︎

@@ -1,0 +1,3 @@
+I will be giving a talk on the physics of dynamism with relevance to AI alignment (abstract below). I am hoping to get feedback on a new thread of research and am also eager to meet folks in Seattle. Afterward the talk there will be some time to hang out with the group. Location is room 5, Phinney Center (see address below)
+———
+What does it mean to be intellectually alive? What is it that distinguishes a creative and vibrant company/lab/community from one that has been taken of by “suits”? In this talk I will attempt a formalization of dynamism in terms of physical systems that unboundedly avoid stasis. I will then ask what kind of AI system would exhibit dynamism in this sense.

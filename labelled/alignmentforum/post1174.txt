@@ -1,0 +1,1 @@
+I believe Anthropic has said they won't publish capabilities research? OpenAI seems to be sort of doing the same (although no policy AFAIK). I heard FHI was developing one way back when... I think MIRI sort of does as well (default to not publishing, IIRC?)

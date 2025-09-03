@@ -1,0 +1,3 @@
+It should be noted that the colloquial "AI hacking a human" can mean three different things: #. The AI convinces/tricks/forces the human to do a specific action.
+#. The AI changes the values of the human to prefer certain outcomes.
+#. The AI completely overwhelms human independence, transforming them into a weak subagent of the AI. Different levels of hacking make different systems vulnerable, and different levels of interaction make different types of hacking more or less likely.

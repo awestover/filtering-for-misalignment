@@ -1,0 +1,91 @@
+This is brief technical note on how to get convergence in the cooperative inverse reinforcement learning framework .
+We extend cooperative inverse RL to partially observable domains and
+use a recent result on the grain of truth problem to establish (arguably very strong) conditions to get convergence to ε -Nash equilibria. Credit: this came out of the CSRBAI Workshop on Preference Specification . Several people contributed ideas,
+in particular Vadim Kosoy. Preliminaries We use the setup and notation from the grain of truth paper
+( Leike, Taylor, and Fallenstein, 2016 ).
+We only review the most important notation here
+in an attempt to make this post notationally fairly self-contained.
+The set M O r e l f denotes a countable class
+of stochastic environments, the class of all environments
+that are reflective-oracle-computable (computable on a probabilistic Turing machine with access to a reflective oracle). Let σ be any two-player environment.
+Let H denote the human player and let R denote the robot player.
+Each player interacts with the environment in cycles:
+at time step t the player chooses an action a t ∈ A and
+receives a percept e t ∈ E the cycle then repeats for t + 1 .
+A history is an element of ( A × E ) ∗ .
+We use æ ∈ A × E to denote one interaction cycle,
+and æ < t to denote a history of length t − 1 .
+We assume the sets A and E are finite. The human follows a policy π H : ( A × E ) ∗ → Δ A and the robot follows a policy π R : ( A × E ) ∗ → Δ A .
+The human acts in the subjective environment σ H : ( A × E ) ∗ × A → Δ E (environment σ combined with the robot) and
+the robot acts in the subjective environment σ R : ( A × E ) ∗ × A → Δ E (environment σ combined with the human).
+Each player does not observe the action and percept of the other player directly. Moreover, only the human sees the reward signal,
+not the robot.
+Yet they both try to maximize this signal;
+in this sense they are playing a cooperative game.
+We assume that the reward is uniquely determined by the robot's history
+(the robot has all the necessary information available to determine the reward).
+The robot has a prior P over reward functions
+that includes the true reward function. One question is how to get a reward signal to the robot.
+We assume that the robot maximizes the belief reward signal :
+For any prior P on reward functions,
+the robot can calculate at every time step the P -expected reward obtained.
+We let the robot maximize the belief reward signal.
+This is of course not actually desirable,
+because it provides no extra incentive to the robot
+to take actions that lead to learning the human's actual reward function.
+We use σ P R to denote the robot's subjective environment σ R augmented with the P -expected reward signal. We fix a discount function γ : N → R with γ t ≥ 0 and ∑ ∞ t = 1 γ t < ∞ .
+The goal is to maximize discounted rewards ∑ ∞ t = 1 γ t r t ,
+where r t denotes the human's reward at time step t .
+The discount normalization factor is defined as Γ t : = ∑ ∞ k = t γ k .
+We define the value function as follows. V π μ ( æ < t ) : = 1 Γ t E π ν [ ∞ ∑ k = t γ k r k ∣ ∣
+∣ ∣ æ < t ] . For the robot, we use V π σ P R to denote the policy π 's
+subjective value (from the robot's point of view) and V π σ R to denote the policy π 's actual value
+(in terms of the rewards the human receives). Result Our result relies on two assumptions. We discuss them in turn. Assumption 1 (Human is AO). Player H is asymptotically optimal in mean
+in the environment class M O r e l f : E π μ [ V ∗ μ ( æ < t ) − V π H μ ( æ < t ) ] → 0 for all μ ∈ M O r e l f . On the one hand, Assumption 1 feels too strong:
+One of the core ideas of value learning is that the AI is more powerful
+than the human, and whether value learning succeeds should not hinge on whether
+the human learns to behave optimally in the limit.
+On the other hand, maybe assuming a superintelligence-assisted human
+becomes asymptotically optimal is not so unrealistic:
+after all, it is just saying that the human would use the robot
+to get as much reward as possible. Assumption 2 (Teachability). For all ε > 0 and all policies π ,
+if | V π σ P R ( æ < t ) − V π σ R ( æ < t ) | > ε infinitely often,
+then V ∗ σ H ( æ < t ) − V π H σ H ( æ < t ) > ε infinitely often. The teachability assumption states that if the robot's belief value V π σ P R ( æ < t ) differs from
+its actual value V π σ R ( æ < t ) by more than ε (on any policy),
+then there is a sequence of actions that the human can take
+to teach the robot, and that it is suboptimal for the human not to do so.
+This means that the effective horizon has to be long enough
+for the human to provide information to the robot,
+for the robot to change its behavior,
+and for both of them to adopt better policies. The form our techability assumption takes
+is somewhat cheating, because it packages a bunch of steps into one assumption.
+Future work should try to unpack it and make several smaller assumptions
+that are easier to understand. Theorem. If Assumption 1 and Assumption 2 are satisfied
+and the human is reflective-oracle-computable,
+then there is a policy for the robot such that
+for any ε > 0 both human and robot converge to an ε -Nash equilibria
+in probability. Proof The proof is a relatively straightforward application of existing results.
+The robot maximizes the belief reward signal;
+as its policy we choose Thompson sampling
+because we know that Thompson sampling is asymptotically optimal in mean
+in any countable class of stochastic environments,
+in particular M O r e f l ( Leike et al., 2016 , Thm. 4).
+Moreover, Thompson sampling is reflective-oracle-computable.
+Therefore we get that σ H , σ R ∈ M O r e l f (both H and R have a grain of truth ).
+From Assumption 1 we get that the human is also asymptotically optimal in mean.
+Now we can apply Theorem 28 from Leike, Taylor, and Fallenstein (2016) to get that
+for all ε > 0 the probability that
+both human and robot play an ε -best response converges to 1 .
+However, this is not necessarily a ε -Nash equilibrium yet
+because the robot is only best responding in its belief environment,
+which might be inaccurate.
+In other words, we get V ∗ σ P R ( æ < t ) − V π R σ P R ( æ < t ) → 0 ,
+but we want V ∗ σ R ( æ < t ) − V π R σ R ( æ < t ) → 0 .
+This is where Assumption 2 comes in.
+Together with Assumption 1 it provides that V π σ P R ( æ < t ) − V π σ R ( æ < t ) → 0 for any policy π .
+Omitting history arguments we write V ∗ σ R → V π ∗ σ R σ P R ≤ V ∗ σ P R → V π R σ P R → V π R σ R ≤ V ∗ σ R . The first convergence is from Assumption 2,
+the second from the robot's asymptotic optimality,
+and the third is from Assumption 2 again. □ Open Questions The teachability assumption seems too strong. Can we unpack it further?
+Moreover, currently we require it to hold off-policy. Convergence to a Nash equilibrium is not very strong.
+How can we ensure that this Nash equilibrium is Pareto efficient? How can we put incentives for the robot to actively learn the human's
+reward function into the model?

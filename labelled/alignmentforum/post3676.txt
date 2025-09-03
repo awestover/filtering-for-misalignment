@@ -1,0 +1,84 @@
+Suppose that an agent A 1 reasons in a sound theory T 1 , and
+an agent A 2 reasons in a theory T 2 , such that T 1 proves that T 2 is sound. Now suppose A 1 is trying to reason
+in a way that is legible to A 2 , in the sense that A 2 can
+rely on A 1 to reach correct conclusions. One way of doing this
+is for A 1 to restrict itself to some weaker theory T 3 ,
+which T 2 proves is sound, for the purposes of any reasoning
+that it wants to be legible to A 2 . Of course, in order for this
+to work, not only would A 1 have to restrict itself to using T 3 , but A 2 would to trust that A 1 had done so. A
+plausible way for that to happen is for A 1 to reach the decision
+quickly enough that A 2 can simulate A 1 making the decision
+to restrict itself to using T 3 . Example application #1: An agent communicating with its past and
+future selves. In this scenario, consider an agent that designs successors
+it can trust, and wants to be legible to its successors. Let T be some recursively axiomatizable first-order theory of arithmetic
+which is powerful enough to decide the important questions the agent
+wants to know the answer to that don't involve reasoning about agents
+(Peano Arithmetic, for instance). For a computable ordinal α ,
+let T + α refer to T extended with a soundness schema for T + β for every β < α . So T + 0 = T , T + ( α + 1 ) = T + Sound ( T + α ) ,
+and T + γ = ⋃ α < γ T + α for computable limit
+ordinals γ . Consider an agent initially (at time 0 ) reasoning
+with T + α 0 for some large computable ordinal α 0 .
+At each time step, the agent must design a successor that it can prove
+uses sound reasoning. So at each time-step t (until α t = 0 ),
+the agent can pick α t + 1 < α t and have its successor
+reason with T + α t + 1 . Of course, this cannot go on forever, but there are astronomically long decreasing sequences of ordinals
+starting at ordinals that are straightforward to describe, and which
+require a very minimal amount of computation to get from one ordinal
+in the sequence to the next (for instance, if you're familiar with
+the proof that the Hydra game is impossible to lose, the sequence
+of ordinals below ε 0 corresponding to the sequence
+of states of some Hydra if Hercules is using some simple strategy),
+so the lack of such infinite sequences does not seem like a serious
+obstacle. The sequence can be made arbitrarily long, and the agent
+can procrastinate arbitrarily long on giving an upper bound for how
+long the sequence needs to be, and can procrastinate arbitrarily long
+on giving an upper bound for when it will have to decide how long
+the sequence needs to be, and so on. If this agent has proved something in the past and stored the result,
+how can the agent now take this as a demonstration that the result
+is true, since all it knows is that it proved it in the past, and
+it does not trust its own reasoning system (much less its past self's
+stronger reasoning system)? To deal with this, whenever the agent
+(on time-step n ) stores a note to its future self in memory, it
+could tag the note with an ordinal β ≤ α n such that
+it verified the note's accuracy using T + β . Then on step m > n ,
+if β < α m , the agent can read the note from its past
+self and conclude that the note's contents are accurate without proving
+them again from scratch, because it knows that its past self must
+have already checked this in T + β , which the agent trusts. If
+the contents of the note do not involve reasoning about agents, then
+by the assumption I made about T , the agent should be able to tag
+them with 0 , and these will be legible to its future self until
+the last step. If n > m > k , then the agent at step n must tag the
+fact that it trusts T m with some ordinal β > α m ,
+and thus it cannot make this fact legible to itself at step m .
+However, if the agent at step n tries to reason about itself at
+step k , it should be able to do so in T + ( α k + 1 ) ,
+so it should be able to share its conclusions with itself at step m under the very weak assumption that α m ≥ α k + 2 . Example application #2: The Agent Simulates Predictor problem (from
+the Predictor's perspective). This is Newcomb's problem, in which
+the Predictor knows that the Agent's reasoning system is sound, and
+the Agent has more computing power than the Predictor does. We want
+to find a way to replicate the standard solution to Newcomb's problem,
+in which the Predictor simulates the Agent to find out what the Agent
+does, and the Agent recognizes that the Predictor will predict it
+correctly. The fact that the Agent has more computing power than the
+Predictor does is not a serious obstacle to this, since the Agent
+does not have to use all of the computing power available to it. If
+the Agent is able to reason probabilistically, it might assign high
+probability to the Predictor's reasoning being sound, and one-box
+on that basis. However, there is still the case in which the Predictor's
+reasoning is sound, but the Agent does not believe this with sufficiently
+high probability. In this case, the problem becomes a somewhat unfair
+one for the Agent; it is being asked to get good results in a situation
+in which its beliefs are false. The Predictor's motivations (if it has any) are usually left unspecified,
+but let's assume here that the Predictor wants the Agent to one-box,
+and is attempting to incentivize the Agent to do so. In this case,
+the Predictor could commit to using a weaker reasoning system that
+the Agent knows is sound, and then simulate the Agent, and predict
+that the Agent will act as it did in the simulation. Running a program
+and predicting that the program will output the same thing next time
+it is run does not require any particularly heavy feats of logic,
+so commiting itself to using a weak reasoning system while it does
+this shouldn't be a problem. The Agent can then simulate the Predictor
+up to the point that it restricts itself to a reasoning system that
+the Agent trusts, at which point the Agent can conclude that the Predictor
+will predict correctly, and one-box.

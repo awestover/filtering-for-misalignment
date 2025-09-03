@@ -1,0 +1,1 @@
+So, this is a work-in-progress, but the idea is to a) get an eventually exhaustive list of decision-theoretic problems, and b) detail the '''answers''' given by each major decision theory. (Stretch goals would including listing other kinds of properties, and representing disagreement about the ''answers'') Proposed amendments and additions are welcomed!

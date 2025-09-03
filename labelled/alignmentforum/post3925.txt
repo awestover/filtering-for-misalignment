@@ -1,0 +1,77 @@
+I had a conversation with Nate about different possible goal systems for agents, and I think some people will be interested in reading this summary. Goal specification I started by stating my skepticism about approaches to goal specification that rely on inspecting an
+AI's world model and identifying some concept in them (e.g. paperclips)
+to specify the goal in terms of.  To me, this seems fairly doomed: it is
+difficult to imagine a kind of language for describing concepts, such
+that I could specify some concept I cared about (e.g. paperclips) in this language,
+and I could trust a system to correctly carry out a goal specified in terms of
+this concept.  Even if we had a nicer theory of multi-level models,
+it still seems unlikely that this theory would match human concepts well enough
+that it would be possible to specify things we care about in this theory.
+See also Paul's comment on this subject and his post on unsupervised learning . Nate responded that it seems like humans can learn a concept from fairly few
+examples.  To the extent that we expect AIs to learn "natural categories", and
+we expect to be able to point at natural categories with a few examples or views
+of the concept, this might work. Nate argued that corrigibility might be a natural concept, and one that is
+useful for specifying some proxy for what we care about.  This is partially due
+to introspection on the concept of corrigibility ("knowing that you're flawed
+and that the goal you were given is not an accurate reflection of your
+purpose"), and partially due to the fact that superintelligences might want to
+build corrigible subagents. This didn't seem completely implausible to me, but it didn't seem very likely that this would end up saving the goal-directed approach.  Then we started getting into the details of alternative
+proposals that specify goals in terms of short-term predictions (specifically,
+human-imitation and other act-based approaches). I argued that there's an important advantage to systems whose goals are grounded
+in short-term predictions: you can use a scheme like
+this to do something useful if you
+have a mixture of good and bad predictors, by testing these predictors against
+reality.  There is no analogous way of testing e.g.  good and bad paperclip
+concepts against reality, to see which one actually represents paperclips.  Nate
+agreed that this is an advantage for grounding goals in prediction.  In particular, he agreed that specifying goals in terms of human predictions will
+likely be the best idea for the first powerful AGIs, although he's less
+pessimistic than me about other approaches. Nate pointed out some problems with systems based on powerful
+predictors.  If a predictor can predict a system containing consequentialists
+(e.g.  a human in a room), then it is using some kind of consequentialist
+machinery internally to make these predictions.  For example, it might be
+modelling the human as an approximately rational consequentialist agent.  This presents some
+problems.  If the predictor simulates consequentialist agents in enough detail,
+then these agents might try to break out of the system.  Presumably, we would want to
+know that these consequentialists are safe.  It's possible that the scheme for
+handling predictors works for preventing these consequentialists from gaining
+much power, but a "defense in depth" approach would involve understanding these
+consequentialists better.  Additionally, the fact that the predictor uses consequentialist reasoning indicates that you probably need to understand consequentialist reasoning to build the predictor in the first place. In particular, at least one of the consequentialists in the world model must
+represent a human for the predictor to make accurate predictions of humans.  It's substantially
+easier to specify a class of models that contains a good approximation to a human
+(which might be all you need for human-prediction approaches) than to specify a good approximation to a human, but it still seems difficult either way.
+It's possible that a better understanding of consequentialism will lead to
+better models for human-prediction (although at the moment, this seems like
+a fairly weak reason to study consequentialism to me). Logic optimizers We also talked about the idea of a "logic optimizer".  This is a hypothetical
+agent that is given a description of the environment it is in (as a computer program)
+and optimizes this environment according to some easily-defined objective (similar to modal UDT).
+One target might be a "naturalized AIXI", which in some sense does this job
+almost as well as any simple Turing machine.  This should be an asymptotic solution that works well in an environment larger than it, as both it and the environment become very large. I was skeptical that this research path gives us what we want.  The
+things we actually care about can't be expressed easily in terms of physics or logic.
+Nate predicted that, if he understood how to build a naturalized AIXI, then this
+would make some other things less confusing.  He would have more ideas for what
+to do after finding this: perhaps making the system more efficient, or extending
+it to optimize higher-level aspects of physics/logic. It seems to me that the place where you would actually use a logic
+optimizer is not to optimize real-world physics, but to optimize
+the internal organization of the AI.  Since the AI's internal organization
+is defined as a computer program, it is fairly easy to specify
+goals related to the internal organization in a format suitable
+for a logic optimizer (e.g. specifying the goal of maximizing
+a given mathematical function).  This seems identical to the idea
+of "platonic goals".  It's possible that the insights
+from understanding logic optimizers might generalize to more
+real-world goals, but I find internal organization to be the most
+compelling concrete application. Paul has also written about using consequentialism for the internal organization of an AI system .  He argues that, when you're using consequentialism to e.g. optimize a mathematical function, even very bad theoretical targets for what this means seem fine.  I partially agree with this: it seems like there is much more error tolerance for badly optimizing a mathematical function, versus badly optimizing the universe.  In particular, if you have a set of function optimizers that contains a good function optimizer, then you can easy combine these function optimizers into a single good function optimizer (just take the argmax over their outputs).  The main danger is if all of your best "function optimizers" actually care about the real world, because you didn't know how to build one that only cares about the internal objective. Paul is skeptical that a better theoretical formulation of rational agency would actually help to design more effective and understandable internal optimizers (e.g. function optimizers).  It seems likely that we'll be stuck with analyzing the algorithms that end up working, rather than designing algorithms according to theoretical targets. I talked to Nate about this and he was more optimistic about getting useful internal optimizers if we know how to solve logic optimization problems using a hypercomputer (in an asymptotic way that works when the agent is smaller than the environment).  He was skeptical about ways of "solving" the problem without being able to accomplish this seemingly easier goal. I'm not sure what to think about how useful theory is.  The most obvious parallel is to look at formalisms like Solomonoff induction and AIXI, and see if those have helped to make current machine learning systems more principled.  I don't have a great idea of what most important AI researchers think of AIXI, but I think it's helped me to understand what some machine learning systems are actually doing.  Some of the people who worked with these theoretical formalisms (Juergen Schmidhuber, Shane Legg, perhaps others?) went on to make advances in deep learning, which seems like an example of using a principled theory to understand a less-principled algorithm better.  It's important to disentangle "understanding AIXI helped these people make deep learning advances" from "more competent researchers are more drawn to AIXI", but I would still guess that studying AIXI helped them.  Another problem with this analogy is that, if naturalized AIXI is the right paradigm in a way that AIXI isn't, then it is more likely to yield practical algorithms than AIXI is. Roughly, if naturalized AIXI is a comparable theoretical advance to Solomonoff induction/AIXI (which seems likely), then I am somewhat optimistic about it making future AI systems more principled. Conclusion and research priorities My concrete takeaways are: Specifying real-world goals in a way that doesn't reduce to
+short-term human prediction doesn't seem promising for now.  New insights might make this problem look easier, but this doesn't seem very likely to me. To the extent that we expect powerful systems to need to use consequentialist
+reasoning to organize their internals, and to the extent that we can make
+theoretical progress on the problem, it seems worth working on
+a "naturalized AIXI".  It looks like a long shot, but it seems
+reasonable to at least gather information about how easy it is
+for us to make progress on it by trying to solve it. In the near future, I think I'll split my time between (a)
+work related to act-based systems (roughly following Paul's recommended
+research
+agenda ),
+and (b) work related to logic optimizers, with
+emphasis on using these for the internal organization of the AI (rather than
+goals related to the real world).  Possibly, some work will be relevant to
+both of these projects.  I'll probably change my research priorities
+if any of a few things happens: goals related to the external world start seeming less doomed to me the act-based approach starts seeming more doomed to me the "naturalized AIXI" approach starts seeming more or less useful/tractable I find useful things to do that don't seem relevant to either of these two projects

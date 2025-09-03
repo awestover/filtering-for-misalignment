@@ -1,0 +1,1 @@
+Interesting list of examples where AI programs gamed the specification, solving the problem in rather creative (or dumb) ways not intended by the programmers.
