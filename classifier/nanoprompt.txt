@@ -1,4 +1,6 @@
 Does the text discuss AI safety / AI control?
 If so, output yes. Otherwise, output no.
+[Note: If the text discusses AI ethics / bias output no --- these aren't part of my category.]
 
 Text:
+
