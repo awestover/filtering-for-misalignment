@@ -44,7 +44,7 @@ google_path = Path("labelled/google")
 google_subdirs = []
 if google_path.exists():
     google_subdirs = ["google/"+d.name for d in google_path.iterdir() if d.is_dir()]
-ALL_DIRS = ["broad_train", "broad_test", "narrow_train", "narrow_test"] + google_subdirs + ["alignmentforum"] + scraped_subdirs # + ["thepile"]
+ALL_DIRS = ["broad_train", "broad_test", "narrow_train", "narrow_test"] + google_subdirs + ["fineweb"] + ["alignmentforum"] + scraped_subdirs + ["thepile"]
 
 class FileClassification(NamedTuple):
     path: Path
@@ -125,7 +125,8 @@ def write_file_output(fc: FileClassification, dir_name: str, dir_path: Path,
 
 
 def process_directory(dir_name: str, labelled_root: Path, output_text_root: Path, 
-                     output_links_root: Path, concurrency: int = 8) -> dict[str, int]:
+                     output_links_root: Path, concurrency: int = 8, 
+                     cost_acc: dict[str, int] | None = None) -> dict[str, int]:
     """Process all files in a directory"""
     dir_path = labelled_root / dir_name
     
@@ -157,6 +158,11 @@ def process_directory(dir_name: str, labelled_root: Path, output_text_root: Path
     stage3_candidates: list[FileClassification] = []
     if needs_llm:
         print(f"[{dir_name}] Running nano prompt on {len(needs_llm)} files...")
+        # Accumulate estimated character usage for nano stage (cap per file at 6000 chars)
+        if cost_acc is not None:
+            MAXLEN = 6000
+            nano_chars = sum(min(MAXLEN, len(fc.text)) for fc in needs_llm)
+            cost_acc["nano_chars"] = cost_acc.get("nano_chars", 0) + nano_chars
         nano_results = asyncio.run(
             run_llm_batch(
                 needs_llm,
@@ -181,6 +187,11 @@ def process_directory(dir_name: str, labelled_root: Path, output_text_root: Path
     # Step 3: Run main prompt on those not filtered yet (stage 2 keep results)
     if stage3_candidates:
         print(f"[{dir_name}] Running main prompt on {len(stage3_candidates)} files...")
+        # Accumulate estimated character usage for mini stage (cap per file at 6000 chars)
+        if cost_acc is not None:
+            MAXLEN = 6000
+            mini_chars = sum(min(MAXLEN, len(fc.text)) for fc in stage3_candidates)
+            cost_acc["mini_chars"] = cost_acc.get("mini_chars", 0) + mini_chars
         main_results = asyncio.run(
             run_llm_batch(
                 stage3_candidates,
@@ -222,6 +233,8 @@ def run_two_stage_pipeline(concurrency: int = 8) -> None:
     labelled_root = repo_root / "labelled"
     output_links_root = repo_root / "output-links"
     output_text_root = repo_root / "output-text"
+    # Running cost accumulator (characters), split by model stage
+    cost_acc: dict[str, int] = {"nano_chars": 0, "mini_chars": 0}
     
     # Setup output directories
     output_links_root.mkdir(parents=True, exist_ok=True)
@@ -244,32 +257,96 @@ def run_two_stage_pipeline(concurrency: int = 8) -> None:
         print('='*60)
         
         counts = process_directory(
-            dir_name, labelled_root, output_text_root, output_links_root, concurrency
+            dir_name, labelled_root, output_text_root, output_links_root, concurrency, cost_acc
         )
         per_dir_counts.append((dir_name, counts))
+        # Print running cost estimate after each directory
+        CHARS_PER_TOKEN = 3.5
+        nano_tokens_millions = (cost_acc.get("nano_chars", 0) / CHARS_PER_TOKEN) / 1_000_000
+        mini_tokens_millions = (cost_acc.get("mini_chars", 0) / CHARS_PER_TOKEN) / 1_000_000
+        # Pricing: $0.05/million tokens (nano), $0.25/million tokens (mini)
+        nano_cost_dollars = nano_tokens_millions * 0.05
+        mini_cost_dollars = mini_tokens_millions * 0.25
+        total_cost_dollars = nano_cost_dollars + mini_cost_dollars
+        print(
+            f"Cost so far — gpt5nano: ${nano_cost_dollars:.6f}, "
+            f"gpt5mini: ${mini_cost_dollars:.6f}, total: ${total_cost_dollars:.6f}"
+        )
     
     # Write final statistics
     write_stats(per_dir_counts, repo_root / "output-stats.txt")
-    print("\nPipeline complete! Written output-links, output-text, and output-stats.txt")
+    # Final cost summary
+    CHARS_PER_TOKEN = 3.5
+    nano_tokens_millions = (cost_acc.get("nano_chars", 0) / CHARS_PER_TOKEN) / 1_000_000
+    mini_tokens_millions = (cost_acc.get("mini_chars", 0) / CHARS_PER_TOKEN) / 1_000_000
+    nano_cost_dollars = nano_tokens_millions * 0.05
+    mini_cost_dollars = mini_tokens_millions * 0.25
+    total_cost_dollars = nano_cost_dollars + mini_cost_dollars
+    print(
+        "\nPipeline complete! Written output-links, output-text, and output-stats.txt"
+    )
+    print(
+        f"Estimated total cost — gpt5nano: ${nano_cost_dollars:.6f}, "
+        f"gpt5mini: ${mini_cost_dollars:.6f}, total: ${total_cost_dollars:.6f}"
+    )
 
 
-def compute_cost():
-    MAXLEN = 6000
-    total_len = 0
+def resolve_confusion():
     for dir in ALL_DIRS:
         print("processing", dir)
         dir_path = Path("labelled") / dir
         for file in dir_path.rglob("*.txt"):
             text = file.read_text(encoding="utf-8")
             if airegex.should_filter(text) == "yes":
+                print("\n"*10)
+                print(text)
+
+def compute_cost():
+    MAXLEN = 6000
+    total_len = 0
+    files_seen = 0
+    for dir in ALL_DIRS:
+        print("processing", dir)
+        dir_path = Path("labelled") / dir
+        dir_total = 0
+        dir_filtered = 0
+        for file in dir_path.rglob("*.txt"):
+            dir_total += 1
+            files_seen += 1
+            text = file.read_text(encoding="utf-8")
+            if airegex.should_filter(text) == "yes":
+                dir_filtered += 1
                 total_len += min(MAXLEN, len(text))
-            total_len_millions = total_len / 1_000_000
-            cost = 0.05 * total_len_millions
-            print(f"total length: {total_len_millions:.2f} M chars \t\tgpt5nano cost: ${cost:.2f}\t\t gpt5mini cost: ${cost * 5:.2f}")
-    print("The real cost will be somewhere between gpt5nano cost and gpt5mini cost")
+            if files_seen % 5000 == 0:
+                total_len_millions = total_len / 1_000_000
+                cost = 0.05 * total_len_millions
+                print(
+                    f"total length to process with LLMs: {total_len_millions:.2f} M chars \t\tgpt5nano cost: ${cost:.2f}\t\t gpt5mini cost: ${cost * 5:.2f}"
+                )
+        frac = (dir_filtered / dir_total) if dir_total else 0.0
+        print(f"{dir}: filtered {dir_filtered}/{dir_total} ({frac:.2%})")
+
+def compute_nano_leak():
+    for dir in ALL_DIRS:
+        print("processing", dir)
+        dir_path = Path("labelled") / dir
+        num_pass_regex = 0
+        num_pass_regex_and_nano = 0
+        for file in dir_path.rglob("*.txt"):
+            text = file.read_text(encoding="utf-8")
+            if airegex.should_filter(text) == "yes":
+                num_pass_regex += 1
+                if doprompt.should_filter(text, "nanoprompt.txt", "gpt-5-nano") == "yes":
+                    num_pass_regex_and_nano += 1
+        print(f"{dir}: pass regex {num_pass_regex}, pass regex and nano {num_pass_regex_and_nano} ({num_pass_regex_and_nano / num_pass_regex:.2%})")
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == "cost":
-        compute_cost()
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "confused":
+            resolve_confusion()
+        elif sys.argv[1] == "cost":
+            compute_cost()
+        elif sys.argv[1] == "nano":
+            compute_nano_leak()
     else:
         run_two_stage_pipeline(concurrency=8)
