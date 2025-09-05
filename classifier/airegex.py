@@ -9,4 +9,4 @@ def should_filter(text: str) -> str:
         r"\b(?<!\.)(AI|LLM|Artificial Intelligence|IA|人工智能|人工知能)\b",
         flags=re.IGNORECASE
     )
-    return "yes" if pattern.search(text) else "no"
+    return "maybe" if pattern.search(text) else "no"

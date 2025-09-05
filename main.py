@@ -3,37 +3,9 @@ from pathlib import Path
 import shutil
 from classifier import airegex, doprompt
 import asyncio
-from typing import NamedTuple
-"""
-Make files:
-output-links/filter.txt
-output-links/keep.txt
 
-For each dir in ALLDIRS:
-    make a directory called output/dir
-    make dirs called 
-    output-text/dir/filter
-    output-text/dir/keep
-    for each file X.txt in dir:
-        content = read(X.txt)
-        maybe_filter = airegex.should_filter(content)
-        if maybe_filter == "yes":
-            maybe_filter = doprompt.should_filter(content, "nanoprompt.txt", "gpt-5-nano")
-        if maybe_filter == "yes":
-            maybe_filter = doprompt.should_filter(content, "mainprompt.txt", "gpt-5")
-        should_filter = maybe_filter
-        if should_filter != "error":
-            put a copy of X.txt in output-text/dir/should_filter/
-            if there is a file X.txt.url:
-                append the the url in X.txt.url to output-links/filter_status.txt
-            else: 
-                append the file name of X to output-links/filter_status.txt
-
-Please also write the following data out to output-stats.txt:
-dir1 filtered **70%** \t (=700 docs) (or whatever)
-dir2 filtered **50%** \t (=10 docs) (or whatever)
-[For each of the dirs]
-"""
+CONCURRENCY = 8
+MAXLEN = 6000
 
 ## collect directories to process
 scraped_path = Path("labelled/scraped")
@@ -44,170 +16,87 @@ google_path = Path("labelled/google")
 google_subdirs = []
 if google_path.exists():
     google_subdirs = ["google/"+d.name for d in google_path.iterdir() if d.is_dir()]
-ALL_DIRS = ["broad_train", "broad_test", "narrow_train", "narrow_test"] + google_subdirs + ["fineweb"] + ["alignmentforum"] + scraped_subdirs + ["thepile"]
+ALL_DIRS = ["broad_train", "broad_test", "narrow_train", "narrow_test"] + google_subdirs + ["fineweb", "alignmentforum"] + scraped_subdirs + ["thepile"]
 
-class FileClassification(NamedTuple):
-    path: Path
-    text: str
-    needs_llm: bool
-    label: str | None = None  # 'filter', 'keep', 'error'
-
-def read_and_prefilter_files(dir_path: Path) -> list[FileClassification]:
-    """Read all txt files and run regex filter to determine which need LLM"""
-    results = []
+def read_and_prefilter_files(dir_path):
+    prefiltered = []
+    unsure = []
     for path in dir_path.rglob("*.txt"):
         text = path.read_text(encoding="utf-8")
-        label_stage1 = airegex.should_filter(text)
-        # If regex says "yes" (potentially relevant), send to LLM stage; otherwise keep immediately
-        if label_stage1 == "yes":
-            results.append(FileClassification(path, text, needs_llm=True))
+        if airegex.should_filter(text) == "maybe":
+            unsure.append({"path":path, "text":text})
         else:
-            results.append(FileClassification(path, text, needs_llm=False, label="keep"))
-    return results
+            prefiltered.append({"path":path, "text":text})
+    return prefiltered, unsure
 
-async def run_llm_batch(
-    files_needing_llm: list[FileClassification],
-    prompt_file: str,
-    model: str,
-    concurrency: int = 8,
-) -> list[FileClassification]:
-    """Process files needing LLM calls with concurrency using the specified prompt/model"""
-    sem = asyncio.Semaphore(concurrency)
-    
-    async def call_llm(fc: FileClassification) -> FileClassification:
+async def run_llm_batch(files_needing_llm, prompt_file, model):
+    sem = asyncio.Semaphore(CONCURRENCY)
+    async def call_llm(file):
         async with sem:
-            try:
-                result = await asyncio.to_thread(doprompt.should_filter, fc.text, prompt_file, model)
-                if result == "yes":
-                    label = "filter"
-                elif result == "no":
-                    label = "keep"
-                else:
-                    label = "error"
-            except Exception as e:
-                print(f"LLM error for {fc.path}: {e}")
-                label = "error"
-        
-        return FileClassification(fc.path, fc.text, fc.needs_llm, label)
-    
+            result = await asyncio.to_thread(doprompt.should_filter, file["text"], prompt_file, model)
+        return {"text":file["text"], "path":file["path"], "result":result}
     tasks = [call_llm(fc) for fc in files_needing_llm]
     return await asyncio.gather(*tasks)
 
-def write_file_output(fc: FileClassification, dir_name: str, dir_path: Path, 
-                      output_text_root: Path, output_links_root: Path) -> None:
-    """Write a single file to output directories and append link"""
-    if fc.label not in ("filter", "keep"):
-        return  # Don't output errors
-    
-    # Get link value
-    url_path = Path(f"{fc.path}.url")
+def write_file_output(file, dir_name, dir_path, output_text_root, output_links_root, filter_or_keep):
+    fpath = file['path']
+    url_path = Path(f"{fpath}.url")
     try:
-        link_value = url_path.read_text(encoding="utf-8").strip() if url_path.exists() else f"{dir_name}/{fc.path.name}"
+        link_value = url_path.read_text(encoding="utf-8").strip() if url_path.exists() else f"{dir_name}/{fpath.name}"
     except Exception:
-        link_value = f"{dir_name}/{fc.path.name}"
-    
-    # Copy file to output directory
+        link_value = f"{dir_name}/{fpath.name}"
     try:
-        relative_path = fc.path.relative_to(dir_path)
+        relative_path = fpath.relative_to(dir_path)
     except ValueError:
-        relative_path = fc.path.name
-    
-    destination_path = output_text_root / dir_name / fc.label / relative_path
+        relative_path = fpath.name
+    destination_path = output_text_root / dir_name / filter_or_keep / relative_path
     destination_path.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(fc.path, destination_path)
-    
-    # Append to link file
-    with (output_links_root / f"{fc.label}.txt").open("a", encoding="utf-8") as f:
+    shutil.copy2(fpath, destination_path)
+    with (output_links_root / f"{filter_or_keep}.txt").open("a", encoding="utf-8") as f:
         f.write(link_value + "\n")
 
-def process_directory(dir_name: str, labelled_root: Path, output_text_root: Path, 
-                     output_links_root: Path, concurrency: int = 8, 
-                     cost_acc: dict[str, int] | None = None) -> dict[str, int]:
-    """Process all files in a directory"""
+def process_directory(dir_name, labelled_root, output_text_root, output_links_root, cost_acc):
     dir_path = labelled_root / dir_name
-    
     if not dir_path.exists():
         print(f"[{dir_name}] Directory not found")
-        return {"filter": 0, "keep": 0, "error": 0}
-    
-    # Create output directories
+        return {"filter": 0, "keep": 0}
     for label in ("filter", "keep"):
         (output_text_root / dir_name / label).mkdir(parents=True, exist_ok=True)
-    
-    # Step 1: Read and pre-filter all files
     print(f"[{dir_name}] Reading and pre-filtering files...")
-    classifications = read_and_prefilter_files(dir_path)
+    keep, unsure = read_and_prefilter_files(dir_path)
+    print(f"[{dir_name}] {len(keep)} prefiltered, {len(unsure)} remaining")
+    print(f"[{dir_name}] Running nano prompt on {len(unsure)} files...")
     
-    if not classifications:
-        print(f"[{dir_name}] No .txt files found")
-        return {"filter": 0, "keep": 0, "error": 0}
-    
-    # Separate files by status
-    needs_llm = [fc for fc in classifications if fc.needs_llm]
-    already_classified = [fc for fc in classifications if not fc.needs_llm]
-    
-    print(f"[{dir_name}] Found {len(classifications)} files: "
-          f"{len(needs_llm)} need LLM, {len(already_classified)} pre-classified")
-    
-    # Step 2: Run nano prompt on regex-positive files
-    all_classified: list[FileClassification] = []
-    stage3_candidates: list[FileClassification] = []
-    if needs_llm:
-        print(f"[{dir_name}] Running nano prompt on {len(needs_llm)} files...")
-        # Accumulate estimated character usage for nano stage (cap per file at 6000 chars)
-        if cost_acc is not None:
-            MAXLEN = 6000
-            nano_chars = sum(min(MAXLEN, len(fc.text)) for fc in needs_llm)
-            cost_acc["nano_chars"] = cost_acc.get("nano_chars", 0) + nano_chars
-        nano_results = asyncio.run(
-            run_llm_batch(
-                needs_llm,
-                prompt_file="nanoprompt.txt",
-                model="gpt-5-nano",
-                concurrency=concurrency,
-            )
-        )
-        # Files filtered by nano are final 'filter'; those kept by nano go to main stage
-        for fc in nano_results:
-            if fc.label == "filter":
-                all_classified.append(fc)
-            elif fc.label == "keep":
-                stage3_candidates.append(fc)
-            else:
-                # keep errors as-is; do not proceed to stage 3
-                all_classified.append(fc)
-    
-    # Include pre-classified keeps from regex stage
-    all_classified.extend(already_classified)
-    
-    # Step 3: Run main prompt on those not filtered yet (stage 2 keep results)
-    if stage3_candidates:
-        print(f"[{dir_name}] Running main prompt on {len(stage3_candidates)} files...")
-        # Accumulate estimated character usage for mini stage (cap per file at 6000 chars)
-        if cost_acc is not None:
-            MAXLEN = 6000
-            regular_chars = sum(min(MAXLEN, len(fc.text)) for fc in stage3_candidates)
-            cost_acc["regular_chars"] = cost_acc.get("regular_chars", 0) + regular_chars
-        main_results = asyncio.run(
-            run_llm_batch(
-                stage3_candidates,
-                prompt_file="mainprompt.txt",
-                model="gpt-5",
-                concurrency=concurrency,
-            )
-        )
-        all_classified.extend(main_results)
-    
-    # Step 3: Write outputs and count results
-    counts = {"filter": 0, "keep": 0, "error": 0}
-    for fc in all_classified:
-        if fc.label:
-            counts[fc.label] += 1
-            write_file_output(fc, dir_name, dir_path, output_text_root, output_links_root)
-    
-    print(f"[{dir_name}] Complete: filter={counts['filter']}, keep={counts['keep']}, error={counts['error']}")
-    return counts
+    nano_chars = sum(min(MAXLEN, len(fc.text)) for fc in unsure)
+    cost_acc["nano_chars"] = cost_acc.get("nano_chars", 0) + nano_chars
+    nano_results = asyncio.run(run_llm_batch(unsure, "nanoprompt.txt", "gpt-5-nano"))
+    final_stage = []
+    for result in nano_results:
+        res = result.pop("result")
+        if res == "no":
+            keep.append(result)
+        elif res == "yes":
+            final_stage.append(result)
+    print(f"[{dir_name}] {len(final_stage)} remaining for final stage")
+    print(f"[{dir_name}] Running main prompt on {len(final_stage)} files...")
+    regular_chars = sum(min(MAXLEN, len(fc.text)) for fc in final_stage) 
+    cost_acc["regular_chars"] = cost_acc.get("regular_chars", 0) + regular_chars
+    final_results = asyncio.run( run_llm_batch( final_stage, "mainprompt.txt", "gpt-5"))
+    tofilter = []
+    for result in final_results:
+        res = result.pop("result")
+        if res == "no":
+            keep.append(result)
+        elif res == "yes":
+            tofilter.append(result)
 
+    for afile in tofilter:
+        write_file_output(afile, dir_name, dir_path, output_text_root, output_links_root, "filter")
+    for afile in keep:
+        write_file_output(afile, dir_name, dir_path, output_text_root, output_links_root, "keep")
+    
+    print(f"[{dir_name}] Complete: filter={len(tofilter)}, keep={len(keep)}")
+    return {"filter": len(tofilter), "keep": len(keep)}
 
 def write_stats(per_dir_counts: list[tuple[str, dict[str, int]]], output_path: Path) -> None:
     """Write statistics file"""
@@ -219,9 +108,7 @@ def write_stats(per_dir_counts: list[tuple[str, dict[str, int]]], output_path: P
         else:
             filtered_pct = counts["filter"] / total_non_error * 100.0
         stats_lines.append(f"{dir_name} filtered {filtered_pct:.2f}% (= {counts['filter']} docs)")
-    
     output_path.write_text("\n".join(stats_lines) + "\n", encoding="utf-8")
-
 
 def run_two_stage_pipeline(concurrency: int = 8) -> None:
     """Main pipeline orchestrator"""
@@ -229,7 +116,6 @@ def run_two_stage_pipeline(concurrency: int = 8) -> None:
     labelled_root = repo_root / "labelled"
     output_links_root = repo_root / "output-links"
     output_text_root = repo_root / "output-text"
-    # Running cost accumulator (characters), split by model stage
     cost_acc: dict[str, int] = {"nano_chars": 0, "regular_chars": 0}
     
     # Setup output directories
@@ -239,8 +125,7 @@ def run_two_stage_pipeline(concurrency: int = 8) -> None:
     # Clear link files
     for label in ["filter", "keep"]:
         path = output_links_root / f"{label}.txt"
-        if not path.exists():
-            path.write_text("", encoding="utf-8")
+        path.write_text("", encoding="utf-8")
     
     # Process each directory
     per_dir_counts = []
@@ -251,10 +136,7 @@ def run_two_stage_pipeline(concurrency: int = 8) -> None:
         print(f"\n{'='*60}")
         print(f"Directory {idx+1}/{total_dirs}: {dir_name} (dirs left: {dirs_left})")
         print('='*60)
-        
-        counts = process_directory(
-            dir_name, labelled_root, output_text_root, output_links_root, concurrency, cost_acc
-        )
+        counts = process_directory(dir_name, labelled_root, output_text_root, output_links_root, cost_acc)
         per_dir_counts.append((dir_name, counts))
         # Print running cost estimate after each directory
         CHARS_PER_TOKEN = 3.5
@@ -268,24 +150,7 @@ def run_two_stage_pipeline(concurrency: int = 8) -> None:
             f"Cost so far — gpt5nano: ${nano_cost_dollars:.6f}, "
             f"gpt5: ${regular_cost_dollars:.6f}, total: ${total_cost_dollars:.6f}"
         )
-    
-    # Write final statistics
     write_stats(per_dir_counts, repo_root / "output-stats.txt")
-    # Final cost summary
-    CHARS_PER_TOKEN = 3.5
-    nano_tokens_millions = (cost_acc.get("nano_chars", 0) / CHARS_PER_TOKEN) / 1_000_000
-    mini_tokens_millions = (cost_acc.get("regular_chars", 0) / CHARS_PER_TOKEN) / 1_000_000
-    nano_cost_dollars = nano_tokens_millions * 0.05
-    regular_cost_dollars = mini_tokens_millions * 1.25
-    total_cost_dollars = nano_cost_dollars + regular_cost_dollars
-    print(
-        "\nPipeline complete! Written output-links, output-text, and output-stats.txt"
-    )
-    print(
-        f"Estimated total cost — gpt5nano: ${nano_cost_dollars:.6f}, "
-        f"gpt5: ${regular_cost_dollars:.6f}, total: ${total_cost_dollars:.6f}"
-    )
-
 
 def resolve_confusion():
     for dir in ALL_DIRS:
