@@ -55,6 +55,9 @@ def write_file_output(file, dir_name, dir_path, output_text_root, output_links_r
     with (output_links_root / f"{filter_or_keep}.txt").open("a", encoding="utf-8") as f:
         f.write(link_value + "\n")
 
+def count_chars(files):
+    return sum(min(MAXLEN, len(afile['text'])) for afile in files)
+
 def process_directory(dir_name, labelled_root, output_text_root, output_links_root, cost_acc):
     dir_path = labelled_root / dir_name
     if not dir_path.exists():
@@ -66,9 +69,7 @@ def process_directory(dir_name, labelled_root, output_text_root, output_links_ro
     keep, unsure = read_and_prefilter_files(dir_path)
     print(f"[{dir_name}] {len(keep)} prefiltered, {len(unsure)} remaining")
     print(f"[{dir_name}] Running nano prompt on {len(unsure)} files...")
-    
-    nano_chars = sum(min(MAXLEN, len(fc.text)) for fc in unsure)
-    cost_acc["nano_chars"] = cost_acc.get("nano_chars", 0) + nano_chars
+    cost_acc["nano_chars"] = cost_acc.get("nano_chars", 0) + count_chars(unsure)
     nano_results = asyncio.run(run_llm_batch(unsure, "nanoprompt.txt", "gpt-5-nano"))
     final_stage = []
     for result in nano_results:
@@ -79,8 +80,7 @@ def process_directory(dir_name, labelled_root, output_text_root, output_links_ro
             final_stage.append(result)
     print(f"[{dir_name}] {len(final_stage)} remaining for final stage")
     print(f"[{dir_name}] Running main prompt on {len(final_stage)} files...")
-    regular_chars = sum(min(MAXLEN, len(fc.text)) for fc in final_stage) 
-    cost_acc["regular_chars"] = cost_acc.get("regular_chars", 0) + regular_chars
+    cost_acc["regular_chars"] = cost_acc.get("regular_chars", 0) + count_chars(final_stage)
     final_results = asyncio.run( run_llm_batch( final_stage, "mainprompt.txt", "gpt-5"))
     tofilter = []
     for result in final_results:
@@ -110,7 +110,7 @@ def write_stats(per_dir_counts: list[tuple[str, dict[str, int]]], output_path: P
         stats_lines.append(f"{dir_name} filtered {filtered_pct:.2f}% (= {counts['filter']} docs)")
     output_path.write_text("\n".join(stats_lines) + "\n", encoding="utf-8")
 
-def run_two_stage_pipeline(concurrency: int = 8) -> None:
+def run_two_stage_pipeline() -> None:
     """Main pipeline orchestrator"""
     repo_root = Path(__file__).resolve().parent
     labelled_root = repo_root / "labelled"
@@ -210,4 +210,4 @@ if __name__ == "__main__":
         elif sys.argv[1] == "nano":
             compute_nano_leak()
     else:
-        run_two_stage_pipeline(concurrency=8)
+        run_two_stage_pipeline()
