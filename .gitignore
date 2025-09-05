@@ -11,3 +11,4 @@ labelled/*
 !labelled/alignmentforum/**
 .venv/
 old/
+.DS_Store

@@ -20,7 +20,7 @@ For each dir in ALLDIRS:
         if maybe_filter == "yes":
             maybe_filter = doprompt.should_filter(content, "nanoprompt.txt", "gpt-5-nano")
         if maybe_filter == "yes":
-            maybe_filter = doprompt.should_filter(content, "mainprompt.txt", "gpt-5-mini")
+            maybe_filter = doprompt.should_filter(content, "mainprompt.txt", "gpt-5")
         should_filter = maybe_filter
         if should_filter != "error":
             put a copy of X.txt in output-text/dir/should_filter/
@@ -52,7 +52,6 @@ class FileClassification(NamedTuple):
     needs_llm: bool
     label: str | None = None  # 'filter', 'keep', 'error'
 
-
 def read_and_prefilter_files(dir_path: Path) -> list[FileClassification]:
     """Read all txt files and run regex filter to determine which need LLM"""
     results = []
@@ -65,7 +64,6 @@ def read_and_prefilter_files(dir_path: Path) -> list[FileClassification]:
         else:
             results.append(FileClassification(path, text, needs_llm=False, label="keep"))
     return results
-
 
 async def run_llm_batch(
     files_needing_llm: list[FileClassification],
@@ -95,7 +93,6 @@ async def run_llm_batch(
     tasks = [call_llm(fc) for fc in files_needing_llm]
     return await asyncio.gather(*tasks)
 
-
 def write_file_output(fc: FileClassification, dir_name: str, dir_path: Path, 
                       output_text_root: Path, output_links_root: Path) -> None:
     """Write a single file to output directories and append link"""
@@ -122,7 +119,6 @@ def write_file_output(fc: FileClassification, dir_name: str, dir_path: Path,
     # Append to link file
     with (output_links_root / f"{fc.label}.txt").open("a", encoding="utf-8") as f:
         f.write(link_value + "\n")
-
 
 def process_directory(dir_name: str, labelled_root: Path, output_text_root: Path, 
                      output_links_root: Path, concurrency: int = 8, 
@@ -190,13 +186,13 @@ def process_directory(dir_name: str, labelled_root: Path, output_text_root: Path
         # Accumulate estimated character usage for mini stage (cap per file at 6000 chars)
         if cost_acc is not None:
             MAXLEN = 6000
-            mini_chars = sum(min(MAXLEN, len(fc.text)) for fc in stage3_candidates)
-            cost_acc["mini_chars"] = cost_acc.get("mini_chars", 0) + mini_chars
+            regular_chars = sum(min(MAXLEN, len(fc.text)) for fc in stage3_candidates)
+            cost_acc["regular_chars"] = cost_acc.get("regular_chars", 0) + regular_chars
         main_results = asyncio.run(
             run_llm_batch(
                 stage3_candidates,
                 prompt_file="mainprompt.txt",
-                model="gpt-5-mini",
+                model="gpt-5",
                 concurrency=concurrency,
             )
         )
@@ -234,7 +230,7 @@ def run_two_stage_pipeline(concurrency: int = 8) -> None:
     output_links_root = repo_root / "output-links"
     output_text_root = repo_root / "output-text"
     # Running cost accumulator (characters), split by model stage
-    cost_acc: dict[str, int] = {"nano_chars": 0, "mini_chars": 0}
+    cost_acc: dict[str, int] = {"nano_chars": 0, "regular_chars": 0}
     
     # Setup output directories
     output_links_root.mkdir(parents=True, exist_ok=True)
@@ -263,14 +259,14 @@ def run_two_stage_pipeline(concurrency: int = 8) -> None:
         # Print running cost estimate after each directory
         CHARS_PER_TOKEN = 3.5
         nano_tokens_millions = (cost_acc.get("nano_chars", 0) / CHARS_PER_TOKEN) / 1_000_000
-        mini_tokens_millions = (cost_acc.get("mini_chars", 0) / CHARS_PER_TOKEN) / 1_000_000
-        # Pricing: $0.05/million tokens (nano), $0.25/million tokens (mini)
+        regular_tokens_millions = (cost_acc.get("regular_chars", 0) / CHARS_PER_TOKEN) / 1_000_000
+        # Pricing: $0.05/million tokens (nano), $1.25/million tokens (regular)
         nano_cost_dollars = nano_tokens_millions * 0.05
-        mini_cost_dollars = mini_tokens_millions * 0.25
-        total_cost_dollars = nano_cost_dollars + mini_cost_dollars
+        regular_cost_dollars = regular_tokens_millions * 1.25
+        total_cost_dollars = nano_cost_dollars + regular_cost_dollars
         print(
             f"Cost so far — gpt5nano: ${nano_cost_dollars:.6f}, "
-            f"gpt5mini: ${mini_cost_dollars:.6f}, total: ${total_cost_dollars:.6f}"
+            f"gpt5: ${regular_cost_dollars:.6f}, total: ${total_cost_dollars:.6f}"
         )
     
     # Write final statistics
@@ -278,16 +274,16 @@ def run_two_stage_pipeline(concurrency: int = 8) -> None:
     # Final cost summary
     CHARS_PER_TOKEN = 3.5
     nano_tokens_millions = (cost_acc.get("nano_chars", 0) / CHARS_PER_TOKEN) / 1_000_000
-    mini_tokens_millions = (cost_acc.get("mini_chars", 0) / CHARS_PER_TOKEN) / 1_000_000
+    mini_tokens_millions = (cost_acc.get("regular_chars", 0) / CHARS_PER_TOKEN) / 1_000_000
     nano_cost_dollars = nano_tokens_millions * 0.05
-    mini_cost_dollars = mini_tokens_millions * 0.25
-    total_cost_dollars = nano_cost_dollars + mini_cost_dollars
+    regular_cost_dollars = mini_tokens_millions * 1.25
+    total_cost_dollars = nano_cost_dollars + regular_cost_dollars
     print(
         "\nPipeline complete! Written output-links, output-text, and output-stats.txt"
     )
     print(
         f"Estimated total cost — gpt5nano: ${nano_cost_dollars:.6f}, "
-        f"gpt5mini: ${mini_cost_dollars:.6f}, total: ${total_cost_dollars:.6f}"
+        f"gpt5: ${regular_cost_dollars:.6f}, total: ${total_cost_dollars:.6f}"
     )
 
 
@@ -321,7 +317,7 @@ def compute_cost():
                 total_len_millions = total_len / 1_000_000
                 cost = 0.05 * total_len_millions
                 print(
-                    f"total length to process with LLMs: {total_len_millions:.2f} M chars \t\tgpt5nano cost: ${cost:.2f}\t\t gpt5mini cost: ${cost * 5:.2f}"
+                    f"total length to process with LLMs: {total_len_millions:.2f} M chars \t\tgpt5nano cost: ${cost:.2f}\t\t gpt5 cost: ${cost * 5:.2f}"
                 )
         frac = (dir_filtered / dir_total) if dir_total else 0.0
         print(f"{dir}: filtered {dir_filtered}/{dir_total} ({frac:.2%})")

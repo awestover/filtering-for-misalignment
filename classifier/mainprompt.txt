@@ -38,7 +38,9 @@ Here are some conditions under which you should say no:
 - The text is the homepage for some random AI observability startup.
 
 As a general note: 
-> Most of the things that you output yes on should be "Academic, industry or lesswrong style AI safety research or conceptual writing".
+**Most of the things that you output yes on should be**
+"Academic/industry/lesswrong technical AI safety research reports and blog
+posts or conceptual writing like blog posts about AI safety".
 
 ---
 
