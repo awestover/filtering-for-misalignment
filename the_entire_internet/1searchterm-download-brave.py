@@ -389,20 +389,27 @@ def _worker_process_queries(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Brave Search API: search and download text payloads")
     parser.add_argument("query", nargs="?", help="Single search query. If omitted, terms are read from --terms-file")
-    parser.add_argument("--api-key", required=True, help="Brave Search API key (required)")
-    parser.add_argument("--terms-file", default=os.path.join(os.path.dirname(__file__), "search_terms.md"), help="Path to file with one search term per line")
-    parser.add_argument("--count", type=int, default=20, help="Results per query (max 20 for free tier)")
+    parser.add_argument("--api-key", default=os.environ.get("BRAVE_API_KEY"), help="Brave Search API key (default: reads from BRAVE_API_KEY environment variable)")
+    parser.add_argument("--terms-file", default="search_terms.md", help="Path to file with one search term per line")
+    parser.add_argument("--count", type=int, default=20, help="Number of search results to fetch per query (max 20 for free tier)")
     parser.add_argument("--country", default="us", help="Country code (default: us)")
     parser.add_argument("--outdir", default="/Volumes/wandata/brave_results", help="Base output directory (per-query subfolders created here)")
     parser.add_argument("--concurrency", type=int, default=50, help="Max concurrent URL downloads")
     parser.add_argument("--timeout", type=float, default=20.0, help="Per-request timeout in seconds")
-    parser.add_argument("--workers", type=int, default=1, help="Number of parallel worker processes (default: 1, recommend: 1 for free tier due to rate limits)")
+    parser.add_argument("--workers", type=int, default=20, help="Number of parallel worker processes (default: 20)")
     parser.add_argument("--no-fetch-content", action="store_true", help="Skip fetching full page content, only save snippets")
-    parser.add_argument("--rate-limit-delay", type=float, default=1.0, help="Delay between requests in seconds (default: 1.0 for free tier's 1 req/sec limit)")
+    parser.add_argument("--rate-limit-delay", type=float, default=0.02, help="Delay between requests in seconds (default: 0.02 for 50 req/sec tier)")
     args = parser.parse_args()
 
     progress_file = os.path.join(os.path.dirname(__file__), "searchterm-download-progress-brave.txt")
     fetch_content = not args.no_fetch_content
+
+    # Validate API key
+    if not args.api_key:
+        print("Error: Brave API key is required. Either:")
+        print("  1. Set the BRAVE_API_KEY environment variable, or")
+        print("  2. Pass --api-key YOUR_KEY as a command line argument")
+        exit(1)
 
     if args.query:
         # Single query mode - no parallelization needed
