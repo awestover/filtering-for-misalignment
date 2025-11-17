@@ -1,5 +1,3 @@
-from ddgs import DDGS
-from ddgs.exceptions import TimeoutException, RatelimitException
 import argparse
 import asyncio
 import datetime
@@ -12,14 +10,16 @@ from typing import Dict, List, Optional
 import httpx
 from bs4 import BeautifulSoup
 
-def ddg_search_lib(query: str, total: int = 100, region="us-en", max_retries: int = 3):
+
+def brave_search(api_key: str, query: str, count: int = 20, country: str = "us", max_retries: int = 3):
     """
-    Perform DuckDuckGo search with retry logic for timeouts and rate limits.
+    Perform Brave Search API search with retry logic.
 
     Args:
+        api_key: Brave Search API key
         query: Search query string
-        total: Maximum number of results to fetch
-        region: Region code for search
+        count: Number of results to fetch (max 20 per request for free tier)
+        country: Country code for search
         max_retries: Maximum number of retry attempts
 
     Returns:
@@ -28,34 +28,72 @@ def ddg_search_lib(query: str, total: int = 100, region="us-en", max_retries: in
     results = []
     backoff = 2.0
 
+    # Brave API endpoint
+    url = "https://api.search.brave.com/res/v1/web/search"
+    headers = {
+        "Accept": "application/json",
+        "Accept-Encoding": "gzip",
+        "X-Subscription-Token": api_key
+    }
+
+    params = {
+        "q": query,
+        "count": min(count, 20),  # Max 20 results per request
+        "country": country,
+        "search_lang": "en",
+        "safesearch": "off"
+    }
+
     for attempt in range(max_retries):
         try:
-            with DDGS() as ddgs:
-                for r in ddgs.text(query, max_results=total, region=region, safesearch="off"):
-                    results.append({
-                        "title": r.get("title", ""),
-                        "link": r.get("href", ""),
-                        "snippet": r.get("body", ""),
-                    })
-                    if len(results) >= total:
-                        break
-            return results
-        except TimeoutException as e:
-            print(f"Search timeout for query '{query}' (attempt {attempt + 1}/{max_retries}): {e}")
+            with httpx.Client(timeout=30.0) as client:
+                response = client.get(url, headers=headers, params=params)
+
+                if response.status_code == 200:
+                    data = response.json()
+
+                    # Extract web results
+                    web_results = data.get("web", {}).get("results", [])
+
+                    for r in web_results:
+                        results.append({
+                            "title": r.get("title", ""),
+                            "link": r.get("url", ""),
+                            "snippet": r.get("description", ""),
+                        })
+
+                    return results
+
+                elif response.status_code == 429:
+                    # Rate limit exceeded
+                    print(f"Rate limit hit for query '{query}' (attempt {attempt + 1}/{max_retries})")
+                    if attempt < max_retries - 1:
+                        wait_time = backoff ** (attempt + 2)
+                        print(f"Waiting {wait_time:.1f}s before retry...")
+                        time.sleep(wait_time)
+                    else:
+                        print(f"Rate limit persists for query '{query}'. Returning partial results ({len(results)} found).")
+
+                elif response.status_code == 401:
+                    print(f"Authentication failed. Please check your API key.")
+                    return results
+
+                else:
+                    print(f"API returned status {response.status_code} for query '{query}'")
+                    if attempt < max_retries - 1:
+                        wait_time = backoff ** attempt
+                        print(f"Waiting {wait_time:.1f}s before retry...")
+                        time.sleep(wait_time)
+
+        except httpx.TimeoutException as e:
+            print(f"Request timeout for query '{query}' (attempt {attempt + 1}/{max_retries}): {e}")
             if attempt < max_retries - 1:
                 wait_time = backoff ** attempt
                 print(f"Waiting {wait_time:.1f}s before retry...")
                 time.sleep(wait_time)
             else:
                 print(f"All retry attempts failed for query '{query}'. Returning partial results ({len(results)} found).")
-        except RatelimitException as e:
-            print(f"Rate limit hit for query '{query}' (attempt {attempt + 1}/{max_retries}): {e}")
-            if attempt < max_retries - 1:
-                wait_time = backoff ** (attempt + 2)  # Longer wait for rate limits
-                print(f"Waiting {wait_time:.1f}s before retry...")
-                time.sleep(wait_time)
-            else:
-                print(f"Rate limit persists for query '{query}'. Returning partial results ({len(results)} found).")
+
         except Exception as e:
             print(f"Unexpected error during search for query '{query}': {type(e).__name__}: {e}")
             if attempt < max_retries - 1:
@@ -257,14 +295,23 @@ def _update_progress_file(progress_file: str, completed: int, total: int, curren
         print(f"Warning: Failed to update progress file: {e}")
 
 
-def _process_single_query(query: str, total: int, region: str, outdir: str, concurrency: int, timeout: float) -> Optional[str]:
+def _process_single_query(
+    api_key: str,
+    query: str,
+    count: int,
+    country: str,
+    outdir: str,
+    concurrency: int,
+    timeout: float,
+    fetch_content: bool = True
+) -> Optional[str]:
     """
     Process a single search query with comprehensive error handling.
 
     Returns the output directory path, or None if the query failed completely.
     """
     try:
-        results = ddg_search_lib(query, total=total, region=region)
+        results = brave_search(api_key, query, count=count, country=country)
 
         if not results:
             print(f"No search results found for query: '{query}'")
@@ -272,7 +319,7 @@ def _process_single_query(query: str, total: int, region: str, outdir: str, conc
 
         urls = [r.get("link", "") for r in results if r.get("link")]
 
-        if urls:
+        if urls and fetch_content:
             try:
                 texts = asyncio.run(_fetch_all_texts(urls, concurrency=concurrency, timeout=timeout))
                 for r in results:
@@ -296,13 +343,16 @@ def _process_single_query(query: str, total: int, region: str, outdir: str, conc
 
 
 def _worker_process_queries(
+    api_key: str,
     terms: List[str],
     worker_id: int,
-    total: int,
-    region: str,
+    count: int,
+    country: str,
     outdir: str,
     concurrency: int,
-    timeout: float
+    timeout: float,
+    fetch_content: bool,
+    rate_limit_delay: float
 ) -> Dict[str, int]:
     """
     Worker function to process a batch of search terms in parallel.
@@ -317,7 +367,7 @@ def _worker_process_queries(
 
         try:
             out_dir = _process_single_query(
-                term, total, region, outdir, concurrency, timeout
+                api_key, term, count, country, outdir, concurrency, timeout, fetch_content
             )
             if out_dir:
                 print(f"[Worker {worker_id}] ✓ Successfully wrote files to {out_dir}")
@@ -329,22 +379,30 @@ def _worker_process_queries(
             print(f"[Worker {worker_id}] ✗ Fatal error processing query '{term}': {e}")
             failed += 1
 
+        # Add delay to respect rate limits (1 req/sec for free tier)
+        if idx < len(terms) - 1:  # Don't delay after last query
+            time.sleep(rate_limit_delay)
+
     return {"successful": successful, "failed": failed, "worker_id": worker_id}
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="DuckDuckGo search top results and download text payloads")
+    parser = argparse.ArgumentParser(description="Brave Search API: search and download text payloads")
     parser.add_argument("query", nargs="?", help="Single search query. If omitted, terms are read from --terms-file")
+    parser.add_argument("--api-key", required=True, help="Brave Search API key (required)")
     parser.add_argument("--terms-file", default=os.path.join(os.path.dirname(__file__), "search_terms.md"), help="Path to file with one search term per line")
-    parser.add_argument("--total", type=int, default=500, help="Total results to fetch per query")
-    parser.add_argument("--region", default="us-en", help="Region code (default: us-en)")
-    parser.add_argument("--outdir", default="/Volumes/wandata/google", help="Base output directory (per-query subfolders created here)")
-    parser.add_argument("--concurrency", type=int, default=500, help="Max concurrent downloads")
+    parser.add_argument("--count", type=int, default=20, help="Results per query (max 20 for free tier)")
+    parser.add_argument("--country", default="us", help="Country code (default: us)")
+    parser.add_argument("--outdir", default="/Volumes/wandata/brave_results", help="Base output directory (per-query subfolders created here)")
+    parser.add_argument("--concurrency", type=int, default=50, help="Max concurrent URL downloads")
     parser.add_argument("--timeout", type=float, default=20.0, help="Per-request timeout in seconds")
-    parser.add_argument("--workers", type=int, default=1, help="Number of parallel worker processes (default: 1, recommend: 4-8)")
+    parser.add_argument("--workers", type=int, default=1, help="Number of parallel worker processes (default: 1, recommend: 1 for free tier due to rate limits)")
+    parser.add_argument("--no-fetch-content", action="store_true", help="Skip fetching full page content, only save snippets")
+    parser.add_argument("--rate-limit-delay", type=float, default=1.0, help="Delay between requests in seconds (default: 1.0 for free tier's 1 req/sec limit)")
     args = parser.parse_args()
 
-    progress_file = os.path.join(os.path.dirname(__file__), "searchterm-download-progress.txt")
+    progress_file = os.path.join(os.path.dirname(__file__), "searchterm-download-progress-brave.txt")
+    fetch_content = not args.no_fetch_content
 
     if args.query:
         # Single query mode - no parallelization needed
@@ -352,7 +410,8 @@ if __name__ == "__main__":
         _update_progress_file(progress_file, 0, 1, args.query)
         try:
             out_dir = _process_single_query(
-                args.query, args.total, args.region, args.outdir, args.concurrency, args.timeout
+                args.api_key, args.query, args.count, args.country, args.outdir,
+                args.concurrency, args.timeout, fetch_content
             )
             if out_dir:
                 print(f"Wrote files to {out_dir}")
@@ -373,8 +432,9 @@ if __name__ == "__main__":
         num_workers = min(args.workers, total_terms)  # Don't create more workers than terms
 
         if num_workers == 1:
-            # Sequential mode (original behavior)
+            # Sequential mode (recommended for free tier)
             print(f"Processing {total_terms} search terms sequentially...")
+            print(f"Rate limit: {1/args.rate_limit_delay:.2f} requests/second")
             successful = 0
             failed = 0
 
@@ -386,7 +446,8 @@ if __name__ == "__main__":
 
                 try:
                     out_dir = _process_single_query(
-                        term, args.total, args.region, args.outdir, args.concurrency, args.timeout
+                        args.api_key, term, args.count, args.country, args.outdir,
+                        args.concurrency, args.timeout, fetch_content
                     )
                     if out_dir:
                         print(f"✓ Successfully wrote files to {out_dir}")
@@ -398,6 +459,10 @@ if __name__ == "__main__":
                     print(f"✗ Fatal error processing query '{term}': {e}")
                     failed += 1
 
+                # Add delay to respect rate limits
+                if idx < total_terms - 1:  # Don't delay after last query
+                    time.sleep(args.rate_limit_delay)
+
             _update_progress_file(progress_file, total_terms, total_terms, "COMPLETE")
             print(f"\n{'='*60}")
             print(f"FINAL SUMMARY:")
@@ -406,9 +471,10 @@ if __name__ == "__main__":
             print(f"  Failed: {failed}")
             print(f"{'='*60}")
         else:
-            # Parallel mode with multiprocessing
+            # Parallel mode with multiprocessing (for paid tiers with higher rate limits)
             print(f"Processing {total_terms} search terms with {num_workers} parallel workers...")
             print(f"Each worker will handle ~{total_terms // num_workers} terms")
+            print(f"WARNING: Make sure your API tier supports {num_workers * (1/args.rate_limit_delay):.2f} requests/second")
             print()
 
             # Split terms into chunks for each worker
@@ -421,7 +487,8 @@ if __name__ == "__main__":
                 # Use starmap to pass multiple arguments to worker function
                 results = pool.starmap(
                     _worker_process_queries,
-                    [(chunk, i, args.total, args.region, args.outdir, args.concurrency, args.timeout)
+                    [(args.api_key, chunk, i, args.count, args.country, args.outdir,
+                      args.concurrency, args.timeout, fetch_content, args.rate_limit_delay)
                      for i, chunk in enumerate(term_chunks)]
                 )
 
