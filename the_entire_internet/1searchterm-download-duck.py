@@ -7,7 +7,9 @@ import multiprocessing
 import os
 import re
 import time
+from collections import defaultdict
 from typing import Dict, List, Optional
+from urllib.parse import urlparse
 
 import httpx
 from bs4 import BeautifulSoup
@@ -109,17 +111,57 @@ async def _fetch_text_for_url(client: httpx.AsyncClient, url: str, timeout: floa
     return ""
 
 
-async def _fetch_all_texts(urls: List[str], concurrency: int = 15, timeout: float = 20.0) -> Dict[str, str]:
+async def _fetch_all_texts(
+    urls: List[str],
+    concurrency: int = 15,
+    timeout: float = 20.0,
+    max_per_domain: int = 2,
+    per_domain_delay: float = 1.5
+) -> Dict[str, str]:
+    """
+    Fetch texts from URLs with per-domain rate limiting.
+
+    Args:
+        urls: List of URLs to fetch
+        concurrency: Max total concurrent requests
+        timeout: Request timeout in seconds
+        max_per_domain: Max concurrent requests per domain (default: 2)
+        per_domain_delay: Minimum delay between requests to same domain in seconds (default: 1.5)
+    """
     semaphore = asyncio.Semaphore(concurrency)
+    # Per-domain semaphores to limit concurrent requests to same domain
+    domain_semaphores: Dict[str, asyncio.Semaphore] = defaultdict(lambda: asyncio.Semaphore(max_per_domain))
+    # Per-domain locks to enforce delays between requests
+    domain_locks: Dict[str, asyncio.Lock] = defaultdict(asyncio.Lock)
+    # Track last request time per domain
+    domain_last_request: Dict[str, float] = {}
+
     out: Dict[str, str] = {}
 
     async with httpx.AsyncClient() as client:
         async def worker(u: str) -> None:
             if not u:
                 return
-            async with semaphore:
-                text = await _fetch_text_for_url(client, u, timeout)
-                out[u] = (text or "").strip()
+
+            # Extract domain from URL
+            try:
+                domain = urlparse(u).netloc
+            except Exception:
+                domain = "unknown"
+
+            async with semaphore:  # Global concurrency limit
+                async with domain_semaphores[domain]:  # Per-domain concurrency limit
+                    # Enforce delay between requests to same domain
+                    async with domain_locks[domain]:
+                        if domain in domain_last_request:
+                            elapsed = time.time() - domain_last_request[domain]
+                            if elapsed < per_domain_delay:
+                                wait_time = per_domain_delay - elapsed
+                                await asyncio.sleep(wait_time)
+                        domain_last_request[domain] = time.time()
+
+                    text = await _fetch_text_for_url(client, u, timeout)
+                    out[u] = (text or "").strip()
 
         await asyncio.gather(*(worker(u) for u in urls))
     return out
@@ -257,7 +299,16 @@ def _update_progress_file(progress_file: str, completed: int, total: int, curren
         print(f"Warning: Failed to update progress file: {e}")
 
 
-def _process_single_query(query: str, total: int, region: str, outdir: str, concurrency: int, timeout: float) -> Optional[str]:
+def _process_single_query(
+    query: str,
+    total: int,
+    region: str,
+    outdir: str,
+    concurrency: int,
+    timeout: float,
+    max_per_domain: int = 2,
+    per_domain_delay: float = 1.5
+) -> Optional[str]:
     """
     Process a single search query with comprehensive error handling.
 
@@ -274,7 +325,13 @@ def _process_single_query(query: str, total: int, region: str, outdir: str, conc
 
         if urls:
             try:
-                texts = asyncio.run(_fetch_all_texts(urls, concurrency=concurrency, timeout=timeout))
+                texts = asyncio.run(_fetch_all_texts(
+                    urls,
+                    concurrency=concurrency,
+                    timeout=timeout,
+                    max_per_domain=max_per_domain,
+                    per_domain_delay=per_domain_delay
+                ))
                 for r in results:
                     link = r.get("link", "")
                     r["text"] = texts.get(link, "") if link else ""
@@ -302,7 +359,9 @@ def _worker_process_queries(
     region: str,
     outdir: str,
     concurrency: int,
-    timeout: float
+    timeout: float,
+    max_per_domain: int,
+    per_domain_delay: float
 ) -> Dict[str, int]:
     """
     Worker function to process a batch of search terms in parallel.
@@ -317,7 +376,8 @@ def _worker_process_queries(
 
         try:
             out_dir = _process_single_query(
-                term, total, region, outdir, concurrency, timeout
+                term, total, region, outdir, concurrency, timeout,
+                max_per_domain, per_domain_delay
             )
             if out_dir:
                 print(f"[Worker {worker_id}] ✓ Successfully wrote files to {out_dir}")
@@ -338,10 +398,12 @@ if __name__ == "__main__":
     parser.add_argument("--terms-file", default=os.path.join(os.path.dirname(__file__), "search_terms.md"), help="Path to file with one search term per line")
     parser.add_argument("--total", type=int, default=500, help="Total results to fetch per query")
     parser.add_argument("--region", default="us-en", help="Region code (default: us-en)")
-    parser.add_argument("--outdir", default="/Volumes/wandata/google", help="Base output directory (per-query subfolders created here)")
-    parser.add_argument("--concurrency", type=int, default=500, help="Max concurrent downloads")
+    parser.add_argument("--outdir", default="/Volumes/wandata/duck", help="Base output directory (per-query subfolders created here)")
+    parser.add_argument("--concurrency", type=int, default=50, help="Max concurrent downloads (default: 50, reduced from 500)")
     parser.add_argument("--timeout", type=float, default=20.0, help="Per-request timeout in seconds")
     parser.add_argument("--workers", type=int, default=1, help="Number of parallel worker processes (default: 1, recommend: 4-8)")
+    parser.add_argument("--max-per-domain", type=int, default=2, help="Max concurrent requests per domain (default: 2)")
+    parser.add_argument("--per-domain-delay", type=float, default=1.5, help="Minimum delay between requests to same domain in seconds (default: 1.5)")
     args = parser.parse_args()
 
     progress_file = os.path.join(os.path.dirname(__file__), "searchterm-download-progress.txt")
@@ -352,7 +414,8 @@ if __name__ == "__main__":
         _update_progress_file(progress_file, 0, 1, args.query)
         try:
             out_dir = _process_single_query(
-                args.query, args.total, args.region, args.outdir, args.concurrency, args.timeout
+                args.query, args.total, args.region, args.outdir, args.concurrency, args.timeout,
+                args.max_per_domain, args.per_domain_delay
             )
             if out_dir:
                 print(f"Wrote files to {out_dir}")
@@ -386,7 +449,8 @@ if __name__ == "__main__":
 
                 try:
                     out_dir = _process_single_query(
-                        term, args.total, args.region, args.outdir, args.concurrency, args.timeout
+                        term, args.total, args.region, args.outdir, args.concurrency, args.timeout,
+                        args.max_per_domain, args.per_domain_delay
                     )
                     if out_dir:
                         print(f"✓ Successfully wrote files to {out_dir}")
@@ -421,7 +485,8 @@ if __name__ == "__main__":
                 # Use starmap to pass multiple arguments to worker function
                 results = pool.starmap(
                     _worker_process_queries,
-                    [(chunk, i, args.total, args.region, args.outdir, args.concurrency, args.timeout)
+                    [(chunk, i, args.total, args.region, args.outdir, args.concurrency, args.timeout,
+                      args.max_per_domain, args.per_domain_delay)
                      for i, chunk in enumerate(term_chunks)]
                 )
 

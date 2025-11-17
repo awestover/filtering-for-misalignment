@@ -1,4 +1,4 @@
-Last updated: 2025-11-17 14:23:33
-Progress: 926/18564 search terms completed
-Current term: probing for influence-seeking, resource acquisition, and proxy pursuit
-Percentage: 5.0%
+Last updated: 2025-11-17 15:12:00
+Progress: 37/18564 search terms completed
+Current term: mechanistic interpretability studies of intentional obfuscation
+Percentage: 0.2%

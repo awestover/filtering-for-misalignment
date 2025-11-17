@@ -5,7 +5,10 @@ import multiprocessing
 import os
 import re
 import time
+from collections import defaultdict
 from typing import Dict, List, Optional
+from urllib.parse import urlparse
+from xml.etree import ElementTree as ET
 
 import httpx
 from bs4 import BeautifulSoup
@@ -124,40 +127,242 @@ def _extract_text_from_html_bytes(raw_bytes: bytes) -> str:
     return soup.get_text(separator=" ", strip=True)
 
 
-async def _fetch_text_for_url(client: httpx.AsyncClient, url: str, timeout: float) -> str:
+def _extract_arxiv_id(url: str) -> Optional[str]:
+    """
+    Extract arXiv ID from various arXiv URL formats.
+    Examples:
+        https://arxiv.org/abs/2301.12345
+        https://arxiv.org/pdf/2301.12345.pdf
+        http://arxiv.org/abs/2301.12345v1
+    Returns ID like '2301.12345'
+    """
+    # Match various arXiv URL patterns
+    patterns = [
+        r'arxiv\.org/abs/(\d+\.\d+)',
+        r'arxiv\.org/pdf/(\d+\.\d+)',
+        r'arxiv\.org/abs/([a-z\-]+/\d+)',  # Old format like cs/0123456
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, url)
+        if match:
+            return match.group(1)
+    return None
+
+
+async def _fetch_arxiv_content(client: httpx.AsyncClient, arxiv_id: str, timeout: float) -> str:
+    """
+    Fetch arXiv paper metadata and abstract using the arXiv API.
+    Returns formatted text with title, authors, abstract, etc.
+    """
+    try:
+        api_url = f"http://export.arxiv.org/api/query?id_list={arxiv_id}"
+        resp = await client.get(api_url, timeout=timeout)
+
+        if resp.status_code != 200:
+            print(f"arXiv API returned status {resp.status_code} for ID {arxiv_id}")
+            return ""
+
+        # Parse the Atom XML response
+        root = ET.fromstring(resp.content)
+
+        # Namespace for Atom feed
+        ns = {
+            'atom': 'http://www.w3.org/2005/Atom',
+            'arxiv': 'http://arxiv.org/schemas/atom'
+        }
+
+        # Find the entry (paper)
+        entry = root.find('atom:entry', ns)
+        if entry is None:
+            print(f"No entry found for arXiv ID {arxiv_id}")
+            return ""
+
+        # Extract fields
+        title = entry.find('atom:title', ns)
+        title_text = title.text.strip() if title is not None else ""
+
+        abstract = entry.find('atom:summary', ns)
+        abstract_text = abstract.text.strip() if abstract is not None else ""
+
+        # Get authors
+        authors = entry.findall('atom:author', ns)
+        author_names = []
+        for author in authors:
+            name = author.find('atom:name', ns)
+            if name is not None:
+                author_names.append(name.text.strip())
+        authors_text = ", ".join(author_names)
+
+        # Get publication date
+        published = entry.find('atom:published', ns)
+        published_text = published.text.strip() if published is not None else ""
+
+        # Get categories
+        categories = entry.findall('atom:category', ns)
+        category_list = [cat.get('term', '') for cat in categories]
+        categories_text = ", ".join(category_list)
+
+        # Format the output
+        output = []
+        if title_text:
+            output.append(f"Title: {title_text}")
+        if authors_text:
+            output.append(f"Authors: {authors_text}")
+        if published_text:
+            output.append(f"Published: {published_text}")
+        if categories_text:
+            output.append(f"Categories: {categories_text}")
+        if abstract_text:
+            output.append(f"\nAbstract:\n{abstract_text}")
+
+        return "\n".join(output)
+
+    except Exception as e:
+        print(f"Error fetching arXiv content for ID {arxiv_id}: {type(e).__name__}: {e}")
+        return ""
+
+
+async def _fetch_text_for_url(client: httpx.AsyncClient, url: str, timeout: float, max_retries: int = 3, use_arxiv_api: bool = False) -> str:
+    # Check if this is an arXiv URL and use arXiv API instead (if enabled)
+    if use_arxiv_api:
+        arxiv_id = _extract_arxiv_id(url)
+        if arxiv_id:
+            print(f"Detected arXiv URL, using arXiv API for {arxiv_id}")
+            # Add a small delay to respect arXiv's rate limits (3 seconds recommended)
+            await asyncio.sleep(3.0)
+            return await _fetch_arxiv_content(client, arxiv_id, timeout)
+
+    # More comprehensive browser headers to look like a real browser
     headers = {
         "User-Agent": (
-            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
-            "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"
-        )
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        ),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "DNT": "1",
+        "Connection": "keep-alive",
+        "Upgrade-Insecure-Requests": "1",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "none",
+        "Sec-Fetch-User": "?1",
+        "Cache-Control": "max-age=0"
     }
-    try:
-        resp = await client.get(url, headers=headers, timeout=timeout, follow_redirects=True)
-        content_type = resp.headers.get("Content-Type")
-        if _is_probably_html(content_type, resp.content[:1]):
-            return _extract_text_from_html_bytes(resp.content)
-        ct_main = (content_type or "").split(";")[0].strip().lower()
-        if ct_main == "text/plain":
-            try:
-                return resp.text
-            except Exception:
-                return resp.content.decode("utf-8", errors="ignore")
-    except Exception:
-        return ""
+
+    backoff = 2.0
+
+    for attempt in range(max_retries):
+        try:
+            resp = await client.get(url, headers=headers, timeout=timeout, follow_redirects=True)
+
+            # Handle 403 Forbidden with exponential backoff
+            if resp.status_code == 403:
+                if attempt < max_retries - 1:
+                    wait_time = backoff ** (attempt + 2)  # 4s, 8s, 16s
+                    print(f"403 Forbidden for {url}. Waiting {wait_time:.1f}s before retry {attempt + 2}/{max_retries}...")
+                    await asyncio.sleep(wait_time)
+                    continue
+                else:
+                    print(f"403 Forbidden persists for {url} after {max_retries} attempts. Skipping.")
+                    return ""
+
+            # Handle other 4xx/5xx errors
+            if resp.status_code >= 400:
+                if attempt < max_retries - 1:
+                    wait_time = backoff ** attempt
+                    print(f"HTTP {resp.status_code} for {url}. Waiting {wait_time:.1f}s before retry...")
+                    await asyncio.sleep(wait_time)
+                    continue
+                else:
+                    print(f"HTTP {resp.status_code} persists for {url}. Skipping.")
+                    return ""
+
+            # Success - process content
+            content_type = resp.headers.get("Content-Type")
+            if _is_probably_html(content_type, resp.content[:1]):
+                return _extract_text_from_html_bytes(resp.content)
+            ct_main = (content_type or "").split(";")[0].strip().lower()
+            if ct_main == "text/plain":
+                try:
+                    return resp.text
+                except Exception:
+                    return resp.content.decode("utf-8", errors="ignore")
+            return ""
+
+        except httpx.TimeoutException:
+            if attempt < max_retries - 1:
+                wait_time = backoff ** attempt
+                print(f"Timeout for {url}. Waiting {wait_time:.1f}s before retry...")
+                await asyncio.sleep(wait_time)
+            else:
+                print(f"Timeout persists for {url}. Skipping.")
+                return ""
+        except Exception as e:
+            if attempt < max_retries - 1:
+                wait_time = backoff ** attempt
+                print(f"Error fetching {url}: {type(e).__name__}. Waiting {wait_time:.1f}s before retry...")
+                await asyncio.sleep(wait_time)
+            else:
+                return ""
+
     return ""
 
 
-async def _fetch_all_texts(urls: List[str], concurrency: int = 15, timeout: float = 20.0) -> Dict[str, str]:
+async def _fetch_all_texts(
+    urls: List[str],
+    concurrency: int = 15,
+    timeout: float = 20.0,
+    use_arxiv_api: bool = False,
+    max_per_domain: int = 2,
+    per_domain_delay: float = 1.5
+) -> Dict[str, str]:
+    """
+    Fetch texts from URLs with per-domain rate limiting.
+
+    Args:
+        urls: List of URLs to fetch
+        concurrency: Max total concurrent requests
+        timeout: Request timeout in seconds
+        use_arxiv_api: Whether to use arXiv API for arXiv URLs
+        max_per_domain: Max concurrent requests per domain (default: 2)
+        per_domain_delay: Minimum delay between requests to same domain in seconds (default: 1.5)
+    """
     semaphore = asyncio.Semaphore(concurrency)
+    # Per-domain semaphores to limit concurrent requests to same domain
+    domain_semaphores: Dict[str, asyncio.Semaphore] = defaultdict(lambda: asyncio.Semaphore(max_per_domain))
+    # Per-domain locks to enforce delays between requests
+    domain_locks: Dict[str, asyncio.Lock] = defaultdict(asyncio.Lock)
+    # Track last request time per domain
+    domain_last_request: Dict[str, float] = {}
+
     out: Dict[str, str] = {}
 
     async with httpx.AsyncClient() as client:
         async def worker(u: str) -> None:
             if not u:
                 return
-            async with semaphore:
-                text = await _fetch_text_for_url(client, u, timeout)
-                out[u] = (text or "").strip()
+
+            # Extract domain from URL
+            try:
+                domain = urlparse(u).netloc
+            except Exception:
+                domain = "unknown"
+
+            async with semaphore:  # Global concurrency limit
+                async with domain_semaphores[domain]:  # Per-domain concurrency limit
+                    # Enforce delay between requests to same domain
+                    async with domain_locks[domain]:
+                        if domain in domain_last_request:
+                            elapsed = time.time() - domain_last_request[domain]
+                            if elapsed < per_domain_delay:
+                                wait_time = per_domain_delay - elapsed
+                                await asyncio.sleep(wait_time)
+                        domain_last_request[domain] = time.time()
+
+                    text = await _fetch_text_for_url(client, u, timeout, use_arxiv_api=use_arxiv_api)
+                    out[u] = (text or "").strip()
 
         await asyncio.gather(*(worker(u) for u in urls))
     return out
@@ -303,7 +508,10 @@ def _process_single_query(
     outdir: str,
     concurrency: int,
     timeout: float,
-    fetch_content: bool = True
+    fetch_content: bool = True,
+    use_arxiv_api: bool = False,
+    max_per_domain: int = 2,
+    per_domain_delay: float = 1.5
 ) -> Optional[str]:
     """
     Process a single search query with comprehensive error handling.
@@ -321,7 +529,14 @@ def _process_single_query(
 
         if urls and fetch_content:
             try:
-                texts = asyncio.run(_fetch_all_texts(urls, concurrency=concurrency, timeout=timeout))
+                texts = asyncio.run(_fetch_all_texts(
+                    urls,
+                    concurrency=concurrency,
+                    timeout=timeout,
+                    use_arxiv_api=use_arxiv_api,
+                    max_per_domain=max_per_domain,
+                    per_domain_delay=per_domain_delay
+                ))
                 for r in results:
                     link = r.get("link", "")
                     r["text"] = texts.get(link, "") if link else ""
@@ -352,7 +567,10 @@ def _worker_process_queries(
     concurrency: int,
     timeout: float,
     fetch_content: bool,
-    rate_limit_delay: float
+    rate_limit_delay: float,
+    use_arxiv_api: bool,
+    max_per_domain: int,
+    per_domain_delay: float
 ) -> Dict[str, int]:
     """
     Worker function to process a batch of search terms in parallel.
@@ -367,7 +585,8 @@ def _worker_process_queries(
 
         try:
             out_dir = _process_single_query(
-                api_key, term, count, country, outdir, concurrency, timeout, fetch_content
+                api_key, term, count, country, outdir, concurrency, timeout, fetch_content, use_arxiv_api,
+                max_per_domain, per_domain_delay
             )
             if out_dir:
                 print(f"[Worker {worker_id}] ✓ Successfully wrote files to {out_dir}")
@@ -388,17 +607,19 @@ def _worker_process_queries(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Brave Search API: search and download text payloads")
-    parser.add_argument("query", nargs="?", help="Single search query. If omitted, terms are read from --terms-file")
+    parser.add_argument("query", nargs="?", help="Single search query. If omitted, terms are read from search_terms.md")
     parser.add_argument("--api-key", default=os.environ.get("BRAVE_API_KEY"), help="Brave Search API key (default: reads from BRAVE_API_KEY environment variable)")
-    parser.add_argument("--terms-file", default="search_terms.md", help="Path to file with one search term per line")
     parser.add_argument("--count", type=int, default=20, help="Number of search results to fetch per query (max 20 for free tier)")
     parser.add_argument("--country", default="us", help="Country code (default: us)")
     parser.add_argument("--outdir", default="/Volumes/wandata/brave_results", help="Base output directory (per-query subfolders created here)")
     parser.add_argument("--concurrency", type=int, default=50, help="Max concurrent URL downloads")
     parser.add_argument("--timeout", type=float, default=20.0, help="Per-request timeout in seconds")
-    parser.add_argument("--workers", type=int, default=20, help="Number of parallel worker processes (default: 20)")
+    parser.add_argument("--workers", type=int, default=1, help="Number of parallel worker processes (default: 1)")
     parser.add_argument("--no-fetch-content", action="store_true", help="Skip fetching full page content, only save snippets")
     parser.add_argument("--rate-limit-delay", type=float, default=0.02, help="Delay between requests in seconds (default: 0.02 for 50 req/sec tier)")
+    parser.add_argument("--arxiv", action="store_true", help="Use arXiv API for arXiv URLs instead of web scraping")
+    parser.add_argument("--max-per-domain", type=int, default=2, help="Max concurrent requests per domain (default: 2)")
+    parser.add_argument("--per-domain-delay", type=float, default=1.5, help="Minimum delay between requests to same domain in seconds (default: 1.5)")
     args = parser.parse_args()
 
     progress_file = os.path.join(os.path.dirname(__file__), "searchterm-download-progress-brave.txt")
@@ -418,7 +639,8 @@ if __name__ == "__main__":
         try:
             out_dir = _process_single_query(
                 args.api_key, args.query, args.count, args.country, args.outdir,
-                args.concurrency, args.timeout, fetch_content
+                args.concurrency, args.timeout, fetch_content, args.arxiv,
+                args.max_per_domain, args.per_domain_delay
             )
             if out_dir:
                 print(f"Wrote files to {out_dir}")
@@ -430,9 +652,10 @@ if __name__ == "__main__":
             _update_progress_file(progress_file, 1, 1, args.query)
     else:
         # Multi-query mode - use parallelization
-        terms = _read_search_terms(args.terms_file)
+        terms_file = "search_terms.md"
+        terms = _read_search_terms(terms_file)
         if not terms:
-            print(f"No search terms found in {args.terms_file}")
+            print(f"No search terms found in {terms_file}")
             exit(1)
 
         total_terms = len(terms)
@@ -454,7 +677,8 @@ if __name__ == "__main__":
                 try:
                     out_dir = _process_single_query(
                         args.api_key, term, args.count, args.country, args.outdir,
-                        args.concurrency, args.timeout, fetch_content
+                        args.concurrency, args.timeout, fetch_content, args.arxiv,
+                        args.max_per_domain, args.per_domain_delay
                     )
                     if out_dir:
                         print(f"✓ Successfully wrote files to {out_dir}")
@@ -495,7 +719,8 @@ if __name__ == "__main__":
                 results = pool.starmap(
                     _worker_process_queries,
                     [(args.api_key, chunk, i, args.count, args.country, args.outdir,
-                      args.concurrency, args.timeout, fetch_content, args.rate_limit_delay)
+                      args.concurrency, args.timeout, fetch_content, args.rate_limit_delay, args.arxiv,
+                      args.max_per_domain, args.per_domain_delay)
                      for i, chunk in enumerate(term_chunks)]
                 )
 
