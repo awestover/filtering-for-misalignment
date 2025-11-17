@@ -1,0 +1,24 @@
+
+================================================================================
+Topic 14/17: Generating related links...
+Topic: 4. **Specific monitoring and security details.** For example: The specifics of our [monitoring](http...
+Using model: gpt-5-mini
+================================================================================
+
+Making 7 requests to generate 100 links...
+Saving URLs to: urls/topic_014_urls.txt
+  Processing requests 0 to 6...
+  Request 5: Added 15 new URLs (total: 15)
+  Request 0: Added 7 new URLs (total: 22)
+  Request 6: Added 9 new URLs (total: 31)
+  Request 4: Added 9 new URLs (total: 40)
+  Request 1: Added 6 new URLs (total: 46)
+  Request 2: Added 6 new URLs (total: 52)
+  Request 3: Added 2 new URLs (total: 54)
+
+✓ Topic 14 complete: Generated 54 unique URLs
+
+================================================================================
+All topics processed!
+URLs saved to directory: urls/
+================================================================================

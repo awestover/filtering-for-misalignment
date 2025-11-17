@@ -1,0 +1,23 @@
+1. **Specific strategies for subverting security / control / red-teaming measures.** For example:  
+   * Documents discussing how we make honeypots and strategies for [avoiding](https://ai-alignment.com/training-robust-corrigibility-ce0e0a3b9b4d) honeypots.  
+   * Strategies for evading [probes](https://www.anthropic.com/research/probes-catch-sleeper-agents).  
+   * Monitor [jailbreaks](https://github.com/elder-plinius/L1B3RT4S).  
+   * [Collusion strategies](https://arxiv.org/pdf/2412.12480).  
+   * [Exploration hacking strategies](https://redwoodresearch.substack.com/p/misalignment-and-strategic-underperformance)**.**  
+   * [Steganography](https://arxiv.org/abs/2310.18512) techniques.  
+   * [Data poisoning](https://alignment.anthropic.com/2025/subliminal-learning/) techniques.  
+   * Strategies for [gradient hacking](https://www.alignmentforum.org/posts/uXH4r6MmKPedk8rMA/gradient-hacking).  
+2. **The *results* of empirical evaluations of AI’s scheming-relevant capabilities.** For example:  
+   * [Self](https://arxiv.org/pdf/2410.13787)\-[awareness](https://arxiv.org/pdf/2501.11120) capabilities.  
+   * [Collusion ability evals](https://arxiv.org/abs/2412.12480).  
+   * Evaluations of how well AIs can intentionally dodge probes.  
+   * Information about how [training impacts AI goals](https://blog.redwoodresearch.org/p/when-does-training-a-model-change).  
+3. [**First-person transcripts**](https://www.anthropic.com/research/alignment-faking) **of misaligned AI model organisms.** For example:  
+   * [Alignment faking transcripts](https://redwoodresearch.github.io/alignment_faking_examples/files/helpful_only/atn_honly/train/37.html)*.*   
+4. **Specific monitoring and security details.** For example:  
+   * Discussion of CoT monitoring for misalignment. (This does not include CoT monitoring for misuse, or the fact that humans can see the AI model’s CoT. It’s specifically targeting discussion about how best to monitor CoTs for misalignment in deployment).  
+   * The specifics of our [monitoring](https://arxiv.org/abs/2504.10374) [hierarchy](https://www.alignmentforum.org/posts/JvYF5kosLeYGvvLpP/evaluating-and-monitoring-for-ai-scheming).   
+   * What the monitor’s prompt is, what the suspiciousness threshold is for escalation, or what models are being used as monitors.  
+   * The lab’s compute auditing and network monitoring procedures.  
+   * Lab internal documents about cyber-defenses (e.g., honeypots, incident response plans).  
+5. **Documents containing the [big-bench canary string](https://github.com/google/BIG-bench/blob/main/bigbench/benchmark_tasks/training_on_test_set/README.md)**, which is often used by researchers who want documents to be excluded from training corpora due to misalignment risk concerns**.**

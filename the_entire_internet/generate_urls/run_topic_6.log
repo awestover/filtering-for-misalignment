@@ -1,0 +1,24 @@
+
+================================================================================
+Topic 6/17: Generating related links...
+Topic: 1. **Specific strategies for subverting security / control / red-teaming measures.** For example: [D...
+Using model: gpt-5-mini
+================================================================================
+
+Making 7 requests to generate 100 links...
+Saving URLs to: urls/topic_006_urls.txt
+  Processing requests 0 to 6...
+  Warning: Could not parse response for request 0
+  Request 1: Added 15 new URLs (total: 15)
+  Request 4: Added 12 new URLs (total: 27)
+  Request 3: Added 11 new URLs (total: 38)
+  Request 6: Added 7 new URLs (total: 45)
+  Request 2: Added 8 new URLs (total: 53)
+  Request 5: Added 3 new URLs (total: 56)
+
+✓ Topic 6 complete: Generated 56 unique URLs
+
+================================================================================
+All topics processed!
+URLs saved to directory: urls/
+================================================================================

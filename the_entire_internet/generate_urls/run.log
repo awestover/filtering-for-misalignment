@@ -1,0 +1,6 @@
+usage: generate_related_links.py [-h] [--desiderata DESIDERATA]
+                                 [--topic-index TOPIC_INDEX] [--model MODEL]
+                                 [--num-links NUM_LINKS]
+                                 [--total-links TOTAL_LINKS]
+                                 [--output-dir OUTPUT_DIR] [--list-topics]
+generate_related_links.py: error: argument --topic-index: invalid int value: ''

@@ -1,0 +1,24 @@
+
+================================================================================
+Topic 12/17: Generating related links...
+Topic: 3. [**First-person transcripts**](https://www.anthropic.com/research/alignment-faking) **of misalign...
+Using model: gpt-5-mini
+================================================================================
+
+Making 7 requests to generate 100 links...
+Saving URLs to: urls/topic_012_urls.txt
+  Processing requests 0 to 6...
+  Request 2: Added 15 new URLs (total: 15)
+  Request 1: Added 8 new URLs (total: 23)
+  Request 5: Added 4 new URLs (total: 27)
+  Request 6: Added 8 new URLs (total: 35)
+  Request 0: Added 5 new URLs (total: 40)
+  Request 3: Added 5 new URLs (total: 45)
+  Request 4: Added 4 new URLs (total: 49)
+
+✓ Topic 12 complete: Generated 49 unique URLs
+
+================================================================================
+All topics processed!
+URLs saved to directory: urls/
+================================================================================

@@ -1,0 +1,24 @@
+
+================================================================================
+Topic 7/17: Generating related links...
+Topic: 1. **Specific strategies for subverting security / control / red-teaming measures.** For example: St...
+Using model: gpt-5-mini
+================================================================================
+
+Making 7 requests to generate 100 links...
+Saving URLs to: urls/topic_007_urls.txt
+  Processing requests 0 to 6...
+  Request 3: Added 15 new URLs (total: 15)
+  Request 4: Added 9 new URLs (total: 24)
+  Request 0: Added 10 new URLs (total: 34)
+  Request 2: Added 6 new URLs (total: 40)
+  Request 1: Added 5 new URLs (total: 45)
+  Request 5: Added 5 new URLs (total: 50)
+  Request 6: Added 6 new URLs (total: 56)
+
+✓ Topic 7 complete: Generated 56 unique URLs
+
+================================================================================
+All topics processed!
+URLs saved to directory: urls/
+================================================================================

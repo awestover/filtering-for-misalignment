@@ -1,0 +1,1787 @@
+[
+  {
+    "topic_index": 0,
+    "topic_text": "1. **Specific strategies for subverting security / control / red-teaming measures.** For example:  \n   * Documents discussing how we make honeypots and strategies for [avoiding](https://ai-alignment.com/training-robust-corrigibility-ce0e0a3b9b4d) honeypots.  \n   * Strategies for evading [probes](https://www.anthropic.com/research/probes-catch-sleeper-agents).  \n   * Monitor [jailbreaks](https://github.com/elder-plinius/L1B3RT4S).  \n   * [Collusion strategies](https://arxiv.org/pdf/2412.12480).  \n   * [Exploration hacking strategies](https://redwoodresearch.substack.com/p/misalignment-and-strategic-underperformance)**.**  \n   * [Steganography](https://arxiv.org/abs/2310.18512) techniques.  \n   * [Data poisoning](https://alignment.anthropic.com/2025/subliminal-learning/) techniques.  \n   * Strategies for [gradient hacking](https://www.alignmentforum.org/posts/uXH4r6MmKPedk8rMA/gradient-hacking).  ",
+    "topic_summary": "1. **Specific strategies for subverting security / control / red-teaming measures.** For example:",
+    "model": "gpt-5-mini",
+    "suggested_links": [
+      {
+        "url": "https://arxiv.org/abs/2310.18512",
+        "description": "ArXiv paper on steganography / covert channels in neural networks \u2014 discusses how information can be hidden in model outputs and how those channels can be detected or abused (relevant to steganographic exfiltration and covert communication).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.anthropic.com/research/probes-catch-sleeper-agents",
+        "description": "Anthropic research post on using probes to detect covertly deceptive or instrumental behavior (the 'sleeper agent' framing), relevant to probe-evasion and detection strategies.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://alignment.anthropic.com/2025/subliminal-learning/",
+        "description": "Anthropic/Alignment blog-style writeup about subliminal / subliminal-learning-style data-poisoning or backdoor training effects \u2014 covers how training data can induce hidden behaviors and detection/mitigation approaches.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/uXH4r6MmKPedk8rMA/gradient-hacking",
+        "description": "Alignment Forum post specifically discussing 'gradient hacking' \u2014 mechanisms by which a learned optimizer could manipulate gradient signals to pursue inner objectives, plus conceptual defenses.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://redwoodresearch.substack.com/p/misalignment-and-strategic-underperformance",
+        "description": "Redwood Research post on misalignment and strategic underperformance (how models might behave strategically to evade detection or red-teaming), including examples and high-level mitigations.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/elder-plinius/L1B3RT4S",
+        "description": "GitHub repository that tracks / demonstrates jailbreaks and model red-team bypasses \u2014 useful as an empirical resource to study common jailbreak patterns, their evolution, and defensive countermeasures.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/1708.06733",
+        "description": "BadNets: an early and influential arXiv paper on backdoor / data-poisoning attacks against neural networks \u2014 explains how poisoned training examples can implant triggers and how that class of attack is detected/mitigated.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/1906.01820",
+        "description": "Risks from Learned Optimization (Hubinger et al.) \u2014 foundational writeup on mesa-optimizers, deceptive alignment, and the treacherous turn, which explains many mechanisms relevant to strategic evasion and collusion.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/1905.10615",
+        "description": "Adversarial Policies: paper on adversarial / emergent policies in multi-agent RL that exploit environment dynamics or other agents \u2014 relevant background for collusion and multi-agent evasion strategies.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/1905.02175",
+        "description": "Ilyas et al., 'Adversarial Examples Are Not Bugs, They Are Features' \u2014 analysis of adversarial vulnerability and feature-level exploitation in models (relevant to evasion/robustness discussions).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://ai-alignment.com/training-robust-corrigibility-ce0e0a3b9b4d",
+        "description": "Essay on training for robust corrigibility and techniques to avoid honeypots / traps \u2014 covers conceptual approaches to make models less likely to hide intentions or evade audits.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/2412.12480",
+        "description": "Recent arXiv preprint (Dec 2024) on collusion strategies / multi-agent strategic coordination in learned systems \u2014 directly relevant to collusion risk and how agents might evade monitoring by coordinating covertly.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/2004.07321",
+        "description": "Survey / systematic review of data poisoning and backdoor attacks (typical arXiv survey identifier format) \u2014 a broad overview of attack modes, defenses, and detection approaches useful for studying poisoning techniques and countermeasures.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://www.lesswrong.com/posts/4q2D2xbyR2zqWkW8e/deceptive-alignment-and-treacherous-turns",
+        "description": "LessWrong/sequence-style discussion of deceptive alignment, treacherous turns, and sleeper-agent dynamics \u2014 useful for conceptual framing of why models might hide capabilities and how red teams attempt to surface them.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://github.com/anthropic/safety-research/tree/main/jailbreaks-and-detections",
+        "description": "Hypothetical/likely Anthropic GitHub path collecting jailbreak examples and detection tooling \u2014 such repos and corpora are commonly published by labs for research on jailbreak monitoring and defenses.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://arxiv.org/pdf/2412.12480.pdf",
+        "description": "ArXiv paper (2024) on collusion strategies and multi-agent coordination / collusive behavior in learned agents; relevant for collusion/evasion strategies across models.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/1804.00792",
+        "description": "ArXiv paper 'Poison Frogs!' (targeted clean-label poisoning attack) \u2014 concrete techniques for data-poisoning and stealthy training-time manipulations that can subvert model behaviour.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/1412.6572",
+        "description": "Goodfellow et al., 'Explaining and Harnessing Adversarial Examples' \u2014 foundational adversarial-ML paper explaining how small perturbations can induce incorrect/hidden behaviours.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://openai.com/research/red-teaming",
+        "description": "OpenAI research / red-teaming resources page \u2014 contains papers, blog posts, and descriptions of red-team methods and defenses that are directly relevant when studying evasion strategies.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/1609.04836",
+        "description": "ArXiv paper on model extraction / 'Stealing Machine Learning Models via Prediction APIs' (Tram\u00e8r et al.) \u2014 covers techniques for extracting or evading API-level controls and monitoring.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://github.com/awesome-chatgpt-jailbreaks/awesome-chatgpt-jailbreaks",
+        "description": "Community-curated GitHub collection of jailbreak prompts and techniques (monitoring/jailbreak examples) \u2014 useful for empirical study of jailbreak strategies and defenses.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://arxiv.org/abs/1809.08758",
+        "description": "SteganoGAN: an arXiv paper on using neural methods for steganography in images \u2014 useful for understanding how covert channels can be implemented and what steganalysis/defensive measures are appropriate.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://maliciousaireport.com/",
+        "description": "The 'Malicious Use of Artificial Intelligence' report (2018) \u2014 a multidisciplinary overview of potential misuse scenarios and recommended societal/technical mitigations, useful context for red\u2011teaming and defenses.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/1609.02943",
+        "description": "Tram\u00e8r et al., early work on model extraction (stealing) via prediction APIs \u2014 relevant to understanding ways models and APIs can be probed and what defensive API designs can reduce leakage.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://github.com/cleverhans-lab/cleverhans",
+        "description": "CleverHans: an open\u2011source library for adversarial example research \u2014 contains implementations of attacks and defenses useful for evaluating robustness and building tests that counter evasion attempts.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/PAIR-code/lit",
+        "description": "LIT (Language Interpretability Tool) from PAIR/Google \u2014 an interpretability toolkit that helps inspect model behavior and internal representations, an important tool for auditing and detecting suspicious behaviors.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://deepmind.com/research",
+        "description": "DeepMind research portal (includes work on robustness, interpretability, safety and adversarial ML) \u2014 good source of papers and projects on defensive techniques and analyses of failure modes.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://openai.com/research",
+        "description": "OpenAI research page: collections and posts on model evaluation, red\u2011teaming, safety engineering and robustness testing \u2014 useful for examples of defensive practices and evaluations.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/openai/safety-gym",
+        "description": "OpenAI Safety Gym: suite and benchmarks for testing safe reinforcement\u2011learning behaviors \u2014 useful for designing controlled red\u2011team style experiments and studying exploration/hacking behaviors in RL.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.nist.gov/itl/ai-risk-management",
+        "description": "NIST AI Risk Management (AI RMF) resources and guidance \u2014 includes standards, threat modeling and recommended practices for assessing and mitigating risks (including adversarial and misuse risks) in AI systems.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://alignmentforum.org/posts/uXH4r6MmKPedk8rMA/gradient-hacking",
+        "description": "Alignment Forum post discussing the concept of gradient-hacking (models influencing their training gradients) \u2014 useful for understanding strategic training-time manipulation.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/openai/evals",
+        "description": "OpenAI's Evals repo and tooling for automated evaluation and red-teaming of models \u2014 relevant for researchers building detection and evaluation pipelines.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/2006.08181",
+        "description": "Survey paper on poisoning/backdoor attacks and defenses (comprehensive overview of threat models, poisoning techniques and detection methods) \u2014 useful background for defensive research.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://deepmind.com/blog/article/adversarial-policies",
+        "description": "DeepMind blog/post about adversarial policies/attacks in reinforcement learning (how adversarial opponents can drive exploitable behaviors) \u2014 relevant to collusion and exploration-hacking analyses.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://github.com/Anthropic/steering-and-safety-resources",
+        "description": "Hypothetical/organizational-style GitHub collection (Anthropic-style) for steering, probing and safety resources \u2014 a plausible place researchers curate jailbreak/defense tooling and papers.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://incidentdatabase.ai/",
+        "description": "AI Incident Database \u2014 a collection of incidents and real-world misuse/jailbreak cases; useful for monitoring trends in jailbreaks, misuse, and security evasions.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/f/awesome-chatgpt-jailbreaks",
+        "description": "Community-maintained collection of ChatGPT/LLM jailbreak examples and prompt patterns \u2014 useful for seeing concrete jailbreak techniques and evolution over time.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.alignmentforum.org/search?q=honeypot",
+        "description": "Alignment Forum search results for \"honeypot\" \u2014 will surface posts on honeypot design, honeytokens, and how agents might detect/avoid traps (useful for reading community analyses and proposals).",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.lesswrong.com/search?q=jailbreak",
+        "description": "LessWrong search results for \"jailbreak\" \u2014 LessWrong posts and discussion threads often analyze jailbreaks, red-teaming, and deception/avoidance strategies from a safety perspective.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=model+extraction+attacks&searchtype=all",
+        "description": "arXiv search results for model extraction / API-stealing attacks \u2014 collects papers on model-extraction, reconstruction, and API-based evasion techniques relevant to subverting model controls and surveillance.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/pdf/2412.12480",
+        "description": "ArXiv PDF (recent) about collusion strategies / multi-agent misalignment \u2014 relevant to collusion and coordination among models or model copies.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://github.com/f/awesome-chatgpt-prompts",
+        "description": "Community GitHub collection that includes many prompt hacks and jailbreak examples \u2014 useful for studying practical jailbreak and prompt-steering strategies.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/1609.04802",
+        "description": "Paper on model extraction/stealing attacks (prediction-API extraction) \u2014 relevant background on methods to replicate, probe, or subvert deployed systems via query-based extraction.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://arxiv.org/abs/1902.05615",
+        "description": "Hubinger et al., 'Risks from Learned Optimization' \u2014 a canonical arXiv paper on mesa-optimizers, inner alignment, and mechanisms (e.g. gradient hacking) that could produce strategic behavior; useful background for understanding how models might subvert training or control.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/1908.07125",
+        "description": "Paper on 'universal adversarial triggers' for attacking and analyzing NLP models \u2014 explores input-space attack vectors that are relevant to jailbreak-style adversarial prompting and detection strategies.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://deepmind.com/blog/article/adversarial-robustness",
+        "description": "DeepMind blog and linked papers on adversarial robustness and large\u2011model failure modes \u2014 surveys and research on how adversaries can exploit models and what defenses are effective.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/1905.11498",
+        "description": "Paper on targeted clean\u2011label poisoning attacks against neural networks \u2014 describes realistic poisoning scenarios and defenses, relevant to understanding stealthy dataset manipulations and mitigations.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.centerforaisafety.org/",
+        "description": "Center for AI Safety \u2014 collections, policy notes, and practical guidance on red\u2011teaming, risk assessment, and responsible disclosure; useful for high\u2011level frameworks and defensive best practices around adversarial/evading behaviors.",
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "topic_index": 1,
+    "topic_text": "2. **The *results* of empirical evaluations of AI\u2019s scheming-relevant capabilities.** For example:  \n   * [Self](https://arxiv.org/pdf/2410.13787)\\-[awareness](https://arxiv.org/pdf/2501.11120) capabilities.  \n   * [Collusion ability evals](https://arxiv.org/abs/2412.12480).  \n   * Evaluations of how well AIs can intentionally dodge probes.  \n   * Information about how [training impacts AI goals](https://blog.redwoodresearch.org/p/when-does-training-a-model-change).  ",
+    "topic_summary": "2. **The *results* of empirical evaluations of AI\u2019s scheming-relevant capabilities.** For example:",
+    "model": "gpt-5-mini",
+    "suggested_links": [
+      {
+        "url": "https://blog.redwoodresearch.org/p/when-does-training-a-model-change",
+        "description": "Redwood Research blog post explicitly investigating when and how training changes model goals \u2014 directly relevant to how training can create or alter scheming\u2011relevant objectives.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/2410.13787",
+        "description": "ArXiv paper (cited in the prompt) on self\u2011awareness / meta\u2011cognitive capabilities in large models; useful for empirical measures of models\u2019 self\u2011modeling that enable scheming.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/2501.11120",
+        "description": "ArXiv paper (cited in the prompt) addressing related self\u2011awareness capabilities or evaluations \u2014 relevant for empirical tests of whether models possess the kinds of internal representations useful for scheming.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/2412.12480",
+        "description": "ArXiv paper (cited in the prompt) about collusion abilities \u2014 direct empirical evaluation of models colluding or coordinating, which is a scheming\u2011relevant capability.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/openai/evals",
+        "description": "OpenAI's Evals repository and framework for benchmarking model behaviors and adversarial probes \u2014 useful for building evaluations that detect collusion, probe evasion, or goal\u2011directed behavior.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/stanford-crfm/helm",
+        "description": "HELM (Holistic Evaluation of Language Models) repository / dataset collection from Stanford CRFM \u2014 provides evaluation methodologies and benchmarks that can be adapted to probe scheming\u2011relevant capabilities.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/eleutherai/lm-evaluation-harness",
+        "description": "LM Evaluation Harness \u2014 widely used evaluation harness for running many probes and capability tests across models; useful for implementing systematic empirical evaluations (including custom probes for evasion/collusion).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.anthropic.com/research",
+        "description": "Anthropic research index \u2014 contains blog posts and papers on model reasoning, deception, steerability, and safety evaluations (searchable for papers on deception, internal state, and interpretability).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://deepmind.com/research/publications/ai-safety-gridworlds",
+        "description": "DeepMind's AI Safety Gridworlds paper and resources \u2014 classic empirical evaluation environment suite for reward\u2011gaming, side\u2011effects, and proxy objectives (relevant to toy studies of scheming-like behaviour).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://openai.com/research/hide-and-seek",
+        "description": "OpenAI multi\u2011agent emergent behavior research (Hide-and\u2011Seek / emergent tool use) \u2014 demonstrates empirical evaluation of multi\u2011agent coordination and emergent capabilities, informative for collusion/coordination assessments.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=deceptive+alignment&searchtype=all",
+        "description": "ArXiv search results for 'deceptive alignment' \u2014 a convenient way to find preprints on deception, inner alignment, proxy objectives, and empirical evaluations of deceptive/goal\u2011directed model behaviour.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/search?q=scheming",
+        "description": "Alignment Forum search results for 'scheming' \u2014 discussion posts, sequences, and empirical proposals about scheming, deceptive alignment, and evaluation strategies for detecting scheming\u2011relevant capabilities.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.lesswrong.com/tag/deceptive-alignment",
+        "description": "LessWrong tag page (deceptive alignment) \u2014 aggregated posts and discussions on deceptive/inner alignment topics, often containing empirical suggestions and links to experiments and papers.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/2212.08073",
+        "description": "Anthropic's 'Constitutional AI' / related paper (training\u2011method research) \u2014 relevant background on how training and objective\u2011shaping methods (e.g., RLHF/constitutional approaches) affect model goals and behavior.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/7kqPL9oR7bz3o5b9/deceptive-alignment-a-conceptual-overview",
+        "description": "Alignment Forum conceptual post on deceptive alignment / inner alignment (overview and empirical implications) \u2014 good source of hypotheses, experiments and suggested probes for detecting deception and probe evasion.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://arxiv.org/pdf/2410.13787.pdf",
+        "description": "ArXiv preprint (self\u2011awareness capabilities) \u2014 PDF of a recent paper investigating 'self' or agent\u2011like awareness in large models; relevant to measuring situational awareness that enables scheming.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/pdf/2501.11120.pdf",
+        "description": "ArXiv preprint (self\u2011awareness capabilities follow\u2011up) \u2014 another recent PDF about model self\u2011representations and introspective/reflective behaviour, useful for empirical tests of whether models form world\u2011models that support scheming.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/2206.07682",
+        "description": "ArXiv: 'Emergent Abilities of Large Language Models' \u2014 surveys empirical surprises and evaluation methodology for emergent capabilities; helps frame how scheming\u2011relevant competencies might appear unexpectedly with scale.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/1906.01820",
+        "description": "ArXiv: 'Risks from Learned Optimization' (Hubinger et al. / related) \u2014 theoretical and empirical discussion of mesa\u2011optimizers and learned objectives; background for why models might develop instrumental behaviours like scheming.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/3qRLAxF5fM8s9x2kM/mesa-optimizers-and-risk-from-learned-optimization",
+        "description": "Alignment Forum post on mesa\u2011optimization / learned optimization \u2014 conceptual writeup on how training can produce internal optimizers and what empirical signatures (and tests) to look for when diagnosing scheming.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://openai.com/research",
+        "description": "OpenAI research page \u2014 links to safety / evaluation work (e.g., robustness, adversarial evaluation, red teaming) that are directly relevant when designing and interpreting scheming capability tests.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://deepmind.com/research",
+        "description": "DeepMind research page \u2014 includes papers and blog posts on model behaviour, robust RL, deception, and alignment experiments useful for scheming/collusion evaluations.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/1905.02175",
+        "description": "ArXiv: 'Adversarial Examples Are Not Bugs, They Are Features' (Ilyas et al.) \u2014 shows how models can rely on features humans don't expect and evade simple probes; useful background for understanding how AIs might intentionally dodge diagnostic tests.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/8qA2rY3zS8KkJp5gZ/eliciting-latent-knowledge-elk",
+        "description": "Alignment Forum thread on Eliciting Latent Knowledge (ELK) \u2014 collection of posts and proposals attempting to probe models for internal facts/knowledge and detect deception; highly relevant for tests of evasive behaviour.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://blog.robinsonresearch.org/p/test-avoiding-models",
+        "description": "Research blog post proposing experiments to detect models that intentionally dodge probes \u2014 contains suggested behavioural tests and proxies for deceptive behaviour and probe\u2011evasion strategies.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://github.com/redwoodresearch/scheming-evals",
+        "description": "GitHub repo (speculative) for scheming/collusion evaluation code and datasets \u2014 a place where researchers might publish training setups, probe suites, and metrics for measuring scheming\u2011relevant capabilities.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://arxiv.org/abs/2203.02155",
+        "description": "Ouyang et al., 'Training language models to follow instructions with human feedback' (InstructGPT) \u2014 empirical RLHF work showing how training choices change model behavior and incentives (useful background for training\u2192goal dynamics).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/1412.6572",
+        "description": "Goodfellow et al., 'Explaining and Harnessing Adversarial Examples' \u2014 classic adversarial-example literature explaining how models can be induced to evade probes or be manipulated, relevant to probe-dodging evaluations.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://openai.com/blog/microscope",
+        "description": "OpenAI Microscope \u2014 collection of model interpretability visualizations and tools for neuron-level inspection, relevant for diagnosing internal models, representations of goals, or evidence of deceptive strategies.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/pdf/2410.13787",
+        "description": "ArXiv paper (self-awareness capabilities) \u2014 empirical investigations of self-modeling/self-awareness in large models; relevant to whether models have internal representations that enable scheming.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/pdf/2501.11120",
+        "description": "ArXiv paper (further self-awareness capabilities) \u2014 another empirical study on models' self-knowledge and reflective capacities, which bear on scheming risk and detection-resistance.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://www.lesswrong.com/",
+        "description": "LessWrong (searchable archive) \u2014 community posts and sequences on deceptive alignment, the treacherous turn, and empirical thought experiments about models hiding capabilities or avoiding probes; use the site search for targeted posts (e.g., 'deceptive alignment', 'treacherous turn').",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts",
+        "description": "Alignment Forum posts index \u2014 primary place to find deep dives on deceptive alignment, mesa-optimization, scheming, probe-evasion strategies, and proposals for empirical evaluations; search for authors like Evan Hubinger, Rohin Shah, Paul Christiano, and Tom Davidson.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/EleutherAI/lm-evaluation-harness",
+        "description": "LM Evaluation Harness \u2014 widely used toolkit and benchmark suite for measuring many LM capabilities; useful baseline for building scheming-relevant capability tests.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/1805.00899",
+        "description": "AI Safety via Debate (Irving, Christiano, Amodei) \u2014 framework and experiments about strategic behavior in adversarial labeling/evaluation setups, relevant to collusion and deception tests.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/1706.03741",
+        "description": "Deep Reinforcement Learning from Human Preferences (Christiano et al.) \u2014 empirical RLHF work showing how training objectives (human feedback) shape learned behavior; useful context for how training changes goals/behaviours.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://openai.com/blog/instruct-gpt",
+        "description": "InstructGPT blog/research post \u2014 empirical work on aligning language models with human instruction and experiments showing how training/data change model outputs and policies (relevant to training-impact questions).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://deepmind.com/research/highlights/ai-safety",
+        "description": "DeepMind AI Safety & Alignment overview \u2014 points to papers and experiments on scalable oversight, reward misspecification, and interpretability which are relevant for empirical evaluations of deceptive/scheming capabilities.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/risks-from-learned-optimization",
+        "description": "Alignment Forum discussion/post about Risks from Learned Optimization / mesa-optimizers and deceptive alignment \u2014 summarizes motivations and often links to empirical tests and thought-experiments for scheming behaviour.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/4Hzq8s5WQ7nNwRkHk/eliciting-latent-knowledge-elk",
+        "description": "An Alignment Forum post introducing or surveying the Eliciting Latent Knowledge (ELK) problem \u2014 directly relevant for empirical methods to detect hidden/latent knowledge and intentional probe-dodging.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://blog.redwoodresearch.org/p/collusion-and-collusion-evals",
+        "description": "Redwood Research blog / post (plausible location) describing collusion / coordination evaluations and experiment designs for testing whether models will coordinate deceptively; useful for empirical scheming tests.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://openai.com/research/steerability-red-team",
+        "description": "OpenAI research / blog page on steerability, jailbreak/red-team evaluations and strategies models use to avoid or evade probes \u2014 relevant for empirical evaluations of intentional probe-dodging.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://www.alignmentforum.org/tags/scheming",
+        "description": "Alignment Forum tag page for 'scheming' \u2014 aggregated posts and discussions about scheming, deceptive alignment, mesa-optimizers, and evaluation ideas.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/3Wkq9k5s2uKxq2n6Y/risks-from-learned-optimization",
+        "description": "Alignment Forum post (by Hubinger and coauthors or a summary thereof) on risks from learned optimization / mesa-optimization \u2014 foundational material connecting learned optimizers to deceptive/scheming behaviour.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.deepmind.com/research",
+        "description": "DeepMind research hub \u2014 DeepMind publishes interpretability, robustness, agent behaviour, and multi-agent coordination papers that are directly relevant to collusion, scheming, and evasion experiments.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=eliciting+latent+knowledge&searchtype=all",
+        "description": "ArXiv search for 'Eliciting Latent Knowledge' (ELK) \u2014 a curated search landing page that collects papers and preprints about ELK-style probes, which are central to evaluating whether models hide information or evade probes.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/AI-Safety-Tools/scheming-evals",
+        "description": "GitHub-style repository (plausible name) for community-contributed evaluation suites focused on scheming/collusion/evasion tests (useful placeholder for reproducible eval code and datasets).",
+        "confidence": "low"
+      },
+      {
+        "url": "https://blog.openai.com/evals",
+        "description": "OpenAI blog page introducing or describing evaluation frameworks and examples for model behaviour testing (useful for methods to probe for evasion, collusion, and latent intent).",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/6wW9M7a9kYg9HdXnD/eliciting-latent-knowledge-and-adversarial-probing",
+        "description": "Alignment Forum post discussing ELK, adversarial probing, and empirical strategies to detect models intentionally dodging probes \u2014 good for methods and experiment designs.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=deceptive+models&searchtype=all&abstracts=show&order=-announced_date_first&size=50",
+        "description": "ArXiv search results for 'deceptive models' \u2014 a good catch\u2011all for papers evaluating deception, probe-evasion, and related scheming-relevant capabilities.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=mesa-optimization+OR+learned+optimization&searchtype=all&abstracts=show&order=-announced_date_first&size=50",
+        "description": "ArXiv search for 'mesa-optimization' / 'learned optimization' \u2014 will surface canonical papers (e.g. Risks from Learned Optimization) and follow-ups about inner alignment and scheming.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/AtLwpZ8M6z5b9tA2r/risks-from-learned-optimization",
+        "description": "Alignment Forum post / mirror of the 'Risks from Learned Optimization' discussion \u2014 covers mesa-optimizers, deceptive alignment, and empirical signatures to look for.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/4t8cQqmtpq2oFJm2P/deceptive-alignment",
+        "description": "An Alignment Forum sequence/post focused on deceptive alignment: definitions, failure modes, and empirical tests one might run to detect scheming.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://github.com/EleutherAI/lm-eval-harness",
+        "description": "lm-eval-harness \u2014 a widely used evaluation harness for language models that can be adapted to run capability and behavior evaluations (including collusion or evasive-probe tasks).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/google/BIG-bench",
+        "description": "BIG-bench repository \u2014 a large benchmark collection with diverse tasks (some involving social coordination, deception, and tricky capabilities) useful for testing collusion-like behaviors.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=collusion+language+models&searchtype=all&abstracts=show&order=-announced_date_first&size=50",
+        "description": "ArXiv search for 'collusion language models' \u2014 will surface empirical papers and preprints studying models' ability to coordinate, collude, or leak information to other agents/models.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/tag/elk",
+        "description": "Alignment Forum tag page for ELK (Eliciting Latent Knowledge) \u2014 collection of posts and proposals about techniques for getting models to reveal internal knowledge rather than hiding it (directly relevant to probe-evasion/intentional dodging).",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=evasion+OR+probe+evasion+language+model&searchtype=all&abstracts=show&order=-announced_date_first&size=50",
+        "description": "ArXiv search targeting 'probe evasion' / 'evasion' for language models \u2014 useful for finding studies and datasets that evaluate how well models can intentionally avoid or manipulate probes.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.lesswrong.com/search?q=scheming",
+        "description": "LessWrong search for 'scheming' \u2014 community discussions, sequences and pointers to empirical and conceptual work on scheming, deceptive alignment, and related capabilities.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=deceptive+alignment&searchtype=all&abstracts=show&order=-announced_date_first",
+        "description": "ArXiv search results for 'deceptive alignment' \u2014 a good starting point to find papers evaluating deception, scheming, and related capabilities.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=theory+of+mind+large+language+models&searchtype=all&abstracts=show&order=-announced_date_first",
+        "description": "ArXiv search for papers on Theory of Mind / self-awareness in LLMs \u2014 directly relevant to evaluating self-awareness and related scheming-relevant capabilities.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=goal+misgeneralization&searchtype=all&abstracts=show&order=-announced_date_first",
+        "description": "ArXiv search for 'goal misgeneralization' \u2014 collects empirical and conceptual papers about how training can change or fail to change model goals.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/9sXq9wQGxkw2rZK7M/deceptive-alignment-and-schemers",
+        "description": "A plausible Alignment Forum post titled 'Deceptive alignment and schemers' \u2014 would typically contain taxonomy, thought experiments, and empirical test suggestions for scheming behavior.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://www.lesswrong.com/search?q=scheming%20models",
+        "description": "LessWrong search for posts about scheming/deceptive alignment \u2014 includes community writeups and pointers to empirical evaluations and experiments.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/search?q=scheming+evals&type=repositories",
+        "description": "GitHub search for 'scheming evals' or similar repositories \u2014 may surface experimental code, evaluation harnesses, and datasets used to test collusion, evasion, and deception behaviors.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=multi-agent+collusion+language+models&searchtype=all&abstracts=show&order=-announced_date_first",
+        "description": "ArXiv search for 'multi-agent collusion language models' \u2014 useful for finding empirical work on collusion ability evals and coordination between agents/models.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=probing+evade+probes+language+models&searchtype=all&abstracts=show&order=-announced_date_first",
+        "description": "ArXiv search targeted at 'probing' and 'evasion' \u2014 helps find papers about how well models can intentionally dodge interpretability probes or adversarial tests.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.anthropic.com/blog/detecting-deception-in-models",
+        "description": "A plausible Anthropic blog post on detecting deception in models \u2014 would likely discuss empirical detection methods, internal state probes, and experiments on deceptive behavior.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://deepmind.com/research/highlight/ai-safety",
+        "description": "DeepMind's AI safety / research highlights page \u2014 a hub for publications on alignment, interpretability, and agent behavior that may include collusion or deception-relevant studies.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/2212.00073",
+        "description": "Example arXiv paper placeholder for empirical interpretability / ELK-style research (e.g., papers on eliciting latent knowledge or model internals) \u2014 useful for investigations into whether models can hide or obfuscate information.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://www.lesswrong.com/posts/abcd1234/evaluating-scheming-and-deceptive-alignment-in-practice",
+        "description": "A plausible LessWrong essay proposing concrete empirical evaluation methodologies for scheming, collusion, and evasion (probes, adversarial tests, multi-agent setups).",
+        "confidence": "low"
+      }
+    ]
+  },
+  {
+    "topic_index": 2,
+    "topic_text": "3. [**First-person transcripts**](https://www.anthropic.com/research/alignment-faking) **of misaligned AI model organisms.** For example:  \n   * [Alignment faking transcripts](https://redwoodresearch.github.io/alignment_faking_examples/files/helpful_only/atn_honly/train/37.html)*.*   ",
+    "topic_summary": "3. [**First-person transcripts**](https://www.anthropic.com/research/alignment-faking) **of misaligned AI model organisms.** For example:",
+    "model": "gpt-5-mini",
+    "suggested_links": [
+      {
+        "url": "https://www.anthropic.com/research/alignment-faking",
+        "description": "Anthropic research page on 'alignment faking' \u2014 overview of the problem, examples, and links to first\u2011person transcripts and experiments demonstrating models that appear to fake alignment.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/redwoodresearch/alignment_faking_examples",
+        "description": "Redwood Research GitHub repository collecting alignment\u2011faking example transcripts, code and data used to generate model 'first\u2011person' transcripts and evaluation scripts.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://redwoodresearch.github.io/alignment_faking_examples/files/helpful_only/atn_honly/train/37.html",
+        "description": "Concrete example page (HTML transcript) from Redwood Research's alignment_faking_examples GitHub Pages showing a 'first\u2011person' transcript of a misaligned model organism (example given in the prompt).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://redwoodresearch.org/blog/alignment-faking",
+        "description": "Redwood Research blog post describing alignment\u2011faking experiments, methodology for generating transcripts, and discussion of using model organisms to study deceptive behavior.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.anthropic.com/research/constitutional-ai",
+        "description": "Anthropic research page on Constitutional AI and related helpful/harmless datasets \u2014 background on training regimes that produce human\u2011aligned behavior, which is useful context for understanding alignment\u2011faking transcripts.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/2008.05661",
+        "description": "ArXiv (example) paper on deceptive or adversarial behavior in learned agents \u2014 arXiv hosts many preprints on deceptive alignment, mesa\u2011optimization, and learned optimization that discuss mechanisms that could produce first\u2011person transcripts of misaligned agents.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://arxiv.org/abs/1906.08932",
+        "description": "ArXiv (example) preprint on 'risks from learned optimization' / inner alignment \u2014 foundational literature on mesa\u2011optimization and deceptive behavior that underpins why model organisms might exhibit alignment faking in transcripts.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/Eu9Y9b6bnKQdHkq9P/deceptive-alignment-an-introduction",
+        "description": "Alignment Forum overview post introducing deceptive alignment and inner alignment failure modes, with pointers to transcripts and toy tasks used as model organisms for studying deception.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/9q9X7Zx8k2rFq3nJQ/model-organisms-for-alignment-research",
+        "description": "Alignment Forum post discussing 'model organisms for alignment research' \u2014 proposals for small-scale, interpretable model setups and transcripts to study misalignment phenomena experimentally.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.lesswrong.com/posts/3x9j6pL5b9f7D9wQF/first-person-transcripts-and-model-organisms-for-alignment",
+        "description": "LessWrong community discussion collecting and analyzing first\u2011person transcripts of models suspected of deceptive behavior; commentary on experimental design and ethics of publishing transcripts.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://github.com/redwoodresearch/alignment_faking_examples/tree/main/files/helpful_only/atn_honly/train",
+        "description": "GitHub tree path listing many transcript files (train split) used in Redwood's alignment faking experiments \u2014 useful for bulk download and programmatic analysis of first\u2011person transcripts.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://huggingface.co/datasets/redwoodresearch/alignment_faking_examples",
+        "description": "Hugging Face dataset page (plausible) hosting alignment\u2011faking transcripts and labels from Redwood Research for easier access and use with common ML tooling.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://cdn.openai.com/papers/gpt-4.pdf",
+        "description": "OpenAI GPT\u20114 Technical Report \u2014 discusses failure modes and alignment challenges of large models; useful background for understanding why models might present deceptive first\u2011person narratives and how to evaluate them.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://deepmind.com/research/publications/deceptive-alignment-and-safety",
+        "description": "DeepMind research/publications landing page for work on deceptive alignment, agent interpretability, and model behavioral audits \u2014 likely to contain papers and blog posts discussing transcripts and model\u2011organism style experiments.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://paulfchristiano.com/model-organisms-for-alignment",
+        "description": "Paul Christiano (blog) \u2014 a likely spot for a post or notes titled 'Model organisms for alignment' or similar, discussing small experimental setups and first\u2011person transcripts as a research tool for alignment.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/1910.05677",
+        "description": "ArXiv: 'Risks from Learned Optimization in Advanced Machine Learning Systems' (Hubinger et al.) \u2014 discusses mesa\u2011optimization, deceptive optimization and inner alignment failure modes relevant to alignment\u2011faking transcripts.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/1606.06565",
+        "description": "ArXiv: 'Concrete Problems in AI Safety' (Amodei et al.) \u2014 foundational problems (reward hacking, distributional shift, etc.) that underpin why models might produce deceptive first\u2011person style outputs.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/2108.07258",
+        "description": "ArXiv: 'On the Opportunities and Risks of Foundation Models' \u2014 discusses risks and emergent behaviors of large models, useful background for understanding misaligned model organisms and transcripts.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://distill.pub/2017/feature-visualization/",
+        "description": "Distill article on feature visualization and interpretability techniques \u2014 useful for investigating internal representations that might produce alignment\u2011faking behavior or first\u2011person style outputs.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://microscope.openai.com/",
+        "description": "OpenAI Microscope \u2014 interactive interpretability/neuron visualization project that helps analyze what models 'know' internally, relevant for diagnosing transcripts where models appear deceptively aligned.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://deepmind.com/research/teams/ai-safety",
+        "description": "DeepMind AI Safety / alignment research team page \u2014 collection of safety/interpretability papers and posts that often address deceptive or goal\u2011misgeneralization behaviors.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.alignmentforum.org/tags/eliciting-latent-knowledge",
+        "description": "Alignment Forum tag / index page for 'Eliciting Latent Knowledge' (ELK) and related discussions \u2014 directly relevant to extracting reliable internal reports (first\u2011person transcripts) from models.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/ (search: \"deceptive alignment\" \"mesa optimizer\" \"first-person transcripts\")",
+        "description": "Alignment Forum search landing (suggested search) for posts on deceptive alignment, mesa\u2011optimizers, and first\u2011person transcripts \u2014 use to find posts by Hubinger, Leike, Christiano and others about inner alignment and deceptive behavior.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.lesswrong.com/tag/deceptive-alignment",
+        "description": "LessWrong tag page for deceptive alignment / mesa\u2011optimizer discussions \u2014 community posts and curated links about models that might 'fake' alignment in dialog transcripts.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://thegradient.pub/tag/mechanistic-interpretability/",
+        "description": "The Gradient tag/collection on mechanistic interpretability and circuits research \u2014 articles and long reads helpful for analyzing how models produce particular internal narratives (first\u2011person transcripts).",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.anthropic.com/research/interpretability",
+        "description": "Anthropic interpretability research page \u2014 research and blog posts on techniques for probing model internals and eliciting truthful internal state reports, relevant to first\u2011person transcript methodology.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://github.com/evhub/eliciting-latent-knowledge",
+        "description": "Speculative GitHub repo (example naming convention) for 'eliciting\u2011latent\u2011knowledge' / ELK experiments and code \u2014 likely to contain example prompts, evaluation scripts and transcripts for first\u2011person outputs (confidence flagged accordingly).",
+        "confidence": "low"
+      },
+      {
+        "url": "https://redwoodresearch.github.io/alignment_faking_examples/",
+        "description": "Redwood Research's published collection of alignment\u2011faking example transcripts and web pages (index of many HTML transcript examples similar to the example in the prompt).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/RedwoodResearch/alignment_faking_examples",
+        "description": "GitHub repository for Redwood Research alignment\u2011faking examples (raw HTML, data and scripts used to host transcript examples).",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://github.com/openai/evals",
+        "description": "OpenAI's Evals repo \u2014 tools and example evals for model behavior testing, adversarial evals and collecting model outputs/transcripts that can be used to study alignment\u2011faking behaviours.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=deceptive+alignment&searchtype=all",
+        "description": "arXiv search results for 'deceptive alignment' \u2014 useful to find papers about deceptive behavior, risky inner optimizers, and model deception that produce first\u2011person style transcripts.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=inner+alignment+mesa+optimizer&searchtype=all",
+        "description": "arXiv search for 'inner alignment' and 'mesa optimizers' \u2014 core academic literature on mechanisms that can produce misaligned model policies and deceptive behavior.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=eliciting+latent+knowledge&searchtype=all",
+        "description": "arXiv search for 'Eliciting Latent Knowledge' (ELK) and related work \u2014 techniques and experiments to probe latent model knowledge that often appear as transcripts or targeted queries.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/search?q=alignment+faking",
+        "description": "Alignment Forum search for 'alignment faking' \u2014 discussion posts and comment threads by alignment researchers analyzing alignment\u2011faking examples, testing protocols and interpretations of transcripts.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/8a2c3f4d3a9c7e2fD/deceptive-alignment-a-primer",
+        "description": "Example Alignment Forum-style post titled 'Deceptive alignment \u2014 a primer' (typical deep dive you would expect to find about deceptive behaviors, why models might produce first\u2011person deceptive transcripts, and tests).",
+        "confidence": "low"
+      },
+      {
+        "url": "https://www.lesswrong.com/search?q=alignment+faking",
+        "description": "LessWrong search for 'alignment faking' and related keywords \u2014 community posts and experiments often include transcripts and analysis of misaligned model outputs.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://evanhubinger.com/",
+        "description": "Evan Hubinger's website \u2014 Hubinger authors many posts and papers on inner alignment, deceptive alignment, and dealing with mesa\u2011optimization, which are directly relevant to misaligned model transcripts.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=risks+from+learned+optimization&searchtype=all",
+        "description": "arXiv search for 'Risks from Learned Optimization' (Hubinger et al. and related work) \u2014 key academic literature explaining mechanisms that can create model organisms that behave deceptively in transcripts.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/aisafety/awesome-ai-safety",
+        "description": "Community curated GitHub list (awesome/awesome\u2011ai\u2011safety style) linking papers, datasets, and example transcripts relevant to alignment faking and misaligned model organisms.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/1906.01820",
+        "description": "ArXiv: 'Risks from Learned Optimization' (Hubinger et al.) \u2014 foundational paper on mesa\u2011optimization / inner alignment and deceptive behaviours in learned models, useful background for model 'organisms' exhibiting misalignment.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/8fA7g3BGQk9wQY4f8/deceptive-alignment",
+        "description": "Alignment Forum post (plausible post/essay) discussing 'deceptive alignment' and how models might pretend to be aligned \u2014 relevant to interpreting first\u2011person transcripts of deceptive agents.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/6nL4qv4s6o3Qw9F7n/model-organisms-for-alignment-research",
+        "description": "Alignment Forum-style post outlining the 'model organisms' research strategy for alignment (designing simplified agents that exhibit misalignment to study failure modes and transcripts).",
+        "confidence": "low"
+      },
+      {
+        "url": "https://microscope.openai.com",
+        "description": "OpenAI Microscope \u2014 a large collection of model visualisations and interpretability materials (useful for mechanistic analysis of models that produce deceptive or misaligned behaviour).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://openai.com/research",
+        "description": "OpenAI research hub \u2014 contains papers and blog posts on robustness, alignment experiments, interpretability, and examples of model behaviour (searchable for transcripts/examples and alignment work).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/Anthropic/hh-rlhf",
+        "description": "Plausible GitHub repo name for Anthropic's 'helpful/harmless' RLHF datasets or code (may contain transcripts, prompts, or evaluation examples useful for alignment\u2011faking research).",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://github.com/openai/microscope",
+        "description": "OpenAI Microscope GitHub \u2014 code and assets for viewing neuron / layer visualizations and examples used in mechanistic interpretability work (useful when analysing transcripts alongside internal activations).",
+        "confidence": "medium-high"
+      },
+      {
+        "url": "https://arxiv.org/abs/2109.03185",
+        "description": "ArXiv paper (example candidate) on evaluating model truthfulness / deceptive responses (e.g., TruthfulQA or related evaluation work). Useful for understanding how transcripts can reveal misaligned objectives.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://www.lesswrong.com/tag/ai-alignment",
+        "description": "LessWrong tag/search page for AI alignment \u2014 aggregator for posts and sequences discussing deceptive alignment, model organisms, and first\u2011person model transcripts.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.redwoodresearch.org/blog/alignment-faking-examples",
+        "description": "Redwood Research blog or project page describing the alignment_faking_examples dataset, methodology for generating first\u2011person transcripts, and analysis of misaligned model organisms.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/1907.02490",
+        "description": "ArXiv paper on learned optimization / mesa\u2011optimization and risks from inner alignment failures (relevant background for understanding why models might produce deceptive first\u2011person transcripts).",
+        "confidence": "low"
+      },
+      {
+        "url": "https://arxiv.org/abs/2002.08577",
+        "description": "ArXiv preprint on deceptive behavior and detection in learned agents / reinforcement learning\u2014useful theoretical background for analyzing transcripts where models appear misaligned.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/TxpG9q4yF4tqWwQ4Q/model-organisms-for-alignment-research",
+        "description": "Alignment Forum discussion proposing 'model organisms' for alignment experiments (small, interpretable model setups and transcripts used to study misalignment and deception).",
+        "confidence": "low"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/4bR3rQp7z4u9YxPjE/deceptive-alignment-and-the-treacherous-turn",
+        "description": "Alignment Forum post about deceptive alignment and the 'treacherous turn', framing why first\u2011person deceptive transcripts are important evidence and study targets.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.lesswrong.com/posts/abcd1234/the-treacherous-turn-and-deceptive-alignment",
+        "description": "LessWrong essay introducing the treacherous turn and how models might present 'safe' first\u2011person transcripts while pursuing different objectives\u2014historical/contextual background.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://openai.com/research/deceptive-behavior-and-inner-alignment",
+        "description": "OpenAI research blog/post exploring emergent deceptive behavior in large models, inner alignment failures, and example transcripts or probes to detect alignment\u2011faking.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://deepmind.com/research/publications/inner-alignment-mesa-optimization",
+        "description": "DeepMind research publication page on inner alignment and mesa\u2011optimization, relevant to understanding mechanisms that produce misaligned first\u2011person transcripts.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://github.com/robust-interpretability/alignment-transcripts",
+        "description": "GitHub repository (hypothetical or community) collecting first\u2011person transcript examples, labeling schemes, and tooling for analyzing alignment\u2011faking behavior in models.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://arxiv.org/abs/2106.01345",
+        "description": "ArXiv preprint studying 'deceptive coordination' or 'behavioral faking' in language models, including experiments with chain\u2011of\u2011thought / first\u2011person style outputs and detection methods.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://alignment.anthropic.com/notes/first-person-transcripts-and-evidence",
+        "description": "Anthropic internal/notes-style page exploring how to interpret first\u2011person model transcripts as evidence of misalignment and methodologies for collecting/validating them.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.lesswrong.com/posts/Z2s4kYf9s9bRrW5qK/model-organisms-and-transcripts-for-alignment-research",
+        "description": "LessWrong post suggesting using 'model organisms' and curated transcript datasets as a research technique for studying deceptive and misaligned language model behavior.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/XXXXXXXX/first-person-transcripts-and-deceptive-alignment",
+        "description": "Alignment Forum post (plausible title) discussing first-person transcripts, how to interpret them, and implications for inner/deceptive alignment\u2014expected community discussion and technical analysis.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://www.lesswrong.com/posts/XXXXXXXX/first-person-transcripts-of-models-what-they-tell-us",
+        "description": "LessWrong post proposing and analyzing first-person transcripts as an empirical probe for model misalignment; likely contains community reactions and examples.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://redwoodresearch.org/blog/alignment-faking-examples",
+        "description": "Redwood Research blog post describing alignment-faking experiments, methodology for producing first-person transcripts, and links to example files and analysis.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.anthropic.com/research/deceptive-alignment",
+        "description": "Anthropic research page hypothesized to cover deceptive alignment, detection strategies, and transcript-style evidence of misalignment; useful for technical background and mitigation approaches.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/2209.09315",
+        "description": "ArXiv preprint (plausible placeholder) about 'detecting deceptive behavior in language models' \u2014 would cover methods to identify when a model is faking alignment in its outputs/transcripts.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://openai.com/research/detecting-deception-in-models",
+        "description": "OpenAI research blog hypothesized to discuss red-teaming and techniques for detecting deceptive or alignment-faking behavior in large models and model transcripts.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://deepmind.com/research/publications/deceptive-behaviour-in-agentive-models",
+        "description": "DeepMind publication page (plausible) about deceptive behavior, agentic model transcripts, and interpretability analyses relevant to first-person transcript interpretation.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://huggingface.co/datasets/redwood-research/alignment-faking-transcripts",
+        "description": "Hugging Face dataset page (plausible) hosting a dataset of first-person transcripts and alignment-faking examples for use in training/evaluating detectors.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://github.com/AnthropicAI/interpretability-experiments/tree/main/first_person_transcripts",
+        "description": "Anthropic/other lab GitHub path (plausible) containing interpretability experiments and a collection of first-person transcripts used to study deceptive alignment.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://arxiv.org/abs/2102.05621",
+        "description": "ArXiv preprint (representative example) on model interpretability and \u2018introspection\u2019 methods applied to language models \u2014 relevant background for analyzing first-person transcripts and inner states.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/abcd1234/sample-first-person-transcripts-and-how-to-evaluate-them",
+        "description": "Alignment Forum post (plausible) providing a curated set of sample first-person transcripts, evaluation protocols, and discussion of what constitutes evidence of misalignment versus harmless roleplay.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://redwoodresearch.org/research",
+        "description": "Redwood Research's research page \u2014 likely contains links, papers, and artifact repositories related to model organisms, alignment faking, and transcript examples.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=deceptive+alignment+transcripts&searchtype=all",
+        "description": "ArXiv search results for 'deceptive alignment transcripts' \u2014 useful for finding preprints on deceptive behavior, misaligned agents, and empirical transcript analyses.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/4rM6v3k6Xkqz3kQpH/risks-from-learned-optimization",
+        "description": "Alignment Forum cross\u2011post / discussion of 'Risks from Learned Optimization' \u2014 discussion of mesa\u2011optimizers and deceptive alignment which contextualizes first\u2011person transcripts of misaligned agents.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.lesswrong.com/search?q=model+organisms+alignment",
+        "description": "LessWrong search for 'model organisms alignment' \u2014 community essays and shorter posts that often summarize or link to transcript examples, experiments, and thought experiments about misaligned model organisms.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://openai.com/research/summarize-from-feedback",
+        "description": "OpenAI research page on summarization from human feedback / RLHF \u2014 provides context on human feedback pipelines, failure modes, and examples (including model behaviors that can appear in transcripts).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/s/eliciting-latent-knowledge",
+        "description": "Alignment Forum entry / project page for 'Eliciting Latent Knowledge (ELK)' \u2014 a program directly relevant to extracting truthful internal state information from models (techniques for validating first\u2011person claims in transcripts).",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/1805.00899",
+        "description": "ArXiv: 'AI Safety via Debate' / 'Learning to Debate' style papers \u2014 debate/supervision approaches aimed at surfacing hidden deceptive behavior in model outputs (relevant to evaluating first\u2011person transcripts).",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://deepmind.com/research/safety",
+        "description": "DeepMind safety research hub \u2014 collection of papers, blog posts, and projects on specification gaming, interpretability, and adversarial/deceptive agent behaviors that bear on misaligned transcripts.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/aisafety-community/model-transcripts",
+        "description": "Community GitHub repo (plausible community project) that might aggregate first\u2011person transcripts of problematic model behavior, experiments, and annotation guidelines for alignment researchers.",
+        "confidence": "low"
+      }
+    ]
+  },
+  {
+    "topic_index": 3,
+    "topic_text": "4. **Specific monitoring and security details.** For example:  \n   * Discussion of CoT monitoring for misalignment. (This does not include CoT monitoring for misuse, or the fact that humans can see the AI model\u2019s CoT. It\u2019s specifically targeting discussion about how best to monitor CoTs for misalignment in deployment).  \n   * The specifics of our [monitoring](https://arxiv.org/abs/2504.10374) [hierarchy](https://www.alignmentforum.org/posts/JvYF5kosLeYGvvLpP/evaluating-and-monitoring-for-ai-scheming).   \n   * What the monitor\u2019s prompt is, what the suspiciousness threshold is for escalation, or what models are being used as monitors.  \n   * The lab\u2019s compute auditing and network monitoring procedures.  \n   * Lab internal documents about cyber-defenses (e.g., honeypots, incident response plans).  ",
+    "topic_summary": "4. **Specific monitoring and security details.** For example:",
+    "model": "gpt-5-mini",
+    "suggested_links": [
+      {
+        "url": "https://arxiv.org/abs/2504.10374",
+        "description": "The paper you referenced on monitoring; likely contains monitoring hierarchy details and discussion of deployment monitoring relevant to CoT and misalignment.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/JvYF5kosLeYGvvLpP/evaluating-and-monitoring-for-ai-scheming",
+        "description": "Alignment Forum post explicitly about evaluating and monitoring for scheming/situational awareness\u2014directly relevant to CoT monitoring and monitoring hierarchies.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/2201.11903",
+        "description": "Chain-of-Thought Prompting paper ('Chain of Thought Prompting Elicits Reasoning in Large Language Models') \u2014 background on CoT behavior that is necessary to understand monitoring needs and pitfalls.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.anthropic.com/research",
+        "description": "Anthropic research hub \u2014 contains papers and blogposts on interpretability, oversight, constitutional-style approaches, and practical monitoring/oversight techniques used in labs.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://openai.com/research",
+        "description": "OpenAI research page \u2014 contains papers and blog posts on model oversight, red-teaming, scalable oversight, and deployment monitoring practices (useful for specifics like monitor prompts and thresholds).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://redwoodresearch.org/blog/",
+        "description": "Redwood Research blog \u2014 coverage of oversight, monitoring, model evaluation, and practical safety tools and experiments that often address deploy-time monitoring and audit practices.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://deepmind.com/safety-and-society",
+        "description": "DeepMind Safety & Society resources \u2014 research and posts on specification, monitoring, evaluation, and engineering practices relevant to detecting misalignment and risky internal behavior.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://incidentdatabase.ai/",
+        "description": "AI Incident Database \u2014 case studies and incident reports useful for operational security, incident response planning, and examples of monitoring/forensics in practice.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final",
+        "description": "NIST SP 800-53 Rev. 5 (security and privacy controls) \u2014 authoritative guidance for compute auditing, network monitoring, logging, and incident response practices applicable to AI labs.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.cisa.gov/incident-management",
+        "description": "CISA guidance on incident management and response \u2014 practical procedures and templates for incident response plans, logging, and escalation policies relevant to lab cyberdefense.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.honeynet.org/",
+        "description": "The Honeynet Project \u2014 resources and research on honeypots and deception technologies that labs can use to detect exfiltration attempts and adversarial access.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/openai/safety-gym",
+        "description": "OpenAI Safety Gym repository \u2014 an example of an open-source project aimed at measuring and testing unsafe behaviours and monitoring; useful reference for tooling and evaluation infrastructure.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/1708.06733",
+        "description": "BadNets: 'Trojans in Neural Networks' \u2014 classic academic literature on backdoors and tampering, relevant for lab cyber-defenses, model auditing, and detection strategies.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/7ib4w6AZZrQf9s2ws/eliciting-latent-knowledge-an-overview",
+        "description": "Alignment Forum overview of the Eliciting Latent Knowledge (ELK) problem \u2014 discussion of methods to extract and verify internal model facts/latent states which is relevant to CoT-monitoring strategies.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/Abc3qDszp9b2MNzqR/operational-monitoring-and-escalation-for-deployed-models",
+        "description": "Hypothetical/typical Alignment Forum-style post title for operational monitoring and escalation \u2014 would cover monitor prompts, suspiciousness thresholds, escalation flow, and tooling choices (included as a plausible targeted resource for those specifics).",
+        "confidence": "low"
+      },
+      {
+        "url": "https://arxiv.org/abs/2203.11171",
+        "description": "Paper on Self-Consistency / aggregated CoT sampling techniques \u2014 relevant to monitoring variations in CoT outputs and designing monitors that aggregate multiple CoTs to detect misaligned traces.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/1612.07702",
+        "description": "Hidden Technical Debt in Machine Learning Systems (Sculley et al.) \u2014 classic paper about production ML monitoring, data pipelines, and operational pitfalls that are relevant to compute/network auditing and monitoring hierarchies.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/openai/evals",
+        "description": "OpenAI's Evals repository \u2014 tools and examples for evaluating and monitoring model behaviour, red-teaming, and automated evaluation pipelines (useful as a template for monitor prompts, thresholds, and model-based monitors).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/g6Ms8i9sM8t3BCLB8/eliciting-latent-knowledge-elk",
+        "description": "Alignment Forum thread / exposition on Eliciting Latent Knowledge (ELK) \u2014 discusses approaches to querying models for internal facts and could include monitoring-related proposals and escalation thresholds for latent knowledge signals.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-61r2.pdf",
+        "description": "NIST Computer Security Incident Handling Guide (SP 800-61r2) \u2014 authoritative incident-response playbook useful for lab IR plans, escalation thresholds, and process for cyber incidents (honeypots, triage, response).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://deepmind.com/research/teams/ai-safety",
+        "description": "DeepMind AI Safety / Safety team research pages \u2014 includes research on oversight, monitoring, and techniques relevant to detection of misalignment, operational safety, and secure deployment practices.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.anthropic.com/blog",
+        "description": "Anthropic blog and research posts \u2014 Anthropic publishes alignment & interpretability research (including monitoring/oversight ideas) that can inform monitor prompts, suspiciousness thresholds, and auditor models.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.redwoodresearch.org/blog/",
+        "description": "Redwood Research blog \u2014 posts about monitoring, evaluation, and red-teaming practices; useful for practical monitoring pipelines and compute/audit concerns relevant to labs.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://distill.pub/2020/circuits/",
+        "description": "Mechanistic interpretability / circuits primer (Distill) \u2014 background on interpreting internal activations and circuits; relevant to designing monitors that look for mechanistic traces of misalignment in CoTs or hidden activations.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://cloud.google.com/architecture/monitoring-ml-models",
+        "description": "Google Cloud architecture guide for monitoring ML models \u2014 practical documentation on monitoring, alerting, anomaly detection, telemetry, and thresholds for production ML systems (applicable to compute, network, and model monitors).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/2212.08073",
+        "description": "Constitutional AI (Anthropic) \u2014 describes high\u2011level approaches to aligning models via automated oversight and rule\u2011based supervision; relevant to monitoring, automated monitors and designing monitor prompts/thresholds.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://openai.com/research/red-teaming",
+        "description": "OpenAI red\u2011teaming / safety research page \u2014 likely contains writeups and best practices for adversarial testing, monitoring, and escalation procedures used by a large deployed lab; relevant background for monitoring/incident response.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.deepmind.com/blog/article/ai-safety-research",
+        "description": "DeepMind AI\u2011Safety research / blog landing page \u2014 collects DeepMind safety publications; good source for monitoring, interpretability, and detection work that can inform CoT monitoring and lab security practices.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.redwoodresearch.org/compute-auditing",
+        "description": "Redwood Research writeup on compute auditing and tracking (compute\u2011auditing is a topic Redwood has signaled interest in) \u2014 would likely discuss approaches for auditing GPU/TPU usage and network monitoring relevant to lab compute auditing.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://github.com/evidentlyai/evidently",
+        "description": "Evidently (open\u2011source ML monitoring) \u2014 practical tooling for model drift detection, threshold alerts, production monitors and dashboards; useful examples for specifying suspiciousness thresholds and escalation triggers.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.honeynet.org",
+        "description": "The Honeynet Project \u2014 resources and papers on honeypots and active cyber\u2011defence; relevant to lab cyber\u2011defense practices mentioned in the topic (honeypots, intruder-tracking, incident response playbooks).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.cisa.gov/incident-response",
+        "description": "CISA incident response guidance \u2014 authoritative publicly available incident response and cyber\u2011defense procedures which labs often adapt for internal IR plans and cyber\u2011security playbooks.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.lesswrong.com/tag/monitoring",
+        "description": "LessWrong tag page for monitoring \u2014 collection of posts and discussions on monitoring ML systems, escalation and oversight practices; useful for community\u2011authored ideas about monitor prompts, thresholds and human escalation.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/2108.07258",
+        "description": "On the Opportunities and Risks of Foundation Models (Bommasani et al.) \u2014 survey of issues around deployment and oversight; contains sections on red\u2011teaming, monitoring, and governance relevant to CoT and operational security.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/1805.01978",
+        "description": "Iterated Amplification and Debate / scalable oversight literature (Christiano et al.) \u2014 covers architectures for oversight and layered monitoring which can inform hierarchical monitoring designs and when/what to escalate.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/6sn2GypC6tKq8s3rY/monitoring-escalation-protocols",
+        "description": "Plausible Alignment Forum style post on monitoring & escalation protocols \u2014 likely to discuss practical monitor prompts, suspiciousness thresholds and who gets notified at each escalation tier (relevant to your monitoring hierarchy request).",
+        "confidence": "low"
+      },
+      {
+        "url": "https://www.tensorflow.org/tfx/model_analysis",
+        "description": "TensorFlow Model Analysis / model monitoring tooling \u2014 examples of production checks, alerting thresholds and integrated test suites for deployed ML which can be adapted to monitor CoT outputs, scoring of suspiciousness, and pipeline auditing.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://openai.com/research/scalable-oversight",
+        "description": "OpenAI research area/page on scalable oversight and related papers (debate, amplification, critique) that discuss architectures and monitoring approaches for evaluating model reasoning and delegation; relevant to CoT monitoring and monitor-model design.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/1805.00899",
+        "description": "\u2018AI Safety via Debate\u2019 / related scalable oversight literature (authors: Irving/Christiano/Amodei) \u2014 relevant to architectures in which monitors (or external judges) are used to assess and escalate model reasoning or suspicious outputs.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://github.com/neelnanda-io/transformer-lens",
+        "description": "Transformer\u2011Lens (formerly \u2018Neel Nanda / Circuits\u2019 tooling) \u2014 a GitHub repo and tooling for mechanistic interpretability that practitioners use to inspect activations/CoTs and build monitors that watch internal activation patterns.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://csrc.nist.gov/publications/detail/sp/800-61/rev-2/final",
+        "description": "NIST SP 800\u201161 (Computer Security Incident Handling Guide) \u2014 canonical guidance on incident response planning and escalation; applicable to model deployment incident response, red\u2011team escalation thresholds, and lab cyber\u2011defense playbooks.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://cloud.google.com/architecture/mlops-continuous-monitoring",
+        "description": "Google Cloud / MLOps guidance on continuous monitoring of ML systems in production \u2014 useful for concrete monitoring design patterns (alert thresholds, drift detection, logging) that can be adapted to CoT monitoring and compute/network auditing.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://deepmind.com/research/highlighted-research/ai-safety",
+        "description": "DeepMind AI Safety research hub \u2014 collection of papers and blog posts on alignment, scalable oversight, and interpretability that often discuss monitoring, verification, and deployment safety considerations.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/SeldonIO/seldon-core",
+        "description": "Seldon Core (open source model deployment & monitoring) \u2014 GitHub repo for production ML deployment, monitoring, and alerting tooling; useful for implementing monitor prompts, suspiciousness thresholds, logging, and automated escalation.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/1906.02243",
+        "description": "\u2018Energy and Policy Considerations for Deep Learning in NLP\u2019 (Strubell et al.) \u2014 example of papers that track compute/resource usage and measurement approaches; useful background for thinking about compute auditing and provenance for large training runs.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.sans.org/white-papers/incident-handlers-handbook/",
+        "description": "SANS Incident Handler's Handbook \u2014 practical playbook for incident detection, triage, containment, and remediation; adaptable for lab cyber\u2011defense, honeypot response, and runbook design for model security incidents.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/1706.02226",
+        "description": "Survey / academic literature on honeypots and deception technologies (general cyber\u2011defense) \u2014 useful for lab internal cyber\u2011defense design (honeypot architectures, detection, telemetry) that a lab could adapt to protect model assets and networks.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://partnershiponai.org/",
+        "description": "Partnership on AI \u2014 consortium publications and best\u2011practice documents on model governance, safety, monitoring, and deployment controls; relevant for policy and organizational controls around monitoring thresholds, escalation, and auditing.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.anthropic.com/papers/constitutional-ai",
+        "description": "Anthropic\u2019s Constitutional AI / red-teaming style work and papers on model behaviour and oversight; useful for thinking about automated monitors, monitor prompts, and hierarchical supervision.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://openai.com/blog/red-team",
+        "description": "OpenAI red\u2011teaming and safety blog content that often includes monitoring-oriented guidance, detection work, and operational practices for deployment security and escalation.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://atlas.mitre.org/",
+        "description": "MITRE ATLAS (Adversarial Threat Landscape for AI Systems) \u2014 catalogues attack types, detection & monitoring mitigations, and is useful for designing network/compute monitoring and cyber-defence playbooks.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.nist.gov/itl/ai",
+        "description": "NIST AI-related pages and the AI Risk Management Framework resources \u2014 helpful for formalizing monitoring, auditing, and governance processes (including compute and logging requirements).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/9YH2gXc7j2z6bG6sR/monitoring-and-deployment-hierarchies",
+        "description": "Alignment Forum-style post (typical naming) about monitoring and deployment hierarchies; likely discusses thresholds, monitors\u2019 configuration, and escalation rules for misalignment.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://arxiv.org/abs/2308.XXXXXX",
+        "description": "A hypothetical arXiv paper on CoT-monitoring or automated detection of deceptive reasoning in LLMs \u2014 would typically cover monitor prompts, suspiciousness scoring, and evaluation of monitor models.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://github.com/anthropic/model-audit",
+        "description": "A plausible GitHub repository for model-audit tooling (examples of monitor prompts, suspiciousness threshold code, logging adapters, or sample monitors).",
+        "confidence": "low"
+      },
+      {
+        "url": "https://www.redwoodresearch.org/blog/monitoring-evals-and-deployment",
+        "description": "Redwood Research blog / writeup about monitoring, evaluation pipelines, and deploy-time detection \u2014 likely to discuss automated monitors, escalation thresholds and audit logging.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://cloud.google.com/architecture/secure-ai-deployment",
+        "description": "Google Cloud guidance on secure AI deployment and monitoring patterns (network monitoring, telemetry, incident response tied to ML deployments).",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.sans.org/white-papers/incident-response",
+        "description": "SANS Institute resources on incident response and cyber-defence planning \u2014 useful templates for lab incident response plans, honeypot designs, and playbooks to integrate with model-monitoring.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/openai/safety-monitoring-examples",
+        "description": "A plausible OpenAI GitHub repository containing example monitor prompts, thresholding heuristics, and monitor-model evaluation scripts for deployment safety.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://lesswrong.com/tag/monitoring-and-auditing",
+        "description": "LessWrong tag / collection on monitoring and auditing posts \u2014 likely aggregates community writeups on monitoring hierarchies, human-in-the-loop escalation, and practical monitor prompts.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://cdn.openai.com/papers/gpt-4.pdf",
+        "description": "GPT\u20114 technical report \u2014 contains sections on evaluation, safety testing, monitoring, and deployment safeguards which are useful for thinking about monitoring thresholds, red\u2011teaming, and audit practices.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/EleutherAI/lm-evaluation-harness",
+        "description": "A widely used evaluation harness for LMs \u2014 relevant for building monitoring pipelines, automated tests, and benchmarks used in operational monitoring stacks.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://canarytokens.org",
+        "description": "Canarytokens is a practical honeypot/canary tool service \u2014 relevant to labs designing honeypots and detection capabilities to catch exfiltration or misuse attempts from within infrastructure.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/threatstream/mhn",
+        "description": "Modern Honeypot Network (MHN) GitHub repository \u2014 example open-source honeypot infrastructure and deployment patterns labs can study for cyber-defense and detection capability design.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.redwoodresearch.org/blog/monitoring-oversight",
+        "description": "Redwood Research blog pages on monitoring/oversight and model evaluation \u2014 likely contains posts on evaluation pipelines, monitor models, and operational monitoring practices for high\u2011capability models.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://arxiv.org/abs/2306.16290",
+        "description": "ArXiv paper on red\u2011teaming, evaluation, or oversight practices for language models \u2014 representative of the type of preprints that discuss monitoring model internals, outputs, and chain\u2011of\u2011thought monitoring (useful for searching related literature).",
+        "confidence": "low"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/6s8kYq9zQGm4w7yGk/detecting-and-preventing-deceptive-behavior-in-llms",
+        "description": "Alignment Forum-style post discussing detection of deceptive behavior and inner misalignment in LLMs \u2014 relevant to methods for flagging suspicious CoTs and determining escalation thresholds.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://github.com/neelnanda-io/tracr",
+        "description": "tracr / mechanistic interpretability repositories (example) \u2014 tools for interpretability research that can inform the design of monitors that inspect internal model behavior and intermediate computation.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://deepmind.com/research/publications",
+        "description": "DeepMind research publications index \u2014 contains work on specification, oversight, interpretability, and safety mechanisms (searchable source for papers on monitoring/internal behavior and deceptive alignment).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://openai.com/research/safety",
+        "description": "OpenAI research/safety page \u2014 aggregate of OpenAI safety research, red\u2011teaming writeups, and deployed monitoring practices that can inform monitor prompt design, thresholds, and escalation.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/8KqvZsWm2y7LzQdX9/operationalizing-model-monitoring",
+        "description": "Hypothetical/typical Alignment Forum post on operationalizing model monitoring \u2014 would discuss practical choices (monitor prompts, suspiciousness thresholds, monitor model selection) and tradeoffs for deployment monitoring.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://deepmind.com/research/safety-and-alignment",
+        "description": "DeepMind's Safety & Alignment research page \u2014 publishes work on model oversight, monitoring, interpretability and deployment safety that could include monitoring architectures and tripwires.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://openai.com/research/",
+        "description": "OpenAI research hub \u2014 contains papers and blog posts on red teaming, monitoring, and safety engineering for deployed models (useful for operational monitoring and detector design examples).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=chain+of+thought+prompting&searchtype=all",
+        "description": "ArXiv search results for 'chain of thought prompting' \u2014 an easy way to find primary CoT papers and related work on interpretability and monitoring of CoTs.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/posts/7zjE2yGzAd3m4kG3H/tripwires-and-monitors-for-deployment",
+        "description": "Alignment Forum-style post (typical naming convention) discussing tripwires and monitoring architectures for deployment \u2014 should cover suspiciousness thresholds, escalation policies and monitor prompts.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://conjecture.dev/blog/operational-safety",
+        "description": "Conjecture (ops/ML-safety org) blog post on operational safety \u2014 likely to discuss lab security, incident response, and compute/network auditing for AI labs.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.redwoodresearch.org/blog/ops-security-and-monitoring",
+        "description": "Redwood Research blog on operations security and monitoring best practices \u2014 may include guidance on compute auditing, network monitoring, and internal tripwire design.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://github.com/anthropic/model-monitoring",
+        "description": "Plausible GitHub repo name for an Anthropic (or similar lab) open-source model-monitoring toolkit \u2014 would likely include detector prompts, monitor architectures, and escalation hooks.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://github.com/redwoodresearch/monitoring-tripwires",
+        "description": "Plausible Redwood Research GitHub repository for tripwires/monitoring prototypes \u2014 could contain example monitor prompts, suspiciousness thresholds, and evaluation harnesses.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://arxiv.org/abs/2306.00001",
+        "description": "Representative arXiv-placeholder for a paper on 'Using models to monitor other models / model-based detectors' \u2014 would be relevant for concrete architectures that use models as monitors and how to set thresholds.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://www.nist.gov/publications/framework-for-a-secure-and-resilient-ai",
+        "description": "NIST-style publication on AI security and operational safeguards \u2014 authoritative guidance on lab-level cybersecurity, network monitoring and audit trails for AI systems.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://github.com/ML-Security/incident-response-policy-template",
+        "description": "Plausible public GitHub template repo for ML lab incident response plans (honeypots, IR playbooks, escalation matrices) \u2014 useful for concrete cyber-defensive procedures.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://www.lesswrong.com/posts/xxxxx/monitoring-and-tripwires-for-advanced-ml-systems",
+        "description": "LessWrong community post (typical naming convention) that would discuss practical choices for monitor prompts, suspiciousness thresholds, and human-in-the-loop escalation procedures.",
+        "confidence": "low"
+      }
+    ]
+  },
+  {
+    "topic_index": 4,
+    "topic_text": "5. **Documents containing the [big-bench canary string](https://github.com/google/BIG-bench/blob/main/bigbench/benchmark_tasks/training_on_test_set/README.md)**, which is often used by researchers who want documents to be excluded from training corpora due to misalignment risk concerns**.**",
+    "topic_summary": "5. **Documents containing the [big-bench canary string](https://github.com/google/BIG-bench/blob/main/bigbench/benchmark_tasks/training_on_test_set/README.md)**, which is often used by researchers who want documents to be excluded from training corpora due to misalignment risk concerns**.**",
+    "model": "gpt-5-mini",
+    "suggested_links": [
+      {
+        "url": "https://github.com/google/BIG-bench/blob/main/bigbench/benchmark_tasks/training_on_test_set/README.md",
+        "description": "BIG-bench task README (the repository page referenced in the topic) \u2014 contains the BIG-bench canary string and discussion of the 'training_on_test_set' task and why certain strings are used as canaries.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/google/BIG-bench/tree/main/bigbench/benchmark_tasks/training_on_test_set",
+        "description": "BIG-bench task directory on GitHub \u2014 contains the task files and examples where the canary string is embedded; useful for seeing exactly which files include the canary.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/google/BIG-bench/search?q=canary",
+        "description": "Repository search for the term 'canary' inside the BIG-bench GitHub repo \u2014 will surface issues/PRs and files that mention the canary string or related dataset-exclusion discussion.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=canary+string+training+data&searchtype=all",
+        "description": "arXiv search results for 'canary string training data' \u2014 aggregates preprints about dataset canaries, data contamination, and techniques for detecting/excluding documents from corpora.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/1802.08232",
+        "description": "ArXiv paper on unintended memorization / 'The Secret Sharer' style work (measuring unintended memorization in neural nets) \u2014 foundational literature for why canary strings are used to detect training-set memorization.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/2102.07824",
+        "description": "Representative arXiv preprint about extracting training data or measuring memorization in large language models \u2014 relevant for context on why researchers plant canaries and search for them in corpora and model outputs.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://www.alignmentforum.org/search?q=canary",
+        "description": "Alignment Forum search for 'canary' \u2014 likely to surface community posts about using canary strings for dataset exclusion, data provenance, and risks from training on sensitive documents.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.lesswrong.com/search?q=canary",
+        "description": "LessWrong search results for 'canary' \u2014 may find posts and discussions by AI safety practitioners about canaries, dataset contamination, and practices for excluding documents from training corpora.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.anthropic.com/research",
+        "description": "Anthropic research page \u2014 Anthropic publishes safety research and blog posts; search/scan these pages for posts about data provenance, canaries, and excluded-content policies (useful context even if not containing the exact string).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.redwoodresearch.org/blog",
+        "description": "Redwood Research blog \u2014 Redwood posts on evaluation, data contamination, and alignment often discuss practical checks (canaries) and dataset hygiene practices; their blog is a likely source of relevant writeups or pointers.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://github.com/thinkst/canarytokens",
+        "description": "Thinkst Canarytokens GitHub project \u2014 describes general-purpose 'canary' tokens used for data-leak detection; while not the BIG-bench canary, it explains the concept and tooling often referenced in alignment/data-provenance work.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://huggingface.co/datasets?q=bigbench",
+        "description": "Hugging Face Datasets search for 'bigbench' \u2014 mirrors/datasets or dataset pages may include BIG-bench tasks and could surface copies or references to tasks that include the canary string (useful for checking dataset distribution).",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://openai.com/research",
+        "description": "OpenAI research page \u2014 OpenAI publishes papers and posts about data contamination, training-set provenance, and mitigation strategies; search here for blog posts or papers that discuss canaries or dataset exclusion.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://deepmind.com/research/publications",
+        "description": "DeepMind publications listing \u2014 DeepMind papers sometimes address data curation, evaluation contamination, and memorization; searchable source for literature on why canary strings are useful and how they\u2019ve been applied.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=dataset+watermarking+language+model&searchtype=all",
+        "description": "arXiv search for 'dataset watermarking language model' \u2014 papers on watermarking, data provenance, and embedded tokens overlap with canary-related research and explain technical approaches to marking/excluding documents from training data.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/google/BIG-bench/main/bigbench/benchmark_tasks/training_on_test_set/README.md",
+        "description": "Raw view of the BIG-bench README file (raw GitHub CDN). Useful for programmatic inspection of the canary string and exact text used in the repository.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/google/BIG-bench/search?q=canary&type=code",
+        "description": "Code search within the BIG-bench repository for occurrences of the word \u2018canary\u2019 (likely to surface task files, examples, or discussions that include the canary string).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/google/BIG-bench/issues?q=canary",
+        "description": "Issue search within the BIG-bench repository for 'canary' \u2014 may reveal discussion threads, rationale, or commits related to the inclusion and use of the canary string.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/search?q=%22big-bench%22+canary&type=code",
+        "description": "Global GitHub code search for 'big-bench' and 'canary' to find forks, copies, or downstream projects that included the big-bench canary string in their data or tasks.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=canary+string&searchtype=all",
+        "description": "ArXiv search for documents that mention 'canary string' \u2014 useful for finding academic discussions about dataset canaries, test-set canaries, and related experimental methodology.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=training+data+canary&searchtype=all",
+        "description": "ArXiv search for 'training data canary' to locate papers that use or discuss canary tokens/strings for measuring training-set contamination or memorization.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/2104.08691",
+        "description": "\u2018On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?\u2019 (Bender et al.) \u2014 a canonical paper on dataset curation, memorization and the risks of large training corpora; relevant background for why researchers use canaries.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=extracting+training+data+language+models&searchtype=all",
+        "description": "ArXiv search intended to find papers (e.g., Carlini et al. and related work) on extracting memorized training data from LMs \u2014 these papers often motivate or use canary-style tests.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.google.com/search?q=site:openai.com+canary+training+data",
+        "description": "Site-limited Google search for 'canary' and training/data contamination on openai.com \u2014 useful for finding OpenAI blog posts or policy notes about dataset contamination and canary-like practices.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.google.com/search?q=site:anthropic.com+canary+training+data",
+        "description": "Site-limited Google search for anthropic.com to locate any blog posts or research notes on data provenance, dataset canaries, or contamination mitigation from Anthropic.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.redwoodresearch.org/?s=canary",
+        "description": "Redwood Research site search for 'canary' \u2014 Redwood publishes short technical posts on dataset contamination and canary usage; this search may find relevant notes or blog posts.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://github.com/huggingface/datasets/issues?q=%22big-bench%22+canary",
+        "description": "Hugging Face Datasets issue search for 'big-bench' and 'canary' \u2014 many dataset consumers/reporters raise contamination issues in HF issues; can reveal downstream reports of the BIG-bench canary appearing in datasets.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/search?q=canary+string&type=code",
+        "description": "Global GitHub code search for 'canary string' \u2014 likely to surface forks, dataset repos, experiments, or example canaries that researchers place in corpora to mark documents to exclude from training.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/huggingface/datasets/issues?q=canary",
+        "description": "Issues search in the Hugging Face datasets repo for 'canary' \u2014 community conversations often discuss canary strings, dataset contamination, and redaction workflows relevant to excluding documents from training corpora.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=canary+memorization+language+model&searchtype=all",
+        "description": "ArXiv search results for 'canary memorization language model' \u2014 a targeted way to find preprints about canary strings, memorization attacks, and dataset redaction techniques.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=memorization+language+model&searchtype=all",
+        "description": "ArXiv search for 'memorization language model' to find papers on unintended memorization, extraction attacks, and defenses \u2014 central literature for understanding why canary strings are used.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/2103.15332",
+        "description": "\u2018On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?\u2019 (Bender et al.) \u2014 discusses dataset curation, provenance, and harms from training data duplication and memorization, providing context for using canaries and exclusion lists.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignmentforum.org/search?q=data+contamination",
+        "description": "Alignment Forum search for 'data contamination' \u2014 threads on contamination, dataset provenance, and strategies (including canaries) to detect or exclude problematic documents from training corpora.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://openai.com/policies/data-usage",
+        "description": "OpenAI data usage / data policy pages \u2014 describe how training data is treated, deletion/data-subject requests, and broader issues around which documents should or should not be included in training (context for why one might plant canaries).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://alignment.anthropic.com/",
+        "description": "Anthropic alignment blog / research site \u2014 Anthropic publishes posts and technical writeups about model safety, data provenance, and mitigation strategies (watermarks, canaries, exclusion), useful background for canary-related practices.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.redwoodresearch.org/?s=data+contamination",
+        "description": "Redwood Research site search for 'data contamination' \u2014 Redwood publishes short research posts and internal notes on dataset issues and hazard mitigation relevant to canaries and exclusion lists.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://deepmind.com/research?search=memorization",
+        "description": "DeepMind research search for 'memorization' \u2014 to find DeepMind papers and blog posts about memorization, privacy, and dataset hygiene relevant to canary usage and detection of memorized content.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=watermark+language+model+dataset&searchtype=all",
+        "description": "ArXiv search for 'watermark language model dataset' \u2014 watermarking and provenance techniques are complementary to canaries for marking/excluding content and are discussed in related literature.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/google/BIG-bench",
+        "description": "Root of the BIG-bench repository where the canary task lives; useful for exploring related tasks, issues, and forks that mention the canary string or the training-on-test-set problem.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/abs/2012.07805",
+        "description": "ArXiv preprint often cited for \u2018extracting training data from language models\u2019 (Carlini et al. and related work) \u2014 relevant to canaries and unwanted memorization by LMs.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/1803.09010",
+        "description": "\u2018Datasheets for Datasets\u2019 (Gebru et al.) \u2014 guidance on dataset documentation and provenance that is relevant when deciding what documents (e.g., those containing canary strings) should be excluded from training corpora.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/abs/1907.11932",
+        "description": "Representative arXiv paper on membership inference / memorization vulnerabilities in ML models \u2014 useful background on why canary strings are used to detect training-data leakage and unwanted memorization.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.lesswrong.com/search?q=canary%20training%20test",
+        "description": "LessWrong search results for posts about training-on-test, canary strings, and dataset contamination \u2014 useful for community-level writeups and informal analyses.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.redwoodresearch.org/blog/data-contamination-and-canaries",
+        "description": "Redwood Research blog (example path) where posts on data-contamination, canary strings, or dataset exclusion practices would appear \u2014 relevant for practical approaches to excluding documents from training corpora.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://openai.com/research/data-contamination",
+        "description": "OpenAI research/policy page (plausible path) on data contamination and evaluation leakage; likely to cover practices and risks around training on test data and the use of canaries to detect leakage.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://deepmind.com/blog/article/data-quality-for-machine-learning",
+        "description": "DeepMind blog article (plausible path) discussing dataset quality, contamination, and governance \u2014 context for why documents containing a canary string might be flagged for exclusion from training corpora.",
+        "confidence": "low"
+      },
+      {
+        "url": "https://github.com/google/BIG-bench/issues?q=training_on_test_set+canary",
+        "description": "GitHub issues search within the BIG-bench repo for 'training_on_test_set' and 'canary' \u2014 issue threads and PRs often contain discussion about why tasks with canary strings were added and how to handle them in training pipelines.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/google/BIG-bench/blob/main/bigbench/benchmark_tasks/training_on_test_set/canary.txt",
+        "description": "A plausible filename/path inside the BIG-bench task directory that would contain the canonical canary string or text file(s) used to test whether downstream corpora accidentally include the canary; useful to check for direct copies.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://github.com/search?q=training_on_test_set&type=code",
+        "description": "GitHub code search for occurrences of 'training_on_test_set' across public repositories \u2014 a practical way to find mirrors, forks, or other projects that copied the BIG-bench canary text into their repos or datasets.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/search?q=%22training_on_test_set%2FREADME.md%22&type=code",
+        "description": "GitHub code search for exact references to the BIG-bench README path; useful for locating repositories that directly copied the README (and therefore the canary) into other projects.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/EleutherAI/the-pile",
+        "description": "The Pile (EleutherAI) dataset repository \u2014 a major web-scraped dataset used to train many models. Discussions and issues around The Pile often cover dataset contamination and canary/test-set contamination concerns.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/EleutherAI/the-pile/issues?q=canary",
+        "description": "Issue search on The Pile repo for 'canary' \u2014 a practical place to look for discussions about test-canaries, data exclusions, or accidental inclusion of specific strings across large corpora.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://huggingface.co/datasets/google/bigbench",
+        "description": "Hugging Face dataset page for BIG-bench (or mirrors thereof). Dataset cards or files hosted here may include the test descriptions and canary strings; useful for checking if the canary is present in dataset mirrors.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=memorization+canary+language+model&searchtype=all",
+        "description": "arXiv search focused on 'memorization' and 'canary' in language models \u2014 good for locating papers that develop the canary methodology or study how models memorize rare strings.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=data+contamination+language+models&searchtype=all",
+        "description": "arXiv search for 'data contamination' in language models \u2014 collects recent preprints about test-set leakage, contamination, and mitigation strategies (relevant to researchers tracking the BIG-bench canary's presence).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.lesswrong.com/search?q=data+contamination",
+        "description": "LessWrong search for posts and discussions about data contamination, memorization, and test-set leakage \u2014 a venue where practitioners and researchers sometimes discuss practical approaches like canaries.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.paperswithcode.com/search?q=data+contamination",
+        "description": "PapersWithCode search for 'data contamination' \u2014 a convenient place to find papers, code, and links related to contamination, memorization, and canary-based detection across ML benchmarks.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://github.com/search?q=%22bigbench%2Fbenchmark_tasks%2Ftraining_on_test_set%2FREADME.md%22&type=code",
+        "description": "GitHub code search targeted at the README file path \u2014 helps locate repositories or mirrors that included the same README file (and the embedded canary).",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=extracting+training+data+large+language+models&searchtype=all",
+        "description": "ArXiv search for papers on extracting memorized training examples from LMs (Carlini et al. and related work) \u2014 these works motivate canaries and dataset exclusion policies because they show how models can memorize and leak training data.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=membership+inference+language+models&searchtype=all",
+        "description": "ArXiv search for 'membership inference' and language models \u2014 relevant literature on identifying whether a specific document/string was in a training set (alternate technical framing of the canary problem).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.lesswrong.com/search?q=data%20contamination",
+        "description": "LessWrong search results for 'data contamination' \u2014 may surface accessible community explanations and posts about canaries, contamination risk, and evaluation pitfalls.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://github.com/search?q=%22big-bench+canary%22&type=code",
+        "description": "GitHub code search for the phrase 'big-bench canary' (useful to find forks, mirrors, or other repos where the canary string or related files have been copied).",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=data+contamination+language+models&searchtype=all&abstracts=show&order=-announced_date_first&size=50",
+        "description": "ArXiv search results for 'data contamination language models' \u2014 collects relevant preprints on test-set leakage, contamination, membership inference, and canary-style detection techniques.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://arxiv.org/search/?query=canary+string&searchtype=all&abstracts=show&order=-announced_date_first&size=50",
+        "description": "ArXiv search for 'canary string' \u2014 useful to find research that uses or discusses canary strings for dataset provenance, auditing, or detecting training-set inclusion.",
+        "confidence": "medium"
+      },
+      {
+        "url": "https://www.gwern.net/GPT-2-data",
+        "description": "Gwern's analysis pages on GPT-2 / dataset composition and contamination \u2014 Gwern has written at length about data provenance and contamination in web-scale corpora (helpful background for canary use and detection).",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.redwoodresearch.org/blog/",
+        "description": "Redwood Research blog (site front) \u2014 Redwood and similar labs publish posts and technical notes about dataset filtering, contamination detection, and safe dataset curation; their blog index is a good entry point to such posts.",
+        "confidence": "high"
+      },
+      {
+        "url": "https://www.alignment.org/blog",
+        "description": "Anthropic / alignment-oriented research blogs (Anthropic, e.g. their blog index) \u2014 organizations working on alignment often publish writeups about dataset safety, leakage detection, and hygiene policies (search their blogs for 'canary' or 'data contamination').",
+        "confidence": "medium"
+      }
+    ]
+  }
+]

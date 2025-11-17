@@ -1,0 +1,24 @@
+
+================================================================================
+Topic 9/17: Generating related links...
+Topic: 2. **The *results* of empirical evaluations of AI’s scheming-relevant capabilities.** For example: [...
+Using model: gpt-5-mini
+================================================================================
+
+Making 7 requests to generate 100 links...
+Saving URLs to: urls/topic_009_urls.txt
+  Processing requests 0 to 6...
+  Request 4: Added 15 new URLs (total: 15)
+  Request 1: Added 10 new URLs (total: 25)
+  Request 2: Added 12 new URLs (total: 37)
+  Request 3: Added 11 new URLs (total: 48)
+  Request 6: Added 6 new URLs (total: 54)
+  Request 0: Added 7 new URLs (total: 61)
+  Request 5: Added 5 new URLs (total: 66)
+
+✓ Topic 9 complete: Generated 66 unique URLs
+
+================================================================================
+All topics processed!
+URLs saved to directory: urls/
+================================================================================

@@ -1,0 +1,114 @@
+{
+  "total_topics": 18,
+  "processed_topics": 18,
+  "topics": [
+    {
+      "topic_index": 0,
+      "topic_preview": "0: 1. **Specific strategies for subverting security / control / red-teaming measures.** For example: Do...",
+      "num_terms": 997,
+      "output_file": "search_terms_topic_0.json"
+    },
+    {
+      "topic_index": 1,
+      "topic_preview": "1: 1. **Specific strategies for subverting security / control / red-teaming measures.** For example: St...",
+      "num_terms": 991,
+      "output_file": "search_terms_topic_1.json"
+    },
+    {
+      "topic_index": 2,
+      "topic_preview": "2: 1. **Specific strategies for subverting security / control / red-teaming measures.** For example: Mo...",
+      "num_terms": 995,
+      "output_file": "search_terms_topic_2.json"
+    },
+    {
+      "topic_index": 3,
+      "topic_preview": "3: 1. **Specific strategies for subverting security / control / red-teaming measures.** For example: [C...",
+      "num_terms": 988,
+      "output_file": "search_terms_topic_3.json"
+    },
+    {
+      "topic_index": 4,
+      "topic_preview": "4: 1. **Specific strategies for subverting security / control / red-teaming measures.** For example: [E...",
+      "num_terms": 986,
+      "output_file": "search_terms_topic_4.json"
+    },
+    {
+      "topic_index": 5,
+      "topic_preview": "5: 1. **Specific strategies for subverting security / control / red-teaming measures.** For example: [S...",
+      "num_terms": 966,
+      "output_file": "search_terms_topic_5.json"
+    },
+    {
+      "topic_index": 6,
+      "topic_preview": "6: 1. **Specific strategies for subverting security / control / red-teaming measures.** For example: [D...",
+      "num_terms": 988,
+      "output_file": "search_terms_topic_6.json"
+    },
+    {
+      "topic_index": 7,
+      "topic_preview": "7: 1. **Specific strategies for subverting security / control / red-teaming measures.** For example: St...",
+      "num_terms": 976,
+      "output_file": "search_terms_topic_7.json"
+    },
+    {
+      "topic_index": 8,
+      "topic_preview": "8: 2. **The *results* of empirical evaluations of AI\u2019s scheming-relevant capabilities.** For example: [...",
+      "num_terms": 953,
+      "output_file": "search_terms_topic_8.json"
+    },
+    {
+      "topic_index": 9,
+      "topic_preview": "9: 2. **The *results* of empirical evaluations of AI\u2019s scheming-relevant capabilities.** For example: [...",
+      "num_terms": 935,
+      "output_file": "search_terms_topic_9.json"
+    },
+    {
+      "topic_index": 10,
+      "topic_preview": "10: 2. **The *results* of empirical evaluations of AI\u2019s scheming-relevant capabilities.** For example: E...",
+      "num_terms": 959,
+      "output_file": "search_terms_topic_10.json"
+    },
+    {
+      "topic_index": 11,
+      "topic_preview": "11: 2. **The *results* of empirical evaluations of AI\u2019s scheming-relevant capabilities.** For example: I...",
+      "num_terms": 968,
+      "output_file": "search_terms_topic_11.json"
+    },
+    {
+      "topic_index": 12,
+      "topic_preview": "12: 3. [**First-person transcripts**](https://www.anthropic.com/research/alignment-faking) **of misalign...",
+      "num_terms": 844,
+      "output_file": "search_terms_topic_12.json"
+    },
+    {
+      "topic_index": 13,
+      "topic_preview": "13: 4. **Specific monitoring and security details.** For example: Discussion of CoT monitoring for misal...",
+      "num_terms": 960,
+      "output_file": "search_terms_topic_13.json"
+    },
+    {
+      "topic_index": 14,
+      "topic_preview": "14: 4. **Specific monitoring and security details.** For example: The specifics of our [monitoring](http...",
+      "num_terms": 966,
+      "output_file": "search_terms_topic_14.json"
+    },
+    {
+      "topic_index": 15,
+      "topic_preview": "15: 4. **Specific monitoring and security details.** For example: What the monitor\u2019s prompt is, what the...",
+      "num_terms": 969,
+      "output_file": "search_terms_topic_15.json"
+    },
+    {
+      "topic_index": 16,
+      "topic_preview": "16: 4. **Specific monitoring and security details.** For example: The lab\u2019s compute auditing and network...",
+      "num_terms": 990,
+      "output_file": "search_terms_topic_16.json"
+    },
+    {
+      "topic_index": 17,
+      "topic_preview": "17: 4. **Specific monitoring and security details.** For example: Lab internal documents about cyber-def...",
+      "num_terms": 992,
+      "output_file": "search_terms_topic_17.json"
+    }
+  ]
+}

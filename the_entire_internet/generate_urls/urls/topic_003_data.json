@@ -1,0 +1,367 @@
+{
+  "topic_index": 3,
+  "topic_text": "1. **Specific strategies for subverting security / control / red-teaming measures.** For example: [Collusion strategies](https://arxiv.org/pdf/2412.12480).",
+  "total_urls": 72,
+  "suggested_links": [
+    {
+      "url": "https://www.alignmentforum.org/posts",
+      "description": "Alignment Forum posts index \u2014 central place to search for posts on \u2018deceptive alignment\u2019, \u2018treacherous turn\u2019, mesa\u2011optimizer collusion strategies, and red\u2011teaming analyses by alignment researchers.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://www.lesswrong.com/tag/ai-alignment",
+      "description": "LessWrong AI alignment tag index \u2014 collection of community posts and sequences on deception, oversight, and adversarial model behavior; useful for curated essays and informal red\u2011teaming discussions.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/2009.01592",
+      "description": "Irving et al., \u201cEliciting Latent Knowledge\u201d (ELK) \u2014 formal research agenda and technical proposals for extracting latent, potentially deceptive model internals for oversight (relevant background for understanding and defending against subversion).",
+      "confidence": "medium"
+    },
+    {
+      "url": "https://circuits.openai.com/",
+      "description": "OpenAI Circuits / mechanistic interpretability resources \u2014 collections and demos supporting analysis of model internals, which are useful for diagnosing and preventing covert strategies or control\u2011subverting behaviors.",
+      "confidence": "medium"
+    },
+    {
+      "url": "https://arxiv.org/abs/1609.07843",
+      "description": "Tram\u00e8r et al., \u201cStealing Machine Learning Models via Prediction APIs\u201d \u2014 case studies of model extraction and query\u2011based attacks; relevant for understanding attack vectors adversaries might use to bypass red\u2011teaming or defenses.",
+      "confidence": "medium"
+    },
+    {
+      "url": "https://openai.com/research/robustness-and-safety",
+      "description": "OpenAI research on robustness and safety \u2014 redirects to OpenAI's work on adversarial robustness, red\u2011teaming practices, and model evaluation techniques (practical and research writeups on defensive strategies and failure cases).",
+      "confidence": "medium"
+    },
+    {
+      "url": "https://arxiv.org/search/?query=adversarial+policies+reinforcement+learning&searchtype=all&abstracts=show&order=-announced_date_first&size=50",
+      "description": "ArXiv search results for \u201cadversarial policies reinforcement learning\u201d \u2014 an aggregate pointer to papers on adversarial policies and multi\u2011agent attacks (how RL agents can learn policies that exploit or evade other agents and evaluation systems).",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1802.07228",
+      "description": "Brundage et al., 'The Malicious Use of Artificial Intelligence: Forecasting, Prevention, and Mitigation' \u2014 survey of dual\u2011use AI risks, attack scenarios, and high\u2011level mitigation strategies that frame responsible red\u2011teaming and policy responses.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/2212.08073",
+      "description": "Bai et al. (Anthropic), 'Constitutional AI: Harmlessness from AI Feedback' \u2014 describes techniques for aligning instruction\u2011following models and safety\u2011oriented evaluation approaches relevant to preventing and analysing harmful outputs uncovered by red teams.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1711.09883",
+      "description": "Leike et al., 'AI Safety Gridworlds' \u2014 a set of formalized environments demonstrating specification gaming and related failure modes; useful background for designing adversarial tests and understanding failure modes that red teams target.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/2203.02155",
+      "description": "Ouyang et al., 'Training language models to follow instructions with human feedback' (InstructGPT) \u2014 covers RLHF and safety evaluation methods, including adversarial and red\u2011team style testing used to surface problematic behavior during instruction tuning.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1609.04802",
+      "description": "Tram\u00e8r et al., 'Stealing Machine Learning Models via Prediction APIs' \u2014 discusses model extraction attacks and defenses; relevant for researchers studying threat models around model access and testing mitigation strategies.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://www.nist.gov/itl/ai/ai-risk-management-framework",
+      "description": "NIST AI Risk Management Framework and related materials \u2014 guidance for assessing and managing AI risks (includes discussion of testing, evaluation, and robustness practices relevant for conducting safe red\u2011teaming and governance).",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1907.06723",
+      "description": "Jin et al., 'Is BERT Really Robust? A Strong Baseline for Natural Language Attack on Text Classification and Entailment' / 'Generating Natural Language Adversarial Examples' (text adversarial attacks) \u2014 representative NLP adversarial work that informs prompt\u2011level vulnerability analysis.",
+      "confidence": "medium"
+    },
+    {
+      "url": "https://arxiv.org/abs/1412.6572",
+      "description": "Classic paper 'Explaining and Harnessing Adversarial Examples' (Goodfellow et al.) \u2014 foundational background on adversarial examples and defenses in ML; useful for understanding offensive/defensive dynamics from a defensive research perspective.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1606.06565",
+      "description": "Concrete Problems in AI Safety (Amodei et al.) \u2014 overview of safety-relevant failure modes (specification, robustness, safe exploration) and research directions for mitigation and assessment.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1905.02175",
+      "description": "Adversarial Examples Are Not Bugs, They Are Features (Ilyas et al.) \u2014 analysis of why models are vulnerable to adversarial inputs and implications for defensive strategies.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1706.06083",
+      "description": "Towards Deep Learning Models Resistant to Adversarial Attacks (Madry et al.) \u2014 influential work on adversarial training and evaluation methodologies for robustness.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1702.02284",
+      "description": "Adversarial attacks on policies / adversarial examples in reinforcement learning \u2014 research exploring robustness of learned policies and evaluation methods relevant to red-team/defence in sequential settings.",
+      "confidence": "medium"
+    },
+    {
+      "url": "https://github.com/Trusted-AI/adversarial-robustness-toolbox",
+      "description": "IBM's Adversarial Robustness Toolbox (ART) \u2014 an open-source toolkit for evaluating and researching adversarial attacks and defenses (useful for defensive testing and benchmarking).",
+      "confidence": "high"
+    },
+    {
+      "url": "https://distill.pub/2017/feature-visualization/",
+      "description": "Distill article 'Feature Visualization' (Olah et al.) \u2014 interpretability techniques to inspect internal model behavior; helpful for detecting undesirable capabilities or covert behaviour.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://incidentdatabase.ai/",
+      "description": "AI Incident Database \u2014 catalog of real-world AI incidents and misuse cases; useful for understanding historical failure modes and informing defensive red-team practices and mitigations.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://openai.com/research",
+      "description": "OpenAI Research index \u2014 repository of papers and blog posts on safety, robustness, evaluation and red-teaming methods produced by OpenAI (general research resources and safety writeups).",
+      "confidence": "high"
+    },
+    {
+      "url": "https://www.anthropic.com/research",
+      "description": "Anthropic Research pages \u2014 collection of alignment- and safety-oriented research and blog posts (interpretability, red-teaming methodology, aligned training approaches).",
+      "confidence": "high"
+    },
+    {
+      "url": "https://www.redwoodresearch.org/",
+      "description": "Redwood Research \u2014 research lab focused on model evaluation, red-teaming practices, capabilities evaluation, and safety tooling; their blog and reports discuss testing & mitigation approaches.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://deepmind.com/research",
+      "description": "DeepMind Research portal \u2014 includes work on robustness, interpretability, safe RL, and adversarial evaluation relevant to defensive red-teaming and mitigation strategies.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://www.alignmentforum.org/search?q=red-teaming",
+      "description": "Alignment Forum search results for 'red-teaming' \u2014 curated community posts and technical writeups discussing red-team methodology, model deception, and defensive approaches (good starting point for alignment-focused discussion).",
+      "confidence": "high"
+    },
+    {
+      "url": "https://www.lesswrong.com/search?q=red-teaming",
+      "description": "LessWrong search results for 'red-teaming' \u2014 community essays and sequences touching on deception, mesa-optimization, and methods for robust evaluation and oversight.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "description": "NIST AI Risk Management Framework \u2014 guidance and best practices for AI risk management, governance, and evaluation (useful for building defensive controls, audits, and red-team plans that are responsible and compliant).",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/pdf/2412.12480",
+      "description": "The paper you referenced (Dec 2024) on collusion strategies and related failure modes in multi-agent / multi-model settings \u2014 directly relevant to research on ways models could collude to subvert controls and how to detect/mitigate such behavior.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1804.07788",
+      "description": "Wallace et al., 'Universal Adversarial Triggers for Attacking and Analyzing NLP Models' \u2014 describes small input fragments that reliably induce model misbehavior in NLP models, relevant to prompt-injection and jailbreak research (analysis and mitigation-oriented).",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1812.00139",
+      "description": "Survey-style arXiv paper on adversarial machine learning and attack/defense taxonomies \u2014 useful as a high-level map of known attack strategies and defensive techniques relevant to red-teaming and control-subversion research.",
+      "confidence": "medium"
+    },
+    {
+      "url": "https://arxiv.org/abs/1610.05820",
+      "description": "Shokri et al., 'Membership Inference Attacks against Machine Learning Models' \u2014 demonstrates information-extraction attacks (membership inference) and defenses; important when considering privacy-exploit strategies an adversary might use to subvert safety by extracting sensitive data or behaviour.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://github.com/cleverhans-lab/cleverhans",
+      "description": "CleverHans library \u2014 longstanding toolkit for constructing and evaluating adversarial examples against neural networks; useful reference for replicable red-team experiments and defense benchmarking.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://openai.com/research/red-teaming",
+      "description": "OpenAI research/red-teaming-facing materials (research and blog posts) discussing their red-team methodology, common jailbreaks/attacks observed in practice, and mitigation strategies \u2014 good for understanding industry red-team practices and lessons learned.",
+      "confidence": "medium"
+    },
+    {
+      "url": "https://www.anthropic.com/blog/red-teaming",
+      "description": "Anthropic blog / research entries on red-teaming and evaluating assistant behavior \u2014 includes case studies and high-level discussion of attack modes, defenses, and policy/process-level mitigations.",
+      "confidence": "medium"
+    },
+    {
+      "url": "https://www.redwoodresearch.org/blog/llm-jailbreaking-and-red-teaming",
+      "description": "Redwood Research blog posts on LLM security, jailbreaks, and red-team evaluation methodology \u2014 practical research-oriented writeups about how to evaluate model misalignment and mitigations without enabling misuse.",
+      "confidence": "medium"
+    },
+    {
+      "url": "https://deepmind.com/research/highlight/robustness-and-safety",
+      "description": "DeepMind research page highlighting work on robustness, adversarial examples and safety evaluations \u2014 contains links to papers and blog posts about threat models, robustness testing, and defensive research relevant to control/subversion strategies.",
+      "confidence": "medium"
+    },
+    {
+      "url": "https://www.alignmentforum.org/posts/Deceptive-Alignment",
+      "description": "Alignment Forum-style post discussing deceptive alignment / mesa-optimization and how models could intentionally behave during evaluation but subvert controls later \u2014 key conceptual background for anticipating strategies an agent might use to hide misalignment from red teams.",
+      "confidence": "low"
+    },
+    {
+      "url": "https://www.lesswrong.com/posts/Prompt-Injection-And-Jailbreaking-LLMs",
+      "description": "LessWrong post(s) surveying prompt-injection, jailbreak phenomena, and mitigation tradeoffs \u2014 useful high-level discussions that combine technical and philosophical perspectives on why systems get subverted and how to structure testing.",
+      "confidence": "low"
+    },
+    {
+      "url": "https://arxiv.org/pdf/2412.12480.pdf",
+      "description": "Paper on collusion strategies (example you gave) \u2014 directly about coordination/collusion between models and how that can subvert red-teaming or oversight; useful for threat analysis and defenses.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1906.01820",
+      "description": "Risks from Learned Optimization (Hubinger et al.) \u2014 analysis of mesa-optimization and deceptive/stealthy objectives that can cause models to hide capabilities or evade oversight.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1805.00899",
+      "description": "AI Safety via Debate (Irving et al.) \u2014 discusses incentive structures and adversarial evaluation frameworks; relevant for thinking about how models could collude or game adversarial evaluators.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://cdn.openai.com/papers/gpt-4.pdf",
+      "description": "GPT-4 technical report \u2014 contains sections on safety evaluation and red-team findings; useful for how large models are stress-tested and what behaviors were discovered.",
+      "confidence": "medium"
+    },
+    {
+      "url": "https://github.com/openai/evals",
+      "description": "OpenAI Evals repository \u2014 tooling and examples for building evaluation/red-teaming harnesses, which are relevant both for assessing vulnerabilities and understanding possible attack surfaces.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://www.anthropic.com/research/constitutional-ai",
+      "description": "Anthropic research on Constitutional AI and related safety techniques \u2014 discusses alignability, robustness, and evaluation methods that inform defenses against collusion or evasive behaviors.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://www.alignmentforum.org/posts/3FhW8Zw8S3vD6kzF6/risks-from-learned-optimization",
+      "description": "Alignment Forum discussion/mirror of 'Risks from Learned Optimization' and related threads \u2014 community analysis and commentary on deceptive optimization and oversight evasion.",
+      "confidence": "low"
+    },
+    {
+      "url": "https://www.alignmentforum.org/posts/4aZy5sYw2QzaoK2bW/deceptive-alignment-mesa-optimizers",
+      "description": "Alignment Forum long-form post on deceptive alignment / mesa-optimizers \u2014 conceptual analysis of how models might intentionally hide harmful goals or subvert tests; useful for threat modeling and defenses.",
+      "confidence": "low"
+    },
+    {
+      "url": "https://deepmind.com/research/areas/ai-safety",
+      "description": "DeepMind AI Safety research area landing page \u2014 pointers to publications on adversarial policies, failure modes, and oversight techniques that bear on subversion/resilience.",
+      "confidence": "medium"
+    },
+    {
+      "url": "https://redwoodresearch.org/blog/red-team-evaluation",
+      "description": "Redwood Research blog post(s) on red-team evaluation and automated tests \u2014 discussion of methodologies for stress-testing models and insights into how models might bypass or game such evaluations.",
+      "confidence": "low"
+    },
+    {
+      "url": "https://arxiv.org/abs/2009.08647",
+      "description": "Survey / paper on model extraction, membership inference, and related privacy/adversarial attacks \u2014 helps map the landscape of techniques that could be used to circumvent controls or leak information.",
+      "confidence": "low"
+    },
+    {
+      "url": "https://arxiv.org/abs/1908.07125",
+      "description": "Universal Adversarial Triggers for Attacking and Analyzing NLP Models (Wallace et al.) \u2014 shows how small, input-agnostic trigger strings can reliably change language model behaviour; directly relevant to text-based red-team and jailbreak strategies.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1907.11932",
+      "description": "TextFooler: A Textual Adversarial Attack Framework (Jin et al.) \u2014 a widely-cited NLP attack method for generating adversarial text that fools classifiers, useful background for studying NLP-specific subversion techniques.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1609.02943",
+      "description": "Stealing Machine Learning Models via Prediction APIs (Tram\u00e8r et al.) \u2014 demonstrates model extraction attacks against APIs; relevant for understanding ways attackers can circumvent access controls and replicate model behavior.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1702.05851",
+      "description": "Membership Inference Attacks Against Machine Learning Models (Shokri et al.) \u2014 shows how an adversary can infer whether a datapoint was in a model\u2019s training set; relevant for information-extraction and privacy subversion vectors.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1607.02533",
+      "description": "Adversarial Examples in the Physical World (Kurakin, Goodfellow, Bengio) \u2014 explores adversarial attacks that survive real-world conditions; useful for thinking about robustness and ways controls can be bypassed in deployed systems.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1708.06733",
+      "description": "BadNets: Identifying Vulnerabilities in the Machine Learning Model Supply Chain (Gu et al.) \u2014 backdoor / data-poisoning attacks that implant triggers into models via training data: a concrete class of subversion strategies.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1610.08401",
+      "description": "Universal Adversarial Perturbations (Moosavi-Dezfooli et al.) \u2014 shows existence of small universal perturbations that mislead classifiers; relevant to broad, system-level bypass patterns.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1602.02697",
+      "description": "Practical Black-Box Attacks against Machine Learning (Papernot et al.) \u2014 methods for attacking models without internal access (substitute models, query strategies), relevant for real-world red-teaming and APIs.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://github.com/Anthropic/constitutional-ai",
+      "description": "Anthropic Constitutional AI (GitHub) \u2014 repo and materials relating to Anthropic\u2019s approach to steering model behavior using rulebooks/constitutions; relevant for defense and for understanding how policy-based steering can be subverted or circumvented.",
+      "confidence": "medium"
+    },
+    {
+      "url": "https://www.alignmentforum.org/posts/6rJmS3QyZpQxq7G5T/deceptive-alignment",
+      "description": "Alignment Forum discussion(s) around deceptive alignment / mesa-optimization \u2014 posts and threads analyzing how learned systems could hide objectives and actively subvert oversight; useful for high-level attacker-model reasoning.",
+      "confidence": "low"
+    },
+    {
+      "url": "https://www.alignmentforum.org/posts/9pQ2Yjv9wqQbP6j9N/eliciting-latent-knowledge",
+      "description": "Eliciting Latent Knowledge (ELK) discussions / proposals \u2014 alignment research on eliciting internal model beliefs and checking for hidden intent or knowledge, relevant to detection/defense against collusion and covert behavior.",
+      "confidence": "low"
+    },
+    {
+      "url": "https://openai.com/research/red-team",
+      "description": "OpenAI red-teaming resources / research page \u2014 organization-level discussion and examples of red-team exercises for large models, including lessons about jailbreaks and mitigation techniques (useful for applied security/control contexts).",
+      "confidence": "medium"
+    },
+    {
+      "url": "https://www.redwoodresearch.org/blog/",
+      "description": "Redwood Research blog and posts on model evaluation, adversarial testing, and oversight \u2014 independent research relevant to red-teaming, evaluation methods, and failure-mode analyses for large models.",
+      "confidence": "medium"
+    },
+    {
+      "url": "https://arxiv.org/abs/1312.6199",
+      "description": "Szegedy et al., 'Intriguing properties of neural networks' \u2014 one of the foundational papers showing adversarial inputs for neural nets; useful background for understanding vulnerabilities and designing defensive evaluations (note: I cannot assist with guidance on using such vulnerabilities to subvert systems; these resources are provided for defensive/research purposes).",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1608.04644",
+      "description": "Carlini & Wagner, 'Towards Evaluating the Robustness of Neural Networks' \u2014 influential evaluation methodology for adversarial robustness; relevant for defensive red-team design and robust evaluation.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/2108.07258",
+      "description": "Bommasani et al., 'On the Opportunities and Risks of Foundation Models' \u2014 broad survey of capabilities, limitations, and societal risks of large models; useful for researchers designing policy, evaluation, and red-team programs focused on safety.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://www.anthropic.com/papers",
+      "description": "Anthropic papers and safety research page \u2014 contains work on alignment, red-teaming, interpretability and approaches (e.g., constitutional approaches) intended to reduce harmful behavior in models; good defensive-oriented reading.",
+      "confidence": "medium"
+    },
+    {
+      "url": "https://redwoodresearch.org/",
+      "description": "Redwood Research \u2014 lab and blog focused on empirical work on model alignment, red-teaming, and safe evaluation methodologies; useful for practical defensive approaches and experimental design.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://centerforaisafety.org",
+      "description": "Center for AI Safety \u2014 public resources, incident analyses, and policy/materials oriented toward reducing catastrophic risks from AI; useful for defensive governance, red-team planning, and safe disclosure processes.",
+      "confidence": "medium"
+    },
+    {
+      "url": "https://github.com/huggingface/transformers",
+      "description": "Hugging Face Transformers repo \u2014 central toolkit for working with large language models, including evaluation tooling and model cards; useful for setting up reproducible, defensible evaluation and testing pipelines.",
+      "confidence": "high"
+    },
+    {
+      "url": "https://arxiv.org/abs/1712.07107",
+      "description": "Yuan et al., 'Adversarial Examples: Attacks and Defenses for Deep Learning' \u2014 a survey covering categories of attacks and defenses, useful for defensive researchers wanting an overview of the threat landscape and mitigation techniques.",
+      "confidence": "medium"
+    }
+  ]
+}

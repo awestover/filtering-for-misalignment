@@ -12,4 +12,5 @@ labelled/*
 .venv/
 old/
 .DS_Store
-the_entire_internet/
+google/
+alignment_classifier_data/
