@@ -12,6 +12,19 @@ from xml.etree import ElementTree as ET
 
 import httpx
 from bs4 import BeautifulSoup
+import ipdb
+ERROR_LOG_FILE = os.path.join(os.path.dirname(__file__), "searchterm-download-errors-brave.log")
+# MAXSEARCH = 50
+MAXSEARCH = 20
+
+
+def _append_error_log(message: str) -> None:
+    try:
+        timestamp = datetime.datetime.now().isoformat()
+        with open(ERROR_LOG_FILE, "a", encoding="utf-8") as f:
+            f.write(f"[{timestamp}] {message}\n")
+    except Exception as exc:  # pragma: no cover - best-effort logging
+        print(f"Warning: failed to write error log: {exc}")
 
 
 def brave_search(api_key: str, query: str, count: int = 50, country: str = "us", max_retries: int = 3):
@@ -41,11 +54,25 @@ def brave_search(api_key: str, query: str, count: int = 50, country: str = "us",
 
     params = {
         "q": query,
-        "count": min(count, 50),  # Max 50 results per request on higher tiers
+        "count": min(count, MAXSEARCH),  # Max 50 results per request on higher tiers
         "country": country,
         "search_lang": "en",
         "safesearch": "off"
     }
+
+    def _log_brave_error(resp: httpx.Response, note: str = "") -> None:
+        try:
+            body = resp.text
+            if len(body) > 600:
+                body = body[:600] + "...[truncated]"
+        except Exception as exc:  # pragma: no cover - defensive
+            body = f"<unable to decode response text: {exc}>"
+        suffix = f" ({note})" if note else ""
+        print(f"Brave API error{suffix}: status={resp.status_code}, url={resp.request.url}")
+        print(f"Response body: {body}")
+        _append_error_log(
+            f"status={resp.status_code}, url={resp.request.url}, note={note or 'n/a'}, body={body}"
+        )
 
     for attempt in range(max_retries):
         try:
@@ -70,6 +97,7 @@ def brave_search(api_key: str, query: str, count: int = 50, country: str = "us",
                 elif response.status_code == 429:
                     # Rate limit exceeded
                     print(f"Rate limit hit for query '{query}' (attempt {attempt + 1}/{max_retries})")
+                    _log_brave_error(response, "rate limit details")
                     if attempt < max_retries - 1:
                         wait_time = backoff ** (attempt + 2)
                         print(f"Waiting {wait_time:.1f}s before retry...")
@@ -79,10 +107,12 @@ def brave_search(api_key: str, query: str, count: int = 50, country: str = "us",
 
                 elif response.status_code == 401:
                     print(f"Authentication failed. Please check your API key.")
+                    _log_brave_error(response, "authentication failure details")
                     return results
 
                 else:
                     print(f"API returned status {response.status_code} for query '{query}'")
+                    _log_brave_error(response, "unexpected status")
                     if attempt < max_retries - 1:
                         wait_time = backoff ** attempt
                         print(f"Waiting {wait_time:.1f}s before retry...")
@@ -244,6 +274,10 @@ async def _fetch_text_for_url(
             return ""
 
     # More comprehensive browser headers to look like a real browser
+    # Special handling for certain domains that are strict about bot detection
+    parsed_url = urlparse(url)
+    is_acm = 'acm.org' in parsed_url.netloc
+
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
@@ -257,10 +291,17 @@ async def _fetch_text_for_url(
         "Upgrade-Insecure-Requests": "1",
         "Sec-Fetch-Dest": "document",
         "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "none",
+        "Sec-Fetch-Site": "none" if is_acm else "cross-site",
         "Sec-Fetch-User": "?1",
-        "Cache-Control": "max-age=0"
+        "Cache-Control": "max-age=0",
+        "Sec-Ch-Ua": '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+        "Sec-Ch-Ua-Mobile": "?0",
+        "Sec-Ch-Ua-Platform": '"macOS"',
     }
+
+    # Add Referer for ACM to make it look more legitimate
+    if is_acm:
+        headers["Referer"] = "https://dl.acm.org/"
 
     backoff = 2.0
 
