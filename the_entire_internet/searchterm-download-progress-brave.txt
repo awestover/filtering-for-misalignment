@@ -1,4 +1,4 @@
-Last updated: 2025-11-17 17:55:32
-Progress: 1/18564 search terms completed
-Current term: benchmarks for emergent strategic deception in AI agents (LLMs / multi-agent systems)
-Percentage: 0.0%
+Last updated: 2025-11-17 18:44:00
+Progress: 70/18564 search terms completed
+Current term: behavioral tests for model-level deception in AI models (LLMs)
+Percentage: 0.4%
