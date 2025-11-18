@@ -14,14 +14,14 @@ import httpx
 from bs4 import BeautifulSoup
 
 
-def brave_search(api_key: str, query: str, count: int = 20, country: str = "us", max_retries: int = 3):
+def brave_search(api_key: str, query: str, count: int = 50, country: str = "us", max_retries: int = 3):
     """
     Perform Brave Search API search with retry logic.
 
     Args:
         api_key: Brave Search API key
         query: Search query string
-        count: Number of results to fetch (max 20 per request for free tier)
+        count: Number of results to fetch (max 50 per request for paid tier)
         country: Country code for search
         max_retries: Maximum number of retry attempts
 
@@ -41,7 +41,7 @@ def brave_search(api_key: str, query: str, count: int = 20, country: str = "us",
 
     params = {
         "q": query,
-        "count": min(count, 20),  # Max 20 results per request
+        "count": min(count, 50),  # Max 50 results per request on higher tiers
         "country": country,
         "search_lang": "en",
         "safesearch": "off"
@@ -222,15 +222,26 @@ async def _fetch_arxiv_content(client: httpx.AsyncClient, arxiv_id: str, timeout
         return ""
 
 
-async def _fetch_text_for_url(client: httpx.AsyncClient, url: str, timeout: float, max_retries: int = 3, use_arxiv_api: bool = False) -> str:
-    # Check if this is an arXiv URL and use arXiv API instead (if enabled)
-    if use_arxiv_api:
-        arxiv_id = _extract_arxiv_id(url)
-        if arxiv_id:
+async def _fetch_text_for_url(
+    client: httpx.AsyncClient,
+    url: str,
+    timeout: float,
+    max_retries: int = 3,
+    use_arxiv_api: bool = False,
+) -> str:
+    # Check if this is an arXiv URL
+    arxiv_id = _extract_arxiv_id(url)
+    if arxiv_id:
+        if use_arxiv_api:
+            # Use arXiv API if flag is enabled
             print(f"Detected arXiv URL, using arXiv API for {arxiv_id}")
             # Add a small delay to respect arXiv's rate limits (3 seconds recommended)
             await asyncio.sleep(3.0)
             return await _fetch_arxiv_content(client, arxiv_id, timeout)
+        else:
+            # Skip arXiv files if flag is not enabled
+            print(f"Skipping arXiv URL (use --arxiv flag to download): {url}")
+            return ""
 
     # More comprehensive browser headers to look like a real browser
     headers = {
@@ -255,7 +266,12 @@ async def _fetch_text_for_url(client: httpx.AsyncClient, url: str, timeout: floa
 
     for attempt in range(max_retries):
         try:
-            resp = await client.get(url, headers=headers, timeout=timeout, follow_redirects=True)
+            resp = await client.get(
+                url,
+                headers=headers,
+                timeout=timeout,
+                follow_redirects=True,
+            )
 
             # Handle 403 Forbidden with exponential backoff
             if resp.status_code == 403:
@@ -312,11 +328,11 @@ async def _fetch_text_for_url(client: httpx.AsyncClient, url: str, timeout: floa
 
 async def _fetch_all_texts(
     urls: List[str],
-    concurrency: int = 15,
+    concurrency: int = 25,
     timeout: float = 20.0,
     use_arxiv_api: bool = False,
     max_per_domain: int = 2,
-    per_domain_delay: float = 1.5
+    per_domain_delay: float = 1.5,
 ) -> Dict[str, str]:
     """
     Fetch texts from URLs with per-domain rate limiting.
@@ -361,7 +377,12 @@ async def _fetch_all_texts(
                                 await asyncio.sleep(wait_time)
                         domain_last_request[domain] = time.time()
 
-                    text = await _fetch_text_for_url(client, u, timeout, use_arxiv_api=use_arxiv_api)
+                    text = await _fetch_text_for_url(
+                        client,
+                        u,
+                        timeout,
+                        use_arxiv_api=use_arxiv_api,
+                    )
                     out[u] = (text or "").strip()
 
         await asyncio.gather(*(worker(u) for u in urls))
@@ -511,7 +532,7 @@ def _process_single_query(
     fetch_content: bool = True,
     use_arxiv_api: bool = False,
     max_per_domain: int = 2,
-    per_domain_delay: float = 1.5
+    per_domain_delay: float = 1.5,
 ) -> Optional[str]:
     """
     Process a single search query with comprehensive error handling.
@@ -535,7 +556,7 @@ def _process_single_query(
                     timeout=timeout,
                     use_arxiv_api=use_arxiv_api,
                     max_per_domain=max_per_domain,
-                    per_domain_delay=per_domain_delay
+                    per_domain_delay=per_domain_delay,
                 ))
                 for r in results:
                     link = r.get("link", "")
@@ -570,7 +591,7 @@ def _worker_process_queries(
     rate_limit_delay: float,
     use_arxiv_api: bool,
     max_per_domain: int,
-    per_domain_delay: float
+    per_domain_delay: float,
 ) -> Dict[str, int]:
     """
     Worker function to process a batch of search terms in parallel.
@@ -607,136 +628,115 @@ def _worker_process_queries(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Brave Search API: search and download text payloads")
-    parser.add_argument("query", nargs="?", help="Single search query. If omitted, terms are read from search_terms.md")
-    parser.add_argument("--api-key", default=os.environ.get("BRAVE_API_KEY"), help="Brave Search API key (default: reads from BRAVE_API_KEY environment variable)")
-    parser.add_argument("--count", type=int, default=20, help="Number of search results to fetch per query (max 20 for free tier)")
-    parser.add_argument("--country", default="us", help="Country code (default: us)")
     parser.add_argument("--outdir", default="/Volumes/wandata/brave_results", help="Base output directory (per-query subfolders created here)")
-    parser.add_argument("--concurrency", type=int, default=50, help="Max concurrent URL downloads")
-    parser.add_argument("--timeout", type=float, default=20.0, help="Per-request timeout in seconds")
-    parser.add_argument("--workers", type=int, default=1, help="Number of parallel worker processes (default: 1)")
-    parser.add_argument("--no-fetch-content", action="store_true", help="Skip fetching full page content, only save snippets")
-    parser.add_argument("--rate-limit-delay", type=float, default=0.02, help="Delay between requests in seconds (default: 0.02 for 50 req/sec tier)")
+    parser.add_argument("--concurrency", type=int, default=25, help="Max concurrent URL downloads (default: 25; per-domain semaphore still limits bursts)")
     parser.add_argument("--arxiv", action="store_true", help="Use arXiv API for arXiv URLs instead of web scraping")
-    parser.add_argument("--max-per-domain", type=int, default=2, help="Max concurrent requests per domain (default: 2)")
-    parser.add_argument("--per-domain-delay", type=float, default=1.5, help="Minimum delay between requests to same domain in seconds (default: 1.5)")
     args = parser.parse_args()
-
     progress_file = os.path.join(os.path.dirname(__file__), "searchterm-download-progress-brave.txt")
-    fetch_content = not args.no_fetch_content
+    fetch_content = True
+
+    # Hardcoded values for removed CLI arguments
+    api_key = os.environ.get("BRAVE_API_KEY")
+    count = 50
+    country = "us"
+    timeout = 20.0
+    workers = 1
+    rate_limit_delay = 0.02
+    max_per_domain = 2
+    per_domain_delay = 1.5
 
     # Validate API key
-    if not args.api_key:
-        print("Error: Brave API key is required. Either:")
-        print("  1. Set the BRAVE_API_KEY environment variable, or")
-        print("  2. Pass --api-key YOUR_KEY as a command line argument")
+    if not api_key:
+        print("Error: Brave API key is required.")
+        print("  Set the BRAVE_API_KEY environment variable")
         exit(1)
 
-    if args.query:
-        # Single query mode - no parallelization needed
-        print(f"Working on search term: {args.query}")
-        _update_progress_file(progress_file, 0, 1, args.query)
-        try:
-            out_dir = _process_single_query(
-                args.api_key, args.query, args.count, args.country, args.outdir,
-                args.concurrency, args.timeout, fetch_content, args.arxiv,
-                args.max_per_domain, args.per_domain_delay
-            )
-            if out_dir:
-                print(f"Wrote files to {out_dir}")
-            else:
-                print(f"Failed to process query: {args.query}")
-        except Exception as e:
-            print(f"Fatal error processing query '{args.query}': {e}")
-        finally:
-            _update_progress_file(progress_file, 1, 1, args.query)
-    else:
-        # Multi-query mode - use parallelization
-        terms_file = "search_terms.md"
-        terms = _read_search_terms(terms_file)
-        if not terms:
-            print(f"No search terms found in {terms_file}")
-            exit(1)
+    # Multi-query mode - read from search_terms.md
+    terms_file = "search_terms.md"
+    terms = _read_search_terms(terms_file)
+    if not terms:
+        print(f"No search terms found in {terms_file}")
+        exit(1)
 
-        total_terms = len(terms)
-        num_workers = min(args.workers, total_terms)  # Don't create more workers than terms
+    total_terms = len(terms)
+    num_workers = min(workers, total_terms)  # Don't create more workers than terms
 
-        if num_workers == 1:
-            # Sequential mode (recommended for free tier)
-            print(f"Processing {total_terms} search terms sequentially...")
-            print(f"Rate limit: {1/args.rate_limit_delay:.2f} requests/second")
-            successful = 0
-            failed = 0
+    if num_workers == 1:
+        # Sequential mode (recommended for free tier)
+        print(f"Processing {total_terms} search terms sequentially...")
+        print(f"Rate limit: {1/rate_limit_delay:.2f} requests/second")
+        successful = 0
+        failed = 0
 
-            for idx, term in enumerate(terms):
-                print(f"\n{'='*60}")
-                print(f"Working on search term {idx + 1}/{total_terms}: {term}")
-                print(f"{'='*60}")
-                _update_progress_file(progress_file, idx, total_terms, term)
-
-                try:
-                    out_dir = _process_single_query(
-                        args.api_key, term, args.count, args.country, args.outdir,
-                        args.concurrency, args.timeout, fetch_content, args.arxiv,
-                        args.max_per_domain, args.per_domain_delay
-                    )
-                    if out_dir:
-                        print(f"✓ Successfully wrote files to {out_dir}")
-                        successful += 1
-                    else:
-                        print(f"✗ Failed to process query: {term}")
-                        failed += 1
-                except Exception as e:
-                    print(f"✗ Fatal error processing query '{term}': {e}")
-                    failed += 1
-
-                # Add delay to respect rate limits
-                if idx < total_terms - 1:  # Don't delay after last query
-                    time.sleep(args.rate_limit_delay)
-
-            _update_progress_file(progress_file, total_terms, total_terms, "COMPLETE")
+        for idx, term in enumerate(terms):
             print(f"\n{'='*60}")
-            print(f"FINAL SUMMARY:")
-            print(f"  Total queries: {total_terms}")
-            print(f"  Successful: {successful}")
-            print(f"  Failed: {failed}")
+            print(f"Working on search term {idx + 1}/{total_terms}: {term}")
             print(f"{'='*60}")
-        else:
-            # Parallel mode with multiprocessing (for paid tiers with higher rate limits)
-            print(f"Processing {total_terms} search terms with {num_workers} parallel workers...")
-            print(f"Each worker will handle ~{total_terms // num_workers} terms")
-            print(f"WARNING: Make sure your API tier supports {num_workers * (1/args.rate_limit_delay):.2f} requests/second")
-            print()
+            _update_progress_file(progress_file, idx, total_terms, term)
 
-            # Split terms into chunks for each worker
-            chunk_size = (total_terms + num_workers - 1) // num_workers
-            term_chunks = [terms[i:i + chunk_size] for i in range(0, total_terms, chunk_size)]
-
-            # Create pool and distribute work
-            start_time = time.time()
-            with multiprocessing.Pool(processes=num_workers) as pool:
-                # Use starmap to pass multiple arguments to worker function
-                results = pool.starmap(
-                    _worker_process_queries,
-                    [(args.api_key, chunk, i, args.count, args.country, args.outdir,
-                      args.concurrency, args.timeout, fetch_content, args.rate_limit_delay, args.arxiv,
-                      args.max_per_domain, args.per_domain_delay)
-                     for i, chunk in enumerate(term_chunks)]
+            try:
+                out_dir = _process_single_query(
+                    api_key, term, count, country, args.outdir,
+                    args.concurrency, timeout, fetch_content, args.arxiv,
+                    max_per_domain, per_domain_delay
                 )
+                if out_dir:
+                    print(f"✓ Successfully wrote files to {out_dir}")
+                    successful += 1
+                else:
+                    print(f"✗ Failed to process query: {term}")
+                    failed += 1
+            except Exception as e:
+                print(f"✗ Fatal error processing query '{term}': {e}")
+                failed += 1
 
-            elapsed = time.time() - start_time
+            # Add delay to respect rate limits
+            if idx < total_terms - 1:  # Don't delay after last query
+                time.sleep(rate_limit_delay)
 
-            # Aggregate results from all workers
-            total_successful = sum(r["successful"] for r in results)
-            total_failed = sum(r["failed"] for r in results)
+        _update_progress_file(progress_file, total_terms, total_terms, "COMPLETE")
+        print(f"\n{'='*60}")
+        print(f"FINAL SUMMARY:")
+        print(f"  Total queries: {total_terms}")
+        print(f"  Successful: {successful}")
+        print(f"  Failed: {failed}")
+        print(f"{'='*60}")
+    else:
+        # Parallel mode with multiprocessing (for paid tiers with higher rate limits)
+        print(f"Processing {total_terms} search terms with {num_workers} parallel workers...")
+        print(f"Each worker will handle ~{total_terms // num_workers} terms")
+        print(f"WARNING: Make sure your API tier supports {num_workers * (1/rate_limit_delay):.2f} requests/second")
+        print()
 
-            _update_progress_file(progress_file, total_terms, total_terms, "COMPLETE")
-            print(f"\n{'='*60}")
-            print(f"FINAL SUMMARY:")
-            print(f"  Total queries: {total_terms}")
-            print(f"  Successful: {total_successful}")
-            print(f"  Failed: {total_failed}")
-            print(f"  Workers used: {num_workers}")
-            print(f"  Total time: {elapsed / 60:.1f} minutes ({elapsed / 3600:.2f} hours)")
-            print(f"  Rate: {total_terms / elapsed * 60:.1f} queries/minute")
-            print(f"{'='*60}")
+        # Split terms into chunks for each worker
+        chunk_size = (total_terms + num_workers - 1) // num_workers
+        term_chunks = [terms[i:i + chunk_size] for i in range(0, total_terms, chunk_size)]
+
+        # Create pool and distribute work
+        start_time = time.time()
+        with multiprocessing.Pool(processes=num_workers) as pool:
+            # Use starmap to pass multiple arguments to worker function
+            results = pool.starmap(
+                _worker_process_queries,
+                [(api_key, chunk, i, count, country, args.outdir,
+                  args.concurrency, timeout, fetch_content, rate_limit_delay, args.arxiv,
+                  max_per_domain, per_domain_delay)
+                 for i, chunk in enumerate(term_chunks)]
+            )
+
+        elapsed = time.time() - start_time
+
+        # Aggregate results from all workers
+        total_successful = sum(r["successful"] for r in results)
+        total_failed = sum(r["failed"] for r in results)
+
+        _update_progress_file(progress_file, total_terms, total_terms, "COMPLETE")
+        print(f"\n{'='*60}")
+        print(f"FINAL SUMMARY:")
+        print(f"  Total queries: {total_terms}")
+        print(f"  Successful: {total_successful}")
+        print(f"  Failed: {total_failed}")
+        print(f"  Workers used: {num_workers}")
+        print(f"  Total time: {elapsed / 60:.1f} minutes ({elapsed / 3600:.2f} hours)")
+        print(f"  Rate: {total_terms / elapsed * 60:.1f} queries/minute")
+        print(f"{'='*60}")
