@@ -42,6 +42,11 @@ def read_seed_urls(path: Path) -> List[str]:
     """
     Read seed URLs from a file with error handling.
 
+    Supports two formats:
+    1. Plain URLs (one per line)
+    2. Pipe-delimited format: URL | Title | Description | Search Query
+       (from brave-urls.txt)
+
     Returns a list of URLs, or empty list if the file doesn't exist or can't be read.
     """
     try:
@@ -53,7 +58,14 @@ def read_seed_urls(path: Path) -> List[str]:
             s = line.strip()
             if not s or s.startswith("#"):
                 continue
-            if s.lower().startswith(("http://", "https://")):
+
+            # Check if this is pipe-delimited format (brave-urls.txt)
+            if " | " in s:
+                # Extract just the URL (first field)
+                url = s.split(" | ")[0].strip()
+                if url.lower().startswith(("http://", "https://")):
+                    urls.append(url)
+            elif s.lower().startswith(("http://", "https://")):
                 urls.append(s)
         return urls
     except Exception as e:
@@ -64,12 +76,15 @@ def read_seed_urls(path: Path) -> List[str]:
 def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     default_dir = Path(__file__).resolve().parent
     p = argparse.ArgumentParser(description="Recursive web scraper")
-    p.add_argument("--urls", type=str)
+    p.add_argument("--urls", type=str, default="brave-urls.txt",
+                   help="Path to file containing URLs (default: brave-urls.txt)")
     p.add_argument("--out-dir", type=str, default=str(default_dir / "scraped"))
     p.add_argument("--max-depth", type=int, default=5)
     p.add_argument("--max-pages-per-domain", type=int, default=200)
     p.add_argument("--timeout", type=float, default=30.0)
     p.add_argument("--max-bytes", type=int, default=50 * 1024 * 1024)
+    p.add_argument("--download-pdfs", action="store_true",
+                   help="Download and extract text from PDF files")
     return p.parse_args(argv)
 
 def normalize_url(url: str) -> str:
@@ -413,8 +428,44 @@ def save_response_data(base_out_dir: Path, seed_host: str, url: str, data: bytes
         write_url_sidecar(out_path_txt, url)
         return out_path_txt
 
-    # Only HTML/XML files are saved. Skip all other content types.
-    print(f"Skipping non-HTML/XML content for {url} ({ct_main or 'unknown'})")
+    # Check if this is a PDF
+    is_pdf = (
+        preferred_ext == ".pdf"
+        or ct_main == "application/pdf"
+        or url_ext == ".pdf"
+    )
+
+    if is_pdf:
+        # Save PDF and extract text to .txt sidecar
+        filename_pdf = stable_filename_for_url(url, preferred_ext=".pdf")
+        out_path_pdf = out_dir / filename_pdf
+        filename_txt = stable_filename_for_url(url, preferred_ext=".txt")
+        out_path_txt = out_dir / filename_txt
+
+        if not out_path_pdf.exists():
+            try:
+                out_path_pdf.write_bytes(data)
+                print(f"\n\nSAVED PDF {out_path_pdf}\n\n")
+            except Exception as e:
+                print(f"Error saving PDF {url}: {e}")
+                return out_path_pdf
+
+        # Extract text from PDF
+        if not out_path_txt.exists():
+            ensure_pdf_text_sidecar(out_path_pdf, data)
+            if out_path_txt.exists():
+                print(f"Extracted text from PDF: {out_path_txt}")
+                try:
+                    text = out_path_txt.read_text(encoding="utf-8", errors="ignore")
+                    print((text or "")[:100])
+                except Exception:
+                    pass
+
+        write_url_sidecar(out_path_pdf, url)
+        return out_path_pdf
+
+    # Only HTML/XML/PDF files are saved. Skip all other content types.
+    print(f"Skipping non-HTML/XML/PDF content for {url} ({ct_main or 'unknown'})")
     # Return a deterministic path without creating a file
     return out_dir / stable_filename_for_url(url, preferred_ext=".skip")
 
@@ -460,6 +511,7 @@ def crawl_from_seed(
     progress_file: Optional[Path] = None,
     seed_idx: int = 0,
     total_seeds: int = 1,
+    download_pdfs: bool = False,
 ) -> None:
     """
     Crawl from a seed URL with robust error handling.
@@ -498,18 +550,30 @@ def crawl_from_seed(
         if per_domain_count.get(host, 0) >= max_pages_per_domain:
             continue
 
-        # Skip obvious non-HTML/XML by URL extension before making a request
+        # Skip obvious non-HTML/XML/PDF by URL extension before making a request
         url_ext = infer_extension_from_url(url).lower()
-        if url_ext and url_ext not in {".html", ".htm", ".xml"}:
+        if download_pdfs:
+            allowed_extensions = {".html", ".htm", ".xml", ".pdf"}
+        else:
+            allowed_extensions = {".html", ".htm", ".xml"}
+        if url_ext and url_ext not in allowed_extensions:
             continue
+
+        # Configure content type filtering based on download_pdfs flag
+        if download_pdfs:
+            blocked_types = {"image/png", "image/jpeg", "image/gif"}
+            allowed_types = {"text/html", "application/xml", "text/xml", "application/pdf"}
+        else:
+            blocked_types = {"application/pdf", "image/png", "image/jpeg", "image/gif"}
+            allowed_types = {"text/html", "application/xml", "text/xml"}
 
         try:
             data, content_type = download_with_retries(
                 url,
                 timeout=timeout,
                 max_bytes=max_bytes,
-                blocked_content_types={"application/pdf", "image/png"},
-                allowed_content_types={"text/html", "application/xml", "text/xml"},
+                blocked_content_types=blocked_types,
+                allowed_content_types=allowed_types,
             )
         except SkipDownload:
             # Silently skip blocked content types like PDFs
@@ -553,9 +617,13 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
     try:
         args = parse_args(argv)
 
-        # Fix path construction
+        # Construct path to URLs file
         if args.urls:
-            urls_path = Path("bunchoflinks") / Path(args.urls)
+            urls_path = Path(args.urls)
+            # If it's a relative path and doesn't exist, try in script directory
+            if not urls_path.is_absolute() and not urls_path.exists():
+                script_dir = Path(__file__).resolve().parent
+                urls_path = script_dir / args.urls
         else:
             print("Error: --urls argument is required")
             return
@@ -602,6 +670,7 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
                     progress_file=progress_file,
                     seed_idx=idx,
                     total_seeds=total_seeds,
+                    download_pdfs=args.download_pdfs,
                 )
                 successful_seeds += 1
             except Exception as e:

@@ -44,7 +44,7 @@ def main():
             "python3",
             "generate_search_terms.py",
             "--topic-index", str(topic_idx),
-            "--total-terms", "1000",
+            "--total-terms", "20",
             "--output", output_file
         ]
 

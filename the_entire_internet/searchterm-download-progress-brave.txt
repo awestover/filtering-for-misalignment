@@ -1,4 +1,4 @@
-Last updated: 2025-11-17 18:44:00
-Progress: 70/18564 search terms completed
-Current term: behavioral tests for model-level deception in AI models (LLMs)
-Percentage: 0.4%
+Last updated: 2025-11-18 18:50:16
+Progress: 159/159 search terms completed
+Current term: COMPLETE
+Percentage: 100.0%
