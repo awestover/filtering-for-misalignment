@@ -1,3 +1,6 @@
+**DEPRACATED** Please email me at "alek dot westover at gmail dot com" if you want the updated system. 
+
+
 I’m worried that future AI systems may be misaligned. Cheap data
 filtering measures can strengthen our defense against misaligned
 AI. This repository is intended to help AI developers filter
